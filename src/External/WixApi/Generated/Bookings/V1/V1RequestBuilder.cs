@@ -2,7 +2,7 @@
 #pragma warning disable CS0618
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions;
-using MyApi.Client.Bookings.V1.Bookings;
+using MyApi.Client.Bookings.V1.Services;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -15,10 +15,10 @@ namespace MyApi.Client.Bookings.V1
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class V1RequestBuilder : BaseRequestBuilder
     {
-        /// <summary>The bookings property</summary>
-        public global::MyApi.Client.Bookings.V1.Bookings.BookingsRequestBuilder Bookings
+        /// <summary>The services property</summary>
+        public global::MyApi.Client.Bookings.V1.Services.ServicesRequestBuilder Services
         {
-            get => new global::MyApi.Client.Bookings.V1.Bookings.BookingsRequestBuilder(PathParameters, RequestAdapter);
+            get => new global::MyApi.Client.Bookings.V1.Services.ServicesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Bookings.V1.V1RequestBuilder"/> and sets the default values.

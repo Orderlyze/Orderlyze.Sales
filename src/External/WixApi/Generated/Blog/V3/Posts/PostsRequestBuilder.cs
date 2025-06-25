@@ -41,7 +41,7 @@ namespace MyApi.Client.Blog.V3.Posts
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public PostsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/blog/v3/posts{?limit*,offset*}", pathParameters)
+        public PostsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/blog/v3/posts{?Limit*,offset*}", pathParameters)
         {
         }
         /// <summary>
@@ -49,7 +49,7 @@ namespace MyApi.Client.Blog.V3.Posts
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public PostsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/blog/v3/posts{?limit*,offset*}", rawUrl)
+        public PostsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/blog/v3/posts{?Limit*,offset*}", rawUrl)
         {
         }
         /// <summary>
@@ -147,7 +147,7 @@ namespace MyApi.Client.Blog.V3.Posts
         public partial class PostsRequestBuilderGetQueryParameters 
         {
             /// <summary>Number of posts to retrieve (default 50).</summary>
-            [QueryParameter("limit")]
+            [QueryParameter("Limit")]
             public int? Limit { get; set; }
             /// <summary>Offset for pagination (default 0).</summary>
             [QueryParameter("offset")]

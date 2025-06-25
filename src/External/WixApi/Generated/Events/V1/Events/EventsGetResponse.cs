@@ -5,43 +5,47 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
-namespace MyApi.Client.Models
+namespace MyApi.Client.Events.V1.Events
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class ProductList_paging : IAdditionalDataHolder, IParsable
+    public partial class EventsGetResponse : IAdditionalDataHolder, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
-        /// <summary>The Limit property</summary>
-        public int? Limit { get; set; }
-        /// <summary>The next property</summary>
+        /// <summary>The events property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Next { get; set; }
+        public List<global::MyApi.Client.Events.V1.Events.EventsGetResponse_events>? Events { get; set; }
 #nullable restore
 #else
-        public string Next { get; set; }
+        public List<global::MyApi.Client.Events.V1.Events.EventsGetResponse_events> Events { get; set; }
 #endif
-        /// <summary>The offset property</summary>
-        public int? Offset { get; set; }
+        /// <summary>The paging property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Events.V1.Events.EventsGetResponse_paging? Paging { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Events.V1.Events.EventsGetResponse_paging Paging { get; set; }
+#endif
         /// <summary>
-        /// Instantiates a new <see cref="global::MyApi.Client.Models.ProductList_paging"/> and sets the default values.
+        /// Instantiates a new <see cref="global::MyApi.Client.Events.V1.Events.EventsGetResponse"/> and sets the default values.
         /// </summary>
-        public ProductList_paging()
+        public EventsGetResponse()
         {
             AdditionalData = new Dictionary<string, object>();
         }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::MyApi.Client.Models.ProductList_paging"/></returns>
+        /// <returns>A <see cref="global::MyApi.Client.Events.V1.Events.EventsGetResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::MyApi.Client.Models.ProductList_paging CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::MyApi.Client.Events.V1.Events.EventsGetResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new global::MyApi.Client.Models.ProductList_paging();
+            return new global::MyApi.Client.Events.V1.Events.EventsGetResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,9 +55,8 @@ namespace MyApi.Client.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "Limit", n => { Limit = n.GetIntValue(); } },
-                { "next", n => { Next = n.GetStringValue(); } },
-                { "offset", n => { Offset = n.GetIntValue(); } },
+                { "events", n => { Events = n.GetCollectionOfObjectValues<global::MyApi.Client.Events.V1.Events.EventsGetResponse_events>(global::MyApi.Client.Events.V1.Events.EventsGetResponse_events.CreateFromDiscriminatorValue)?.AsList(); } },
+                { "paging", n => { Paging = n.GetObjectValue<global::MyApi.Client.Events.V1.Events.EventsGetResponse_paging>(global::MyApi.Client.Events.V1.Events.EventsGetResponse_paging.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -63,9 +66,8 @@ namespace MyApi.Client.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteIntValue("Limit", Limit);
-            writer.WriteStringValue("next", Next);
-            writer.WriteIntValue("offset", Offset);
+            writer.WriteCollectionOfObjectValues<global::MyApi.Client.Events.V1.Events.EventsGetResponse_events>("events", Events);
+            writer.WriteObjectValue<global::MyApi.Client.Events.V1.Events.EventsGetResponse_paging>("paging", Paging);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

@@ -35,7 +35,7 @@ namespace MyApi.Client.Contacts.V4.Contacts
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ContactsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/contacts/v4/contacts{?limit*,offset*}", pathParameters)
+        public ContactsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/contacts/v4/contacts{?Limit*,offset*}", pathParameters)
         {
         }
         /// <summary>
@@ -43,7 +43,7 @@ namespace MyApi.Client.Contacts.V4.Contacts
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ContactsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/contacts/v4/contacts{?limit*,offset*}", rawUrl)
+        public ContactsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/contacts/v4/contacts{?Limit*,offset*}", rawUrl)
         {
         }
         /// <summary>
@@ -159,12 +159,10 @@ namespace MyApi.Client.Contacts.V4.Contacts
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class ContactsRequestBuilderGetQueryParameters 
         {
-            [QueryParameter("limit")]
+            [QueryParameter("Limit")]
             public int? Limit { get; set; }
             [QueryParameter("offset")]
             public int? Offset { get; set; }
-            [QueryParameter("fieldName")]
-            public string fieldName { get; set; }
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.

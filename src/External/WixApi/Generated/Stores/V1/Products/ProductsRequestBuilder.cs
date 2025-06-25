@@ -41,7 +41,7 @@ namespace MyApi.Client.Stores.V1.Products
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ProductsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/stores/v1/products{?limit*,offset*}", pathParameters)
+        public ProductsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/stores/v1/products{?Limit*,offset*}", pathParameters)
         {
         }
         /// <summary>
@@ -49,7 +49,7 @@ namespace MyApi.Client.Stores.V1.Products
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ProductsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/stores/v1/products{?limit*,offset*}", rawUrl)
+        public ProductsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/stores/v1/products{?Limit*,offset*}", rawUrl)
         {
         }
         /// <summary>
@@ -147,7 +147,7 @@ namespace MyApi.Client.Stores.V1.Products
         public partial class ProductsRequestBuilderGetQueryParameters 
         {
             /// <summary>Maximum number of products to return.</summary>
-            [QueryParameter("limit")]
+            [QueryParameter("Limit")]
             public int? Limit { get; set; }
             /// <summary>Offset for pagination.</summary>
             [QueryParameter("offset")]

@@ -35,7 +35,7 @@ namespace MyApi.Client.Members.V1.Members
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public MembersRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/members/v1/members{?limit*,offset*}", pathParameters)
+        public MembersRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/members/v1/members{?Limit*,offset*}", pathParameters)
         {
         }
         /// <summary>
@@ -43,7 +43,7 @@ namespace MyApi.Client.Members.V1.Members
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public MembersRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/members/v1/members{?limit*,offset*}", rawUrl)
+        public MembersRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/members/v1/members{?Limit*,offset*}", rawUrl)
         {
         }
         /// <summary>
@@ -160,7 +160,7 @@ namespace MyApi.Client.Members.V1.Members
         public partial class MembersRequestBuilderGetQueryParameters 
         {
             /// <summary>Maximum number of members to return.</summary>
-            [QueryParameter("limit")]
+            [QueryParameter("Limit")]
             public int? Limit { get; set; }
             /// <summary>Offset for pagination.</summary>
             [QueryParameter("offset")]
