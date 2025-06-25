@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnoApp.Presentation.Common;
+using UnoApp.Services.Common;
 
 namespace UnoApp.Presentation.Pages.Main;
 
-public partial class MainViewModel : ObservableObject
+public partial class MainViewModel : BasePageViewModel
 {
     private INavigator _navigator;
 
@@ -16,8 +18,10 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel(
         IStringLocalizer localizer,
         IOptions<AppConfig> appInfo,
-        INavigator navigator
+        INavigator navigator,
+        BaseServices baseServices
     )
+        : base(baseServices)
     {
         _navigator = navigator;
         Title = "Main";

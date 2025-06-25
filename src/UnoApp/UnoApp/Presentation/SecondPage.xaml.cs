@@ -1,4 +1,4 @@
-﻿namespace UnoApp.Presentation;
+namespace UnoApp.Presentation;
 
 public sealed partial class SecondPage : Page
 {
@@ -7,4 +7,3 @@ public sealed partial class SecondPage : Page
         this.InitializeComponent();
     }
 }
-

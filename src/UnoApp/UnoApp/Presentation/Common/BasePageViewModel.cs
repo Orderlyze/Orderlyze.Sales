@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnoApp.Services.Common;
 
 namespace UnoApp.Presentation.Common;
 
-internal partial class BasePageViewModel : BaseViewModel { }
+public partial class BasePageViewModel(BaseServices Services) : BaseViewModel(Services) { }
