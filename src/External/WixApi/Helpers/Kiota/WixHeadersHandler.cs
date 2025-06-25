@@ -20,8 +20,6 @@ namespace WixApi.Helpers.Kiota
             if (!request.Headers.Contains("wix-site-id"))
                 request.Headers.Add("wix-site-id", WixConstants.SiteId);
 
-            request.Headers.Remove("Accept");
-
             // Weiter zum nächsten Handler (oder zum HttpClient senden)
             var result = await base.SendAsync(request, cancellationToken);
             return result;

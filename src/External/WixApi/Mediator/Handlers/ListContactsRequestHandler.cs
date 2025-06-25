@@ -22,7 +22,10 @@ namespace WixApi.Mediator.Handlers
             CancellationToken cancellationToken
         )
         {
-            var stream = await apiClient.Contacts.V4.Contacts.GetAsync(default);
+            var stream = await apiClient.Contacts.V4.Contacts.GetAsContactsGetResponseAsync(x =>
+            {
+                x.QueryParameters.Limit = 10;
+            });
             return null;
         }
     }

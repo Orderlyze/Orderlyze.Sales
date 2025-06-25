@@ -41,13 +41,19 @@
             "type": "string",
             "description": "Post ID (GUID)"
           },
-          "title": { "type": "string" },
-          "content": { "type": "string" },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
           "publishedDate": {
             "type": "string",
             "format": "date-time"
           },
-          "author": { "type": "string" }
+          "author": {
+            "type": "string"
+          }
         }
       },
       "BlogPostList": {
@@ -55,14 +61,22 @@
         "properties": {
           "posts": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/BlogPost" }
+            "items": {
+              "$ref": "#/components/schemas/BlogPost"
+            }
           },
           "paging": {
             "type": "object",
             "properties": {
-              "limit": { "type": "integer" },
-              "offset": { "type": "integer" },
-              "next": { "type": "string" }
+              "limit": {
+                "type": "integer"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "next": {
+                "type": "string"
+              }
             }
           }
         }
@@ -74,11 +88,21 @@
             "type": "string",
             "description": "Product ID (GUID)"
           },
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "sku": { "type": "string" },
-          "price": { "type": "number" },
-          "inStock": { "type": "boolean" }
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "inStock": {
+            "type": "boolean"
+          }
         }
       },
       "ProductList": {
@@ -86,14 +110,22 @@
         "properties": {
           "products": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/Product" }
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            }
           },
           "paging": {
             "type": "object",
             "properties": {
-              "limit": { "type": "integer" },
-              "offset": { "type": "integer" },
-              "next": { "type": "string" }
+              "limit": {
+                "type": "integer"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "next": {
+                "type": "string"
+              }
             }
           }
         }
@@ -113,21 +145,35 @@
             "type": "string",
             "format": "date-time"
           },
-          "currency": { "type": "string" },
+          "currency": {
+            "type": "string"
+          },
           "items": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "productId": { "type": "string" },
-                "name": { "type": "string" },
-                "quantity": { "type": "integer" },
-                "price": { "type": "number" }
+                "productId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "integer"
+                },
+                "price": {
+                  "type": "number"
+                }
               }
             }
           },
-          "totalPrice": { "type": "number" },
-          "status": { "type": "string" }
+          "totalPrice": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          }
         }
       },
       "Member": {
@@ -152,7 +198,9 @@
           "profile": {
             "type": "object",
             "properties": {
-              "nickname": { "type": "string" },
+              "nickname": {
+                "type": "string"
+              },
               "picture": {
                 "type": "string",
                 "format": "uri"
@@ -172,15 +220,21 @@
             "type": "string",
             "description": "Contact ID (GUID)"
           },
-          "name": { "type": "string" },
+          "name": {
+            "type": "string"
+          },
           "email": {
             "type": "string",
             "format": "email"
           },
-          "phone": { "type": "string" },
+          "phone": {
+            "type": "string"
+          },
           "labels": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "createdDate": {
             "type": "string",
@@ -199,7 +253,9 @@
             "type": "string",
             "description": "Booking status (e.g. CONFIRMED, PENDING)"
           },
-          "serviceId": { "type": "string" },
+          "serviceId": {
+            "type": "string"
+          },
           "slot": {
             "type": "object",
             "properties": {
@@ -211,15 +267,23 @@
                 "type": "string",
                 "format": "date-time"
               },
-              "timezone": { "type": "string" }
+              "timezone": {
+                "type": "string"
+              }
             }
           },
           "customer": {
             "type": "object",
             "properties": {
-              "contactId": { "type": "string" },
-              "name": { "type": "string" },
-              "email": { "type": "string" }
+              "contactId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
             }
           },
           "createdDate": {
@@ -235,7 +299,9 @@
             "type": "string",
             "description": "Event ID (GUID)"
           },
-          "title": { "type": "string" },
+          "title": {
+            "type": "string"
+          },
           "startTime": {
             "type": "string",
             "format": "date-time"
@@ -244,7 +310,9 @@
             "type": "string",
             "format": "date-time"
           },
-          "location": { "type": "string" },
+          "location": {
+            "type": "string"
+          },
           "status": {
             "type": "string",
             "description": "Event status (DRAFT/PUBLISHED)"
@@ -268,12 +336,126 @@
           },
           "fields": {
             "type": "object",
-            "additionalProperties": { "type": "string" },
+            "additionalProperties": {
+              "type": "string"
+            },
             "description": "Submitted field values (keyed by field name or ID)"
           },
           "status": {
             "type": "string",
             "description": "Submission status (e.g., CONFIRMED)"
+          }
+        }
+      },
+      "Participant": {
+        "type": "object",
+        "properties": {
+          "anonymousVisitorId": {
+            "type": "string"
+          },
+          "contactId": {
+            "type": "string"
+          },
+          "memberId": {
+            "type": "string"
+          }
+        }
+      },
+      "DisplayData": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "Badge": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          }
+        }
+      },
+      "Conversation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "participant": {
+            "$ref": "#/components/schemas/Participant"
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "businessDisplayData": {
+            "$ref": "#/components/schemas/DisplayData"
+          },
+          "participantDisplayData": {
+            "$ref": "#/components/schemas/DisplayData"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          },
+          "sender": {
+            "$ref": "#/components/schemas/Participant"
+          },
+          "badges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Badge"
+            }
+          },
+          "targetChannels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceChannel": {
+            "type": "string"
+          },
+          "appId": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "BUSINESS_AND_PARTICIPANT",
+              "BUSINESS"
+            ]
+          },
+          "sequence": {
+            "type": "integer"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "BUSINESS_TO_PARTICIPANT",
+              "PARTICIPANT_TO_BUSINESS"
+            ]
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }
@@ -290,12 +472,20 @@
   "paths": {
     "/blog/v3/posts": {
       "get": {
-        "tags": [ "Blog" ],
+        "tags": [
+          "Blog"
+        ],
         "summary": "List Blog Posts",
         "description": "Retrieves a list of published blog posts (paged).",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
@@ -322,19 +512,29 @@
             "description": "List of blog posts",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/BlogPostList" }
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostList"
+                }
               }
             }
           }
         }
       },
       "post": {
-        "tags": [ "Blog" ],
+        "tags": [
+          "Blog"
+        ],
         "summary": "Query Blog Posts",
         "description": "Query blog posts with filters and sorting. Supports retrieving draft posts or specific criteria.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Query filter and sort object",
@@ -355,8 +555,12 @@
                   "paging": {
                     "type": "object",
                     "properties": {
-                      "limit": { "type": "integer" },
-                      "offset": { "type": "integer" }
+                      "limit": {
+                        "type": "integer"
+                      },
+                      "offset": {
+                        "type": "integer"
+                      }
                     }
                   }
                 }
@@ -369,7 +573,9 @@
             "description": "Query results of blog posts",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/BlogPostList" }
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostList"
+                }
               }
             }
           }
@@ -378,19 +584,29 @@
     },
     "/blog/v3/posts/{postId}": {
       "get": {
-        "tags": [ "Blog" ],
+        "tags": [
+          "Blog"
+        ],
         "summary": "Get Blog Post",
         "description": "Retrieves a specific blog post by its ID.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "postId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "The unique identifier of the blog post."
           }
         ],
@@ -399,7 +615,9 @@
             "description": "Blog post object",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/BlogPost" }
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPost"
+                }
               }
             }
           },
@@ -411,19 +629,29 @@
     },
     "/blog/v3/posts/slugs/{slug}": {
       "get": {
-        "tags": [ "Blog" ],
+        "tags": [
+          "Blog"
+        ],
         "summary": "Get Blog Post by Slug",
         "description": "Retrieves a blog post using its slug (SEO friendly URL identifier).",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "slug",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Slug of the blog post (as seen in the post URL)."
           }
         ],
@@ -432,7 +660,9 @@
             "description": "Blog post object",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/BlogPost" }
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPost"
+                }
               }
             }
           },
@@ -444,19 +674,29 @@
     },
     "/stores/v1/products": {
       "post": {
-        "tags": [ "Stores" ],
+        "tags": [
+          "Stores"
+        ],
         "summary": "Create Product",
         "description": "Creates a new product in the Wix Stores catalog.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Product object to create",
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Product" }
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
             }
           }
         },
@@ -465,19 +705,29 @@
             "description": "Product created successfully",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Product" }
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
               }
             }
           }
         }
       },
       "get": {
-        "tags": [ "Stores" ],
+        "tags": [
+          "Stores"
+        ],
         "summary": "List Products",
         "description": "Retrieves a list of products in the store catalog. Supports basic pagination or use the query endpoint for advanced filtering.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
@@ -504,7 +754,9 @@
             "description": "List of products",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ProductList" }
+                "schema": {
+                  "$ref": "#/components/schemas/ProductList"
+                }
               }
             }
           }
@@ -513,12 +765,20 @@
     },
     "/stores/v1/products/query": {
       "post": {
-        "tags": [ "Stores" ],
+        "tags": [
+          "Stores"
+        ],
         "summary": "Query Products",
         "description": "Query the product catalog with filters (by name, price, etc.), sorting, and pagination.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Product query filter",
@@ -528,13 +788,21 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "filter": { "type": "object" },
-                  "sort": { "type": "object" },
+                  "filter": {
+                    "type": "object"
+                  },
+                  "sort": {
+                    "type": "object"
+                  },
                   "paging": {
                     "type": "object",
                     "properties": {
-                      "limit": { "type": "integer" },
-                      "offset": { "type": "integer" }
+                      "limit": {
+                        "type": "integer"
+                      },
+                      "offset": {
+                        "type": "integer"
+                      }
                     }
                   }
                 }
@@ -547,7 +815,9 @@
             "description": "Query results of products",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ProductList" }
+                "schema": {
+                  "$ref": "#/components/schemas/ProductList"
+                }
               }
             }
           }
@@ -556,19 +826,29 @@
     },
     "/stores/v1/products/{productId}": {
       "get": {
-        "tags": [ "Stores" ],
+        "tags": [
+          "Stores"
+        ],
         "summary": "Get Product",
         "description": "Retrieves a product by its ID.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "productId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Product ID"
           }
         ],
@@ -577,27 +857,41 @@
             "description": "Product object",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Product" }
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
               }
             }
           },
-          "404": { "description": "Product not found" }
+          "404": {
+            "description": "Product not found"
+          }
         }
       },
       "put": {
-        "tags": [ "Stores" ],
+        "tags": [
+          "Stores"
+        ],
         "summary": "Update Product",
         "description": "Updates an existing product's information (fields that are writable via the API).",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "productId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Product ID"
           }
         ],
@@ -606,7 +900,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Product" }
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
             }
           }
         },
@@ -615,50 +911,76 @@
             "description": "Product updated successfully",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Product" }
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [ "Stores" ],
+        "tags": [
+          "Stores"
+        ],
         "summary": "Delete Product",
         "description": "Deletes a product from the catalog.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "productId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Product ID"
           }
         ],
         "responses": {
-          "204": { "description": "Product deleted successfully (no content)" },
-          "404": { "description": "Product not found" }
+          "204": {
+            "description": "Product deleted successfully (no content)"
+          },
+          "404": {
+            "description": "Product not found"
+          }
         }
       }
     },
     "/ecom/v1/orders": {
       "post": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
         "summary": "Create Order",
         "description": "Creates a new eCommerce order record.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Order object to create",
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Order" }
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              }
             }
           }
         },
@@ -667,7 +989,9 @@
             "description": "Order created",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Order" }
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
               }
             }
           }
@@ -676,12 +1000,20 @@
     },
     "/ecom/v1/orders/search": {
       "post": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
         "summary": "Search Orders",
         "description": "Searches for orders matching the given criteria (filter by status, date, etc.).",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Order search filters",
@@ -691,13 +1023,21 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "filter": { "type": "object" },
-                  "sort": { "type": "object" },
+                  "filter": {
+                    "type": "object"
+                  },
+                  "sort": {
+                    "type": "object"
+                  },
                   "paging": {
                     "type": "object",
                     "properties": {
-                      "limit": { "type": "integer" },
-                      "offset": { "type": "integer" }
+                      "limit": {
+                        "type": "integer"
+                      },
+                      "offset": {
+                        "type": "integer"
+                      }
                     }
                   }
                 }
@@ -715,12 +1055,16 @@
                   "properties": {
                     "orders": {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/Order" }
+                      "items": {
+                        "$ref": "#/components/schemas/Order"
+                      }
                     },
                     "paging": {
                       "type": "object",
                       "properties": {
-                        "next": { "type": "string" }
+                        "next": {
+                          "type": "string"
+                        }
                       }
                     }
                   }
@@ -733,19 +1077,29 @@
     },
     "/ecom/v1/orders/{orderId}": {
       "get": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
         "summary": "Get Order",
         "description": "Retrieves an order by ID, including details of items, pricing, fulfillment, etc.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "orderId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Order ID"
           }
         ],
@@ -754,27 +1108,41 @@
             "description": "Order object",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Order" }
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
               }
             }
           },
-          "404": { "description": "Order not found" }
+          "404": {
+            "description": "Order not found"
+          }
         }
       },
       "patch": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
         "summary": "Update Order",
         "description": "Updates allowed properties of an order (e.g. buyer information or certain status flags).",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "orderId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Order ID"
           }
         ],
@@ -783,7 +1151,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Order" }
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              }
             }
           }
         },
@@ -792,30 +1162,46 @@
             "description": "Order updated",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Order" }
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
               }
             }
           },
-          "400": { "description": "Invalid update (e.g. disallowed field or value)" },
-          "404": { "description": "Order not found" }
+          "400": {
+            "description": "Invalid update (e.g. disallowed field or value)"
+          },
+          "404": {
+            "description": "Order not found"
+          }
         }
       }
     },
     "/ecom/v1/orders/{orderId}/cancel": {
       "post": {
-        "tags": [ "Orders" ],
+        "tags": [
+          "Orders"
+        ],
         "summary": "Cancel Order",
         "description": "Cancels an order (if it has not been canceled already), typically setting its status to CANCELED and triggering related workflows.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "orderId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Order ID to cancel"
           }
         ],
@@ -827,27 +1213,43 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "reason": { "type": "string" }
+                  "reason": {
+                    "type": "string"
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "204": { "description": "Order canceled successfully (no content)" },
-          "404": { "description": "Order not found or already canceled" },
-          "409": { "description": "Order cannot be canceled (e.g., already fulfilled)" }
+          "204": {
+            "description": "Order canceled successfully (no content)"
+          },
+          "404": {
+            "description": "Order not found or already canceled"
+          },
+          "409": {
+            "description": "Order cannot be canceled (e.g., already fulfilled)"
+          }
         }
       }
     },
     "/members/v1/members": {
       "get": {
-        "tags": [ "Members" ],
+        "tags": [
+          "Members"
+        ],
         "summary": "List Members",
         "description": "Lists site members. Supports pagination and field projection.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
@@ -879,12 +1281,16 @@
                   "properties": {
                     "members": {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/Member" }
+                      "items": {
+                        "$ref": "#/components/schemas/Member"
+                      }
                     },
                     "paging": {
                       "type": "object",
                       "properties": {
-                        "next": { "type": "string" }
+                        "next": {
+                          "type": "string"
+                        }
                       }
                     }
                   }
@@ -895,12 +1301,20 @@
         }
       },
       "post": {
-        "tags": [ "Members" ],
+        "tags": [
+          "Members"
+        ],
         "summary": "Create Member",
         "description": "Creates a new member for the site. Typically used to invite a user or convert a contact into a member.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Member object to create",
@@ -917,7 +1331,9 @@
                   "profile": {
                     "type": "object",
                     "properties": {
-                      "nickname": { "type": "string" }
+                      "nickname": {
+                        "type": "string"
+                      }
                     }
                   },
                   "contactDetails": {
@@ -925,7 +1341,9 @@
                     "description": "Optional contact info to link"
                   }
                 },
-                "required": [ "loginEmail" ]
+                "required": [
+                  "loginEmail"
+                ]
               }
             }
           }
@@ -935,29 +1353,43 @@
             "description": "Member created",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Member" }
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
               }
             }
           },
-          "409": { "description": "Email already in use or other conflict" }
+          "409": {
+            "description": "Email already in use or other conflict"
+          }
         }
       }
     },
     "/members/v1/members/{memberId}": {
       "get": {
-        "tags": [ "Members" ],
+        "tags": [
+          "Members"
+        ],
         "summary": "Get Member",
         "description": "Retrieves a site member by ID.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "memberId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Member ID"
           }
         ],
@@ -966,27 +1398,41 @@
             "description": "Member object",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Member" }
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
               }
             }
           },
-          "404": { "description": "Member not found" }
+          "404": {
+            "description": "Member not found"
+          }
         }
       },
       "patch": {
-        "tags": [ "Members" ],
+        "tags": [
+          "Members"
+        ],
         "summary": "Update Member",
         "description": "Updates a member's information (e.g., profile details or status).",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "memberId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Member ID"
           }
         ],
@@ -995,7 +1441,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Member" }
+              "schema": {
+                "$ref": "#/components/schemas/Member"
+              }
             }
           }
         },
@@ -1004,44 +1452,70 @@
             "description": "Member updated",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Member" }
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
               }
             }
           },
-          "404": { "description": "Member not found" }
+          "404": {
+            "description": "Member not found"
+          }
         }
       },
       "delete": {
-        "tags": [ "Members" ],
+        "tags": [
+          "Members"
+        ],
         "summary": "Delete Member",
         "description": "Removes a member from the site (the associated contact may remain).",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "memberId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Member ID"
           }
         ],
         "responses": {
-          "204": { "description": "Member deleted (no content)" },
-          "404": { "description": "Member not found" }
+          "204": {
+            "description": "Member deleted (no content)"
+          },
+          "404": {
+            "description": "Member not found"
+          }
         }
       }
     },
     "/contacts/v4/contacts": {
       "get": {
-        "tags": [ "Contacts" ],
+        "tags": [
+          "Contacts"
+        ],
         "summary": "List Contacts",
         "description": "Lists contacts in the site's CRM (address book). Supports pagination.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
@@ -1071,12 +1545,16 @@
                   "properties": {
                     "contacts": {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/Contact" }
+                      "items": {
+                        "$ref": "#/components/schemas/Contact"
+                      }
                     },
                     "paging": {
                       "type": "object",
                       "properties": {
-                        "next": { "type": "string" }
+                        "next": {
+                          "type": "string"
+                        }
                       }
                     }
                   }
@@ -1087,12 +1565,20 @@
         }
       },
       "post": {
-        "tags": [ "Contacts" ],
+        "tags": [
+          "Contacts"
+        ],
         "summary": "Create Contact",
         "description": "Creates a new contact in the site's CRM.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Contact object to create",
@@ -1102,14 +1588,20 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": { "type": "string" },
+                  "name": {
+                    "type": "string"
+                  },
                   "email": {
                     "type": "string",
                     "format": "email"
                   },
-                  "phone": { "type": "string" }
+                  "phone": {
+                    "type": "string"
+                  }
                 },
-                "required": [ "name" ]
+                "required": [
+                  "name"
+                ]
               }
             }
           }
@@ -1119,7 +1611,9 @@
             "description": "Contact created",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Contact" }
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
               }
             }
           }
@@ -1128,19 +1622,29 @@
     },
     "/contacts/v4/contacts/{contactId}": {
       "get": {
-        "tags": [ "Contacts" ],
+        "tags": [
+          "Contacts"
+        ],
         "summary": "Get Contact",
         "description": "Retrieves a contact by ID.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "contactId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Contact ID"
           }
         ],
@@ -1149,27 +1653,41 @@
             "description": "Contact object",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Contact" }
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
               }
             }
           },
-          "404": { "description": "Contact not found" }
+          "404": {
+            "description": "Contact not found"
+          }
         }
       },
       "patch": {
-        "tags": [ "Contacts" ],
+        "tags": [
+          "Contacts"
+        ],
         "summary": "Update Contact",
         "description": "Updates a contact's information.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "contactId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Contact ID"
           }
         ],
@@ -1178,7 +1696,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Contact" }
+              "schema": {
+                "$ref": "#/components/schemas/Contact"
+              }
             }
           }
         },
@@ -1187,51 +1707,79 @@
             "description": "Contact updated",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Contact" }
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
               }
             }
           },
-          "404": { "description": "Contact not found" }
+          "404": {
+            "description": "Contact not found"
+          }
         }
       },
       "delete": {
-        "tags": [ "Contacts" ],
+        "tags": [
+          "Contacts"
+        ],
         "summary": "Delete Contact",
         "description": "Deletes a contact.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "contactId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Contact ID"
           }
         ],
         "responses": {
-          "204": { "description": "Contact deleted (no content)" },
-          "404": { "description": "Contact not found" }
+          "204": {
+            "description": "Contact deleted (no content)"
+          },
+          "404": {
+            "description": "Contact not found"
+          }
         }
       }
     },
     "/_api/bookings-service/v2/bookings": {
       "post": {
-        "tags": [ "Bookings" ],
+        "tags": [
+          "Bookings"
+        ],
         "summary": "Create Booking",
         "description": "Creates a new booking (appointment or class enrollment).",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Booking object to create (including service, slot, and participant info)",
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Booking" }
+              "schema": {
+                "$ref": "#/components/schemas/Booking"
+              }
             }
           }
         },
@@ -1240,29 +1788,43 @@
             "description": "Booking created",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Booking" }
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
               }
             }
           },
-          "400": { "description": "Invalid booking (e.g. slot unavailable)" }
+          "400": {
+            "description": "Invalid booking (e.g. slot unavailable)"
+          }
         }
       }
     },
     "/_api/bookings-service/v2/bookings/{bookingId}/cancel": {
       "post": {
-        "tags": [ "Bookings" ],
+        "tags": [
+          "Bookings"
+        ],
         "summary": "Cancel Booking",
         "description": "Cancels an existing booking (if allowed by booking policy).",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "bookingId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Booking ID"
           }
         ],
@@ -1284,26 +1846,40 @@
           }
         },
         "responses": {
-          "204": { "description": "Booking canceled" },
-          "404": { "description": "Booking not found or already canceled" }
+          "204": {
+            "description": "Booking canceled"
+          },
+          "404": {
+            "description": "Booking not found or already canceled"
+          }
         }
       }
     },
     "/_api/bookings-service/v2/bookings/{bookingId}/confirm": {
       "post": {
-        "tags": [ "Bookings" ],
+        "tags": [
+          "Bookings"
+        ],
         "summary": "Confirm Booking",
         "description": "Confirms a pending booking (if the service requires manual confirmation).",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "bookingId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Booking ID"
           }
         ],
@@ -1312,23 +1888,37 @@
             "description": "Booking confirmed",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Booking" }
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
               }
             }
           },
-          "404": { "description": "Booking not found" },
-          "409": { "description": "Booking cannot be confirmed (e.g., already confirmed or canceled)" }
+          "404": {
+            "description": "Booking not found"
+          },
+          "409": {
+            "description": "Booking cannot be confirmed (e.g., already confirmed or canceled)"
+          }
         }
       }
     },
     "/events/v3/events": {
       "get": {
-        "tags": [ "Events" ],
+        "tags": [
+          "Events"
+        ],
         "summary": "List Events",
         "description": "Lists events on the site (e.g., upcoming events).",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "responses": {
           "200": {
@@ -1340,7 +1930,9 @@
                   "properties": {
                     "events": {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/Event" }
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
                     }
                   }
                 }
@@ -1350,19 +1942,29 @@
         }
       },
       "post": {
-        "tags": [ "Events" ],
+        "tags": [
+          "Events"
+        ],
         "summary": "Create Event",
         "description": "Creates a new event.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Event object to create",
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Event" }
+              "schema": {
+                "$ref": "#/components/schemas/Event"
+              }
             }
           }
         },
@@ -1371,7 +1973,9 @@
             "description": "Event created",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Event" }
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
               }
             }
           }
@@ -1380,19 +1984,29 @@
     },
     "/events/v3/events/{eventId}": {
       "get": {
-        "tags": [ "Events" ],
+        "tags": [
+          "Events"
+        ],
         "summary": "Get Event",
         "description": "Retrieves an event by its ID.",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Event ID"
           }
         ],
@@ -1401,27 +2015,41 @@
             "description": "Event object",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Event" }
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
               }
             }
           },
-          "404": { "description": "Event not found" }
+          "404": {
+            "description": "Event not found"
+          }
         }
       },
       "patch": {
-        "tags": [ "Events" ],
+        "tags": [
+          "Events"
+        ],
         "summary": "Update Event",
         "description": "Updates an event's details.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Event ID"
           }
         ],
@@ -1430,7 +2058,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Event" }
+              "schema": {
+                "$ref": "#/components/schemas/Event"
+              }
             }
           }
         },
@@ -1439,75 +2069,117 @@
             "description": "Event updated",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Event" }
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
               }
             }
           },
-          "404": { "description": "Event not found" }
+          "404": {
+            "description": "Event not found"
+          }
         }
       },
       "delete": {
-        "tags": [ "Events" ],
+        "tags": [
+          "Events"
+        ],
         "summary": "Delete Event",
         "description": "Deletes an event.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Event ID"
           }
         ],
         "responses": {
-          "204": { "description": "Event deleted" },
-          "404": { "description": "Event not found" }
+          "204": {
+            "description": "Event deleted"
+          },
+          "404": {
+            "description": "Event not found"
+          }
         }
       }
     },
     "/events/v1/events/{eventId}/orders/confirm": {
       "post": {
-        "tags": [ "Events" ],
+        "tags": [
+          "Events"
+        ],
         "summary": "Confirm Event Order",
         "description": "Confirms an order (ticket purchase) for the specified event. Typically used for approving orders awaiting manual confirmation.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Event ID"
           }
         ],
         "responses": {
-          "204": { "description": "Order confirmed" },
-          "404": { "description": "Event or order not found" }
+          "204": {
+            "description": "Order confirmed"
+          },
+          "404": {
+            "description": "Event or order not found"
+          }
         }
       }
     },
     "/form-submission-service/v4/submissions": {
       "post": {
-        "tags": [ "Forms" ],
+        "tags": [
+          "Forms"
+        ],
         "summary": "Create Form Submission",
         "description": "Manually creates (injects) a new form submission for a Wix Form.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Submission data to create",
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/FormSubmission" }
+              "schema": {
+                "$ref": "#/components/schemas/FormSubmission"
+              }
             }
           }
         },
@@ -1516,29 +2188,43 @@
             "description": "Submission created",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/FormSubmission" }
+                "schema": {
+                  "$ref": "#/components/schemas/FormSubmission"
+                }
               }
             }
           },
-          "404": { "description": "Form (namespace) not found or not installed" }
+          "404": {
+            "description": "Form (namespace) not found or not installed"
+          }
         }
       }
     },
     "/form-submission-service/v4/submissions/{submissionId}": {
       "get": {
-        "tags": [ "Forms" ],
+        "tags": [
+          "Forms"
+        ],
         "summary": "Get Form Submission",
         "description": "Retrieves a specific form submission by ID (for Wix Forms).",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "submissionId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Submission ID"
           }
         ],
@@ -1547,44 +2233,70 @@
             "description": "Form submission object",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/FormSubmission" }
+                "schema": {
+                  "$ref": "#/components/schemas/FormSubmission"
+                }
               }
             }
           },
-          "404": { "description": "Submission not found" }
+          "404": {
+            "description": "Submission not found"
+          }
         }
       },
       "delete": {
-        "tags": [ "Forms" ],
+        "tags": [
+          "Forms"
+        ],
         "summary": "Delete Form Submission",
         "description": "Deletes a form submission.",
         "security": [
-          { "OAuth2": [ "manage:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "parameters": [
           {
             "name": "submissionId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" },
+            "schema": {
+              "type": "string"
+            },
             "description": "Submission ID"
           }
         ],
         "responses": {
-          "204": { "description": "Submission deleted" },
-          "404": { "description": "Submission not found" }
+          "204": {
+            "description": "Submission deleted"
+          },
+          "404": {
+            "description": "Submission not found"
+          }
         }
       }
     },
     "/form-submission-service/v4/submissions/query": {
       "post": {
-        "tags": [ "Forms" ],
+        "tags": [
+          "Forms"
+        ],
         "summary": "Query Form Submissions",
         "description": "Query form submissions for a specific form (namespace) with optional filters (e.g., by date or status).",
         "security": [
-          { "OAuth2": [ "read:site" ] },
-          { "APIKeyAuth": [] }
+          {
+            "OAuth2": [
+              "read:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
         ],
         "requestBody": {
           "description": "Query criteria (including form identifier and filters)",
@@ -1598,16 +2310,24 @@
                     "type": "string",
                     "description": "Form (namespace) ID to filter submissions"
                   },
-                  "filter": { "type": "object" },
+                  "filter": {
+                    "type": "object"
+                  },
                   "paging": {
                     "type": "object",
                     "properties": {
-                      "limit": { "type": "integer" },
-                      "offset": { "type": "integer" }
+                      "limit": {
+                        "type": "integer"
+                      },
+                      "offset": {
+                        "type": "integer"
+                      }
                     }
                   }
                 },
-                "required": [ "formId" ]
+                "required": [
+                  "formId"
+                ]
               }
             }
           }
@@ -1622,13 +2342,323 @@
                   "properties": {
                     "submissions": {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/FormSubmission" }
+                      "items": {
+                        "$ref": "#/components/schemas/FormSubmission"
+                      }
                     },
                     "paging": {
                       "type": "object",
                       "properties": {
-                        "next": { "type": "string" }
+                        "next": {
+                          "type": "string"
+                        }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inbox/v2/conversations/{conversationId}": {
+      "get": {
+        "tags": [
+          "Inbox"
+        ],
+        "summary": "Get Conversation",
+        "description": "Retrieves a conversation by its unique conversation ID.",
+        "security": [
+          {
+            "OAuth2": [
+              "manage_inbox_messages"
+            ]
+          },
+          {
+            "OAuth2": [
+              "read_inbox_messages"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "description": "Conversation ID (GUID) of the conversation to retrieve.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the requested conversation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "conversation": {
+                      "$ref": "#/components/schemas/Conversation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/inbox/v2/conversations": {
+      "post": {
+        "tags": [
+          "Inbox"
+        ],
+        "summary": "Get or Create Conversation",
+        "description": "Retrieves or creates a conversation by participant ID.",
+        "security": [
+          {
+            "OAuth2": [
+              "manage_inbox_messages",
+              "manage_stores"
+            ]
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "participantId": {
+                    "type": "object",
+                    "properties": {
+                      "anonymousVisitorId": {
+                        "type": "string"
+                      },
+                      "contactId": {
+                        "type": "string"
+                      },
+                      "memberId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "participantId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "conversation": {
+                      "$ref": "#/components/schemas/Conversation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/inbox/v2/messages": {
+      "get": {
+        "tags": [
+          "Inbox"
+        ],
+        "summary": "List Messages",
+        "description": "Retrieves messages in a conversation.",
+        "security": [
+          {
+            "OAuth2": [
+              "manage_inbox_messages",
+              "manage_stores"
+            ]
+          },
+          {
+            "OAuth2": [
+              "read_inbox_messages",
+              "manage_stores"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "paging.cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "visibility",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BUSINESS_AND_PARTICIPANT",
+                "BUSINESS"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of messages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "messages": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Message"
+                      }
+                    },
+                    "pagingMetadata": {
+                      "type": "object",
+                      "properties": {
+                        "cursors": {
+                          "type": "object",
+                          "properties": {
+                            "next": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Inbox"
+        ],
+        "summary": "Send Message",
+        "description": "Sends a message in a conversation.",
+        "security": [
+          {
+            "OAuth2": [
+              "manage_inbox_messages"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sendAs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "conversationId": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "object",
+                    "properties": {
+                      "content": {
+                        "type": "object"
+                      },
+                      "visibility": {
+                        "type": "string",
+                        "enum": [
+                          "BUSINESS_AND_PARTICIPANT",
+                          "BUSINESS"
+                        ]
+                      },
+                      "direction": {
+                        "type": "string",
+                        "enum": [
+                          "BUSINESS_TO_PARTICIPANT",
+                          "PARTICIPANT_TO_BUSINESS"
+                        ]
+                      },
+                      "targetChannels": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "content",
+                      "visibility",
+                      "direction"
+                    ]
+                  }
+                },
+                "required": [
+                  "conversationId",
+                  "message"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "$ref": "#/components/schemas/Message"
                     }
                   }
                 }

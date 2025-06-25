@@ -11,6 +11,7 @@ using MyApi.Client.Contacts;
 using MyApi.Client.Ecom;
 using MyApi.Client.Events;
 using MyApi.Client.FormSubmissionService;
+using MyApi.Client.Inbox;
 using MyApi.Client.Members;
 using MyApi.Client.Stores;
 using MyApi.Client._api;
@@ -55,6 +56,11 @@ namespace MyApi.Client
         public global::MyApi.Client.FormSubmissionService.FormSubmissionServiceRequestBuilder FormSubmissionService
         {
             get => new global::MyApi.Client.FormSubmissionService.FormSubmissionServiceRequestBuilder(PathParameters, RequestAdapter);
+        }
+        /// <summary>The inbox property</summary>
+        public global::MyApi.Client.Inbox.InboxRequestBuilder Inbox
+        {
+            get => new global::MyApi.Client.Inbox.InboxRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The members property</summary>
         public global::MyApi.Client.Members.MembersRequestBuilder Members

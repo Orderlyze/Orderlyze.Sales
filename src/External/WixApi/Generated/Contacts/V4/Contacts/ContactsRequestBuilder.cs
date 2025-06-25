@@ -163,6 +163,8 @@ namespace MyApi.Client.Contacts.V4.Contacts
             public int? Limit { get; set; }
             [QueryParameter("offset")]
             public int? Offset { get; set; }
+            [QueryParameter("fieldName")]
+            public string fieldName { get; set; }
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.
