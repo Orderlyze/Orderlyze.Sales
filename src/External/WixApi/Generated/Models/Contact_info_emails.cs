@@ -22,6 +22,16 @@ namespace MyApi.Client.Models
 #else
         public string Email { get; set; }
 #endif
+        /// <summary>The _id property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Id { get; set; }
+#nullable restore
+#else
+        public string Id { get; set; }
+#endif
+        /// <summary>The primary property</summary>
+        public bool? Primary { get; set; }
         /// <summary>The tag property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -56,6 +66,8 @@ namespace MyApi.Client.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "email", n => { Email = n.GetStringValue(); } },
+                { "_id", n => { Id = n.GetStringValue(); } },
+                { "primary", n => { Primary = n.GetBoolValue(); } },
                 { "tag", n => { Tag = n.GetStringValue(); } },
             };
         }
@@ -67,6 +79,8 @@ namespace MyApi.Client.Models
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteStringValue("email", Email);
+            writer.WriteStringValue("_id", Id);
+            writer.WriteBoolValue("primary", Primary);
             writer.WriteStringValue("tag", Tag);
             writer.WriteAdditionalData(AdditionalData);
         }

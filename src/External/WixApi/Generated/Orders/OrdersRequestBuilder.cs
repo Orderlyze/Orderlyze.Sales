@@ -2,7 +2,7 @@
 #pragma warning disable CS0618
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions;
-using MyApi.Client.Orders.V1;
+using MyApi.Client.Orders.V2;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -15,10 +15,10 @@ namespace MyApi.Client.Orders
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class OrdersRequestBuilder : BaseRequestBuilder
     {
-        /// <summary>The v1 property</summary>
-        public global::MyApi.Client.Orders.V1.V1RequestBuilder V1
+        /// <summary>The v2 property</summary>
+        public global::MyApi.Client.Orders.V2.V2RequestBuilder V2
         {
-            get => new global::MyApi.Client.Orders.V1.V1RequestBuilder(PathParameters, RequestAdapter);
+            get => new global::MyApi.Client.Orders.V2.V2RequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Orders.OrdersRequestBuilder"/> and sets the default values.

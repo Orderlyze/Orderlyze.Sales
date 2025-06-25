@@ -35,7 +35,7 @@ namespace MyApi.Client.Members.V1.Members
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public MembersRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/members/v1/members{?Limit*,offset*}", pathParameters)
+        public MembersRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/members/v1/members{?limit*,offset*}", pathParameters)
         {
         }
         /// <summary>
@@ -43,45 +43,26 @@ namespace MyApi.Client.Members.V1.Members
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public MembersRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/members/v1/members{?Limit*,offset*}", rawUrl)
+        public MembersRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/members/v1/members{?limit*,offset*}", rawUrl)
         {
         }
         /// <summary>
         /// Lists site members. Supports pagination and field projection.
         /// </summary>
-        /// <returns>A <see cref="global::MyApi.Client.Members.V1.Members.MembersGetResponse"/></returns>
+        /// <returns>A <see cref="global::MyApi.Client.Models.MemberList"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::MyApi.Client.Members.V1.Members.MembersGetResponse?> GetAsMembersGetResponseAsync(Action<RequestConfiguration<global::MyApi.Client.Members.V1.Members.MembersRequestBuilder.MembersRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::MyApi.Client.Models.MemberList?> GetAsync(Action<RequestConfiguration<global::MyApi.Client.Members.V1.Members.MembersRequestBuilder.MembersRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::MyApi.Client.Members.V1.Members.MembersGetResponse> GetAsMembersGetResponseAsync(Action<RequestConfiguration<global::MyApi.Client.Members.V1.Members.MembersRequestBuilder.MembersRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::MyApi.Client.Models.MemberList> GetAsync(Action<RequestConfiguration<global::MyApi.Client.Members.V1.Members.MembersRequestBuilder.MembersRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
-            return await RequestAdapter.SendAsync<global::MyApi.Client.Members.V1.Members.MembersGetResponse>(requestInfo, global::MyApi.Client.Members.V1.Members.MembersGetResponse.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
-        }
-        /// <summary>
-        /// Lists site members. Supports pagination and field projection.
-        /// </summary>
-        /// <returns>A <see cref="global::MyApi.Client.Members.V1.Members.MembersResponse"/></returns>
-        /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
-        /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        [Obsolete("This method is obsolete. Use GetAsMembersGetResponseAsync instead.")]
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public async Task<global::MyApi.Client.Members.V1.Members.MembersResponse?> GetAsync(Action<RequestConfiguration<global::MyApi.Client.Members.V1.Members.MembersRequestBuilder.MembersRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
-        {
-#nullable restore
-#else
-        public async Task<global::MyApi.Client.Members.V1.Members.MembersResponse> GetAsync(Action<RequestConfiguration<global::MyApi.Client.Members.V1.Members.MembersRequestBuilder.MembersRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
-        {
-#endif
-            var requestInfo = ToGetRequestInformation(requestConfiguration);
-            return await RequestAdapter.SendAsync<global::MyApi.Client.Members.V1.Members.MembersResponse>(requestInfo, global::MyApi.Client.Members.V1.Members.MembersResponse.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::MyApi.Client.Models.MemberList>(requestInfo, global::MyApi.Client.Models.MemberList.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Creates a new member for the site. Typically used to invite a user or convert a contact into a member.
@@ -160,7 +141,7 @@ namespace MyApi.Client.Members.V1.Members
         public partial class MembersRequestBuilderGetQueryParameters 
         {
             /// <summary>Maximum number of members to return.</summary>
-            [QueryParameter("Limit")]
+            [QueryParameter("limit")]
             public int? Limit { get; set; }
             /// <summary>Offset for pagination.</summary>
             [QueryParameter("offset")]

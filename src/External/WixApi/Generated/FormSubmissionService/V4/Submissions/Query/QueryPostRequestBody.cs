@@ -22,14 +22,6 @@ namespace MyApi.Client.FormSubmissionService.V4.Submissions.Query
 #else
         public global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_filter Filter { get; set; }
 #endif
-        /// <summary>Form (namespace) ID to filter submissions</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? FormId { get; set; }
-#nullable restore
-#else
-        public string FormId { get; set; }
-#endif
         /// <summary>The paging property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -37,6 +29,14 @@ namespace MyApi.Client.FormSubmissionService.V4.Submissions.Query
 #nullable restore
 #else
         public global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_paging Paging { get; set; }
+#endif
+        /// <summary>The sort property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_sort? Sort { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_sort Sort { get; set; }
 #endif
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody"/> and sets the default values.
@@ -64,8 +64,8 @@ namespace MyApi.Client.FormSubmissionService.V4.Submissions.Query
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "filter", n => { Filter = n.GetObjectValue<global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_filter>(global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_filter.CreateFromDiscriminatorValue); } },
-                { "formId", n => { FormId = n.GetStringValue(); } },
                 { "paging", n => { Paging = n.GetObjectValue<global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_paging>(global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_paging.CreateFromDiscriminatorValue); } },
+                { "sort", n => { Sort = n.GetObjectValue<global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_sort>(global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_sort.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -76,8 +76,8 @@ namespace MyApi.Client.FormSubmissionService.V4.Submissions.Query
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_filter>("filter", Filter);
-            writer.WriteStringValue("formId", FormId);
             writer.WriteObjectValue<global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_paging>("paging", Paging);
+            writer.WriteObjectValue<global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostRequestBody_sort>("sort", Sort);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Wix REST API",
-    "description": "OpenAPI specification for Wix REST API covering Blog, Store (Products), Orders, Members, Contacts, Bookings, Events, Forms and other modules.",
+    "description": "OpenAPI specification for Wix REST API covering Blog, Store (Products), Orders, Members, Contacts, Bookings, Events, Forms, Inbox, and other modules.",
     "version": "1.0.0"
   },
   "servers": [
@@ -21,7 +21,10 @@
             "tokenUrl": "https://www.wix.com/oauth/access",
             "scopes": {
               "manage:site": "Full control of the Wix site data",
-              "read:site": "Read-only access to the Wix site data"
+              "read:site": "Read-only access to the Wix site data",
+              "manage_inbox_messages": "Manage Inbox messages (send messages, create conversations)",
+              "read_inbox_messages": "Read Inbox messages",
+              "manage_stores": "Manage stores data (e.g., needed for some Inbox actions related to store orders)"
             }
           }
         }
@@ -238,7 +241,35 @@
           },
           "createdDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Date and time the contact was created."
+          },
+          "revision": {
+            "type": "integer",
+            "description": "Revision number, which increments by 1 each time the contact is updated. Must specify existing revision when updating the contact to avoid conflicting changes."
+          },
+          "source": {
+            "$ref": "#/components/schemas/Source"
+          },
+          "updatedDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time the contact was last updated."
+          },
+          "lastActivity": {
+            "$ref": "#/components/schemas/LastActivity"
+          },
+          "primaryInfo": {
+            "$ref": "#/components/schemas/PrimaryInfo"
+          },
+          "info": {
+            "$ref": "#/components/schemas/Info"
+          },
+          "primaryEmail": {
+            "$ref": "#/components/schemas/PrimaryEmail"
+          },
+          "primaryPhone": {
+            "$ref": "#/components/schemas/PrimaryPhone"
           }
         }
       },
@@ -458,15 +489,228 @@
             "format": "date-time"
           }
         }
+      },
+      "Source": {
+        "type": "object",
+        "properties": {
+          "sourceType": {
+            "type": "string",
+            "description": "Origin of the contact's creation (e.g., ADMIN, API, OTHER)."
+          }
+        }
+      },
+      "LastActivity": {
+        "type": "object",
+        "properties": {
+          "activityDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time of the contact's last activity."
+          },
+          "activityType": {
+            "type": "string",
+            "description": "Type of the last activity (e.g., CONTACT_CREATED, MEMBER_LOGIN, etc.)."
+          }
+        }
+      },
+      "PrimaryInfo": {
+        "type": "object",
+        "description": "Contact's primary phone and email.",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "PrimaryEmail": {
+        "type": "object",
+        "description": "Contact's primary email details.",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "subscriptionStatus": {
+            "type": "string",
+            "description": "Recipient's subscription status for emails."
+          },
+          "deliverabilityStatus": {
+            "type": "string",
+            "description": "Deliverability status of this email address (e.g., whether emails bounce)."
+          }
+        }
+      },
+      "PrimaryPhone": {
+        "type": "object",
+        "description": "Contact's primary phone details.",
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "description": "Country code of the phone number in ISO-3166 alpha-2 format."
+          },
+          "e164Phone": {
+            "type": "string",
+            "description": "Phone number in ITU E.164 format."
+          },
+          "formattedPhone": {
+            "type": "string",
+            "description": "Formatted phone number."
+          },
+          "subscriptionStatus": {
+            "type": "string",
+            "description": "Opt-in/opt-out status for SMS messages (default is NOT_SET for valid numbers)."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Primary phone number."
+          }
+        }
+      },
+      "Info": {
+        "type": "object",
+        "description": "Contact's detailed information, including additional emails, phones, addresses, etc.",
+        "properties": {
+          "name": {
+            "type": "object",
+            "properties": {
+              "first": {
+                "type": "string"
+              },
+              "last": {
+                "type": "string"
+              }
+            }
+          },
+          "emails": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "primary": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "phones": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "phone": {
+                  "type": "string"
+                },
+                "countryCode": {
+                  "type": "string"
+                },
+                "e164Phone": {
+                  "type": "string"
+                },
+                "formattedPhone": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                },
+                "primary": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "street": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "subdivision": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "postalCode": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PagingMetadata": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of items returned in this response."
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The offset which was requested."
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The total number of items that match the query."
+          },
+          "tooManyToCount": {
+            "type": "boolean",
+            "description": "True if the server could not calculate the total number of items."
+          }
+        }
+      },
+      "ContactList": {
+        "type": "object",
+        "properties": {
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contact"
+            }
+          },
+          "pagingMetadata": {
+            "$ref": "#/components/schemas/PagingMetadata"
+          }
+        }
+      },
+      "MemberList": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Member"
+            }
+          },
+          "pagingMetadata": {
+            "$ref": "#/components/schemas/PagingMetadata"
+          }
+        }
       }
     }
   },
   "security": [
     {
       "OAuth2": []
-    },
-    {
-      "APIKeyAuth": []
     }
   ],
   "paths": {
@@ -476,7 +720,7 @@
           "Blog"
         ],
         "summary": "List Blog Posts",
-        "description": "Retrieves a list of published blog posts (paged).",
+        "description": "Retrieves a list of blog posts.",
         "security": [
           {
             "OAuth2": [
@@ -491,7 +735,6 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Number of posts to retrieve (default 50).",
             "schema": {
               "type": "integer",
               "default": 50
@@ -500,7 +743,6 @@
           {
             "name": "offset",
             "in": "query",
-            "description": "Offset for pagination (default 0).",
             "schema": {
               "type": "integer",
               "default": 0
@@ -519,67 +761,6 @@
             }
           }
         }
-      },
-      "post": {
-        "tags": [
-          "Blog"
-        ],
-        "summary": "Query Blog Posts",
-        "description": "Query blog posts with filters and sorting. Supports retrieving draft posts or specific criteria.",
-        "security": [
-          {
-            "OAuth2": [
-              "read:site"
-            ]
-          },
-          {
-            "APIKeyAuth": []
-          }
-        ],
-        "requestBody": {
-          "description": "Query filter and sort object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "filter": {
-                    "type": "object",
-                    "description": "Filter conditions for posts"
-                  },
-                  "sort": {
-                    "type": "object",
-                    "description": "Sorting conditions"
-                  },
-                  "paging": {
-                    "type": "object",
-                    "properties": {
-                      "limit": {
-                        "type": "integer"
-                      },
-                      "offset": {
-                        "type": "integer"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Query results of blog posts",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlogPostList"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/blog/v3/posts/{postId}": {
@@ -588,7 +769,7 @@
           "Blog"
         ],
         "summary": "Get Blog Post",
-        "description": "Retrieves a specific blog post by its ID.",
+        "description": "Retrieves a blog post by ID.",
         "security": [
           {
             "OAuth2": [
@@ -607,7 +788,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The unique identifier of the blog post."
+            "description": "Post ID"
           }
         ],
         "responses": {
@@ -633,7 +814,7 @@
           "Blog"
         ],
         "summary": "Get Blog Post by Slug",
-        "description": "Retrieves a blog post using its slug (SEO friendly URL identifier).",
+        "description": "Retrieves a blog post by its slug (SEO-friendly URL identifier).",
         "security": [
           {
             "OAuth2": [
@@ -652,7 +833,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Slug of the blog post (as seen in the post URL)."
+            "description": "Post slug"
           }
         ],
         "responses": {
@@ -667,7 +848,7 @@
             }
           },
           "404": {
-            "description": "Post not found for given slug"
+            "description": "Post not found"
           }
         }
       }
@@ -678,7 +859,7 @@
           "Stores"
         ],
         "summary": "Create Product",
-        "description": "Creates a new product in the Wix Stores catalog.",
+        "description": "Creates a new product in the store.",
         "security": [
           {
             "OAuth2": [
@@ -702,60 +883,11 @@
         },
         "responses": {
           "201": {
-            "description": "Product created successfully",
+            "description": "Product created",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Product"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Stores"
-        ],
-        "summary": "List Products",
-        "description": "Retrieves a list of products in the store catalog. Supports basic pagination or use the query endpoint for advanced filtering.",
-        "security": [
-          {
-            "OAuth2": [
-              "read:site"
-            ]
-          },
-          {
-            "APIKeyAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "default": 100
-            },
-            "description": "Maximum number of products to return."
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "default": 0
-            },
-            "description": "Offset for pagination."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of products",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductList"
                 }
               }
             }
@@ -769,7 +901,7 @@
           "Stores"
         ],
         "summary": "Query Products",
-        "description": "Query the product catalog with filters (by name, price, etc.), sorting, and pagination.",
+        "description": "Queries products with filters (e.g., by inventory status, price range).",
         "security": [
           {
             "OAuth2": [
@@ -782,7 +914,7 @@
         ],
         "requestBody": {
           "description": "Product query filter",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -1081,7 +1213,7 @@
           "Orders"
         ],
         "summary": "Get Order",
-        "description": "Retrieves an order by ID, including details of items, pricing, fulfillment, etc.",
+        "description": "Retrieves an order by ID.",
         "security": [
           {
             "OAuth2": [
@@ -1118,13 +1250,15 @@
             "description": "Order not found"
           }
         }
-      },
-      "patch": {
+      }
+    },
+    "/ecom/v1/orders/{orderId}/cancel": {
+      "post": {
         "tags": [
           "Orders"
         ],
-        "summary": "Update Order",
-        "description": "Updates allowed properties of an order (e.g. buyer information or certain status flags).",
+        "summary": "Cancel Order",
+        "description": "Cancels an existing order.",
         "security": [
           {
             "OAuth2": [
@@ -1146,90 +1280,12 @@
             "description": "Order ID"
           }
         ],
-        "requestBody": {
-          "description": "Order fields to update (only certain fields are accepted)",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Order"
-              }
-            }
-          }
-        },
         "responses": {
-          "200": {
-            "description": "Order updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Order"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid update (e.g. disallowed field or value)"
+          "204": {
+            "description": "Order canceled (no content)"
           },
           "404": {
             "description": "Order not found"
-          }
-        }
-      }
-    },
-    "/ecom/v1/orders/{orderId}/cancel": {
-      "post": {
-        "tags": [
-          "Orders"
-        ],
-        "summary": "Cancel Order",
-        "description": "Cancels an order (if it has not been canceled already), typically setting its status to CANCELED and triggering related workflows.",
-        "security": [
-          {
-            "OAuth2": [
-              "manage:site"
-            ]
-          },
-          {
-            "APIKeyAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Order ID to cancel"
-          }
-        ],
-        "requestBody": {
-          "description": "Cancellation details (optional reason)",
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "reason": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Order canceled successfully (no content)"
-          },
-          "404": {
-            "description": "Order not found or already canceled"
-          },
-          "409": {
-            "description": "Order cannot be canceled (e.g., already fulfilled)"
           }
         }
       }
@@ -1277,23 +1333,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "members": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Member"
-                      }
-                    },
-                    "paging": {
-                      "type": "object",
-                      "properties": {
-                        "next": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/MemberList"
                 }
               }
             }
@@ -1541,23 +1581,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "contacts": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Contact"
-                      }
-                    },
-                    "paging": {
-                      "type": "object",
-                      "properties": {
-                        "next": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/ContactList"
                 }
               }
             }
@@ -1828,29 +1852,12 @@
             "description": "Booking ID"
           }
         ],
-        "requestBody": {
-          "description": "Cancellation details (e.g., reason message to customer)",
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "sendCancellationEmail": {
-                    "type": "boolean",
-                    "default": true
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
-          "204": {
+          "200": {
             "description": "Booking canceled"
           },
           "404": {
-            "description": "Booking not found or already canceled"
+            "description": "Booking not found or cannot be canceled"
           }
         }
       }
@@ -1861,7 +1868,7 @@
           "Bookings"
         ],
         "summary": "Confirm Booking",
-        "description": "Confirms a pending booking (if the service requires manual confirmation).",
+        "description": "Marks a booking as confirmed (if awaiting confirmation).",
         "security": [
           {
             "OAuth2": [
@@ -1885,20 +1892,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Booking confirmed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Booking"
-                }
-              }
-            }
+            "description": "Booking confirmed"
           },
           "404": {
-            "description": "Booking not found"
-          },
-          "409": {
-            "description": "Booking cannot be confirmed (e.g., already confirmed or canceled)"
+            "description": "Booking not found or cannot be confirmed"
           }
         }
       }
@@ -1909,7 +1906,7 @@
           "Events"
         ],
         "summary": "List Events",
-        "description": "Lists events on the site (e.g., upcoming events).",
+        "description": "Lists events in the site.",
         "security": [
           {
             "OAuth2": [
@@ -1918,6 +1915,24 @@
           },
           {
             "APIKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
           }
         ],
         "responses": {
@@ -1933,48 +1948,16 @@
                       "items": {
                         "$ref": "#/components/schemas/Event"
                       }
+                    },
+                    "paging": {
+                      "type": "object",
+                      "properties": {
+                        "next": {
+                          "type": "string"
+                        }
+                      }
                     }
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Events"
-        ],
-        "summary": "Create Event",
-        "description": "Creates a new event.",
-        "security": [
-          {
-            "OAuth2": [
-              "manage:site"
-            ]
-          },
-          {
-            "APIKeyAuth": []
-          }
-        ],
-        "requestBody": {
-          "description": "Event object to create",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Event"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Event created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Event"
                 }
               }
             }
@@ -1988,7 +1971,7 @@
           "Events"
         ],
         "summary": "Get Event",
-        "description": "Retrieves an event by its ID.",
+        "description": "Retrieves an event by ID.",
         "security": [
           {
             "OAuth2": [
@@ -2025,96 +2008,6 @@
             "description": "Event not found"
           }
         }
-      },
-      "patch": {
-        "tags": [
-          "Events"
-        ],
-        "summary": "Update Event",
-        "description": "Updates an event's details.",
-        "security": [
-          {
-            "OAuth2": [
-              "manage:site"
-            ]
-          },
-          {
-            "APIKeyAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "eventId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Event ID"
-          }
-        ],
-        "requestBody": {
-          "description": "Event fields to update",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Event"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Event updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Event"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Event not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Events"
-        ],
-        "summary": "Delete Event",
-        "description": "Deletes an event.",
-        "security": [
-          {
-            "OAuth2": [
-              "manage:site"
-            ]
-          },
-          {
-            "APIKeyAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "eventId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Event ID"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Event deleted"
-          },
-          "404": {
-            "description": "Event not found"
-          }
-        }
       }
     },
     "/events/v1/events/{eventId}/orders/confirm": {
@@ -2123,7 +2016,7 @@
           "Events"
         ],
         "summary": "Confirm Event Order",
-        "description": "Confirms an order (ticket purchase) for the specified event. Typically used for approving orders awaiting manual confirmation.",
+        "description": "Confirms an order (RSVP or ticket purchase) for an event.",
         "security": [
           {
             "OAuth2": [
@@ -2146,7 +2039,7 @@
           }
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": "Order confirmed"
           },
           "404": {
@@ -2160,8 +2053,8 @@
         "tags": [
           "Forms"
         ],
-        "summary": "Create Form Submission",
-        "description": "Manually creates (injects) a new form submission for a Wix Form.",
+        "summary": "Submit Form",
+        "description": "Submits a form data entry.",
         "security": [
           {
             "OAuth2": [
@@ -2173,7 +2066,7 @@
           }
         ],
         "requestBody": {
-          "description": "Submission data to create",
+          "description": "Form submission data",
           "required": true,
           "content": {
             "application/json": {
@@ -2185,7 +2078,7 @@
         },
         "responses": {
           "201": {
-            "description": "Submission created",
+            "description": "Form submission received",
             "content": {
               "application/json": {
                 "schema": {
@@ -2193,9 +2086,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Form (namespace) not found or not installed"
           }
         }
       }
@@ -2206,7 +2096,7 @@
           "Forms"
         ],
         "summary": "Get Form Submission",
-        "description": "Retrieves a specific form submission by ID (for Wix Forms).",
+        "description": "Retrieves a form submission by ID.",
         "security": [
           {
             "OAuth2": [
@@ -2243,42 +2133,6 @@
             "description": "Submission not found"
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "Forms"
-        ],
-        "summary": "Delete Form Submission",
-        "description": "Deletes a form submission.",
-        "security": [
-          {
-            "OAuth2": [
-              "manage:site"
-            ]
-          },
-          {
-            "APIKeyAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "submissionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Submission ID"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Submission deleted"
-          },
-          "404": {
-            "description": "Submission not found"
-          }
-        }
       }
     },
     "/form-submission-service/v4/submissions/query": {
@@ -2287,7 +2141,7 @@
           "Forms"
         ],
         "summary": "Query Form Submissions",
-        "description": "Query form submissions for a specific form (namespace) with optional filters (e.g., by date or status).",
+        "description": "Queries form submissions with filtering (e.g., by formId, date).",
         "security": [
           {
             "OAuth2": [
@@ -2299,18 +2153,17 @@
           }
         ],
         "requestBody": {
-          "description": "Query criteria (including form identifier and filters)",
-          "required": true,
+          "description": "Submission query filter",
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "formId": {
-                    "type": "string",
-                    "description": "Form (namespace) ID to filter submissions"
-                  },
                   "filter": {
+                    "type": "object"
+                  },
+                  "sort": {
                     "type": "object"
                   },
                   "paging": {
@@ -2324,10 +2177,7 @@
                       }
                     }
                   }
-                },
-                "required": [
-                  "formId"
-                ]
+                }
               }
             }
           }

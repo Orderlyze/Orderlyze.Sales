@@ -30,6 +30,30 @@ namespace MyApi.Client.Models
 #else
         public string Last { get; set; }
 #endif
+        /// <summary>The middle property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Middle { get; set; }
+#nullable restore
+#else
+        public string Middle { get; set; }
+#endif
+        /// <summary>The prefix property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Prefix { get; set; }
+#nullable restore
+#else
+        public string Prefix { get; set; }
+#endif
+        /// <summary>The suffix property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Suffix { get; set; }
+#nullable restore
+#else
+        public string Suffix { get; set; }
+#endif
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Models.Contact_info_name"/> and sets the default values.
         /// </summary>
@@ -57,6 +81,9 @@ namespace MyApi.Client.Models
             {
                 { "first", n => { First = n.GetStringValue(); } },
                 { "last", n => { Last = n.GetStringValue(); } },
+                { "middle", n => { Middle = n.GetStringValue(); } },
+                { "prefix", n => { Prefix = n.GetStringValue(); } },
+                { "suffix", n => { Suffix = n.GetStringValue(); } },
             };
         }
         /// <summary>
@@ -68,6 +95,9 @@ namespace MyApi.Client.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteStringValue("first", First);
             writer.WriteStringValue("last", Last);
+            writer.WriteStringValue("middle", Middle);
+            writer.WriteStringValue("prefix", Prefix);
+            writer.WriteStringValue("suffix", Suffix);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

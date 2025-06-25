@@ -33,7 +33,7 @@ namespace MyApi.Client.FormSubmissionService.V4.Submissions.Query
         {
         }
         /// <summary>
-        /// Query form submissions for a specific form (namespace) with optional filters (e.g., by date or status).
+        /// Queries form submissions with filtering (e.g., by formId, date).
         /// </summary>
         /// <returns>A <see cref="global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostResponse"/></returns>
         /// <param name="body">The request body</param>
@@ -53,7 +53,7 @@ namespace MyApi.Client.FormSubmissionService.V4.Submissions.Query
             return await RequestAdapter.SendAsync<global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostResponse>(requestInfo, global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryPostResponse.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Query form submissions for a specific form (namespace) with optional filters (e.g., by date or status).
+        /// Queries form submissions with filtering (e.g., by formId, date).
         /// </summary>
         /// <returns>A <see cref="global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryResponse"/></returns>
         /// <param name="body">The request body</param>
@@ -74,7 +74,7 @@ namespace MyApi.Client.FormSubmissionService.V4.Submissions.Query
             return await RequestAdapter.SendAsync<global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryResponse>(requestInfo, global::MyApi.Client.FormSubmissionService.V4.Submissions.Query.QueryResponse.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Query form submissions for a specific form (namespace) with optional filters (e.g., by date or status).
+        /// Queries form submissions with filtering (e.g., by formId, date).
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>

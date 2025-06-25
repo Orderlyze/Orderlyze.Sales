@@ -2,7 +2,6 @@
 #pragma warning disable CS0618
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions.Serialization;
-using Microsoft.Kiota.Abstractions;
 using System.Collections.Generic;
 using System.IO;
 using System;
@@ -23,17 +22,21 @@ namespace MyApi.Client.Models
 #else
         public List<global::MyApi.Client.Models.Contact_info_addresses> Addresses { get; set; }
 #endif
-        /// <summary>The anniversary property</summary>
-        public Date? Anniversary { get; set; }
-        /// <summary>The birthdate property</summary>
-        public Date? Birthdate { get; set; }
         /// <summary>The company property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Company { get; set; }
+        public global::MyApi.Client.Models.Contact_info_company? Company { get; set; }
 #nullable restore
 #else
-        public string Company { get; set; }
+        public global::MyApi.Client.Models.Contact_info_company Company { get; set; }
+#endif
+        /// <summary>The dates property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public List<global::MyApi.Client.Models.Contact_info_dates>? Dates { get; set; }
+#nullable restore
+#else
+        public List<global::MyApi.Client.Models.Contact_info_dates> Dates { get; set; }
 #endif
         /// <summary>The emails property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -43,13 +46,13 @@ namespace MyApi.Client.Models
 #else
         public List<global::MyApi.Client.Models.Contact_info_emails> Emails { get; set; }
 #endif
-        /// <summary>The jobTitle property</summary>
+        /// <summary>The extendedFields property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? JobTitle { get; set; }
+        public global::MyApi.Client.Models.Contact_info_extendedFields? ExtendedFields { get; set; }
 #nullable restore
 #else
-        public string JobTitle { get; set; }
+        public global::MyApi.Client.Models.Contact_info_extendedFields ExtendedFields { get; set; }
 #endif
         /// <summary>The name property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -70,10 +73,26 @@ namespace MyApi.Client.Models
         /// <summary>The picture property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Picture { get; set; }
+        public global::MyApi.Client.Models.Contact_info_picture? Picture { get; set; }
 #nullable restore
 #else
-        public string Picture { get; set; }
+        public global::MyApi.Client.Models.Contact_info_picture Picture { get; set; }
+#endif
+        /// <summary>The profilePicture property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? ProfilePicture { get; set; }
+#nullable restore
+#else
+        public string ProfilePicture { get; set; }
+#endif
+        /// <summary>The urls property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public List<global::MyApi.Client.Models.Contact_info_urls>? Urls { get; set; }
+#nullable restore
+#else
+        public List<global::MyApi.Client.Models.Contact_info_urls> Urls { get; set; }
 #endif
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Models.Contact_info"/> and sets the default values.
@@ -101,14 +120,15 @@ namespace MyApi.Client.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "addresses", n => { Addresses = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_addresses>(global::MyApi.Client.Models.Contact_info_addresses.CreateFromDiscriminatorValue)?.AsList(); } },
-                { "anniversary", n => { Anniversary = n.GetDateValue(); } },
-                { "birthdate", n => { Birthdate = n.GetDateValue(); } },
-                { "company", n => { Company = n.GetStringValue(); } },
+                { "company", n => { Company = n.GetObjectValue<global::MyApi.Client.Models.Contact_info_company>(global::MyApi.Client.Models.Contact_info_company.CreateFromDiscriminatorValue); } },
+                { "dates", n => { Dates = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_dates>(global::MyApi.Client.Models.Contact_info_dates.CreateFromDiscriminatorValue)?.AsList(); } },
                 { "emails", n => { Emails = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_emails>(global::MyApi.Client.Models.Contact_info_emails.CreateFromDiscriminatorValue)?.AsList(); } },
-                { "jobTitle", n => { JobTitle = n.GetStringValue(); } },
+                { "extendedFields", n => { ExtendedFields = n.GetObjectValue<global::MyApi.Client.Models.Contact_info_extendedFields>(global::MyApi.Client.Models.Contact_info_extendedFields.CreateFromDiscriminatorValue); } },
                 { "name", n => { Name = n.GetObjectValue<global::MyApi.Client.Models.Contact_info_name>(global::MyApi.Client.Models.Contact_info_name.CreateFromDiscriminatorValue); } },
                 { "phones", n => { Phones = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_phones>(global::MyApi.Client.Models.Contact_info_phones.CreateFromDiscriminatorValue)?.AsList(); } },
-                { "picture", n => { Picture = n.GetStringValue(); } },
+                { "picture", n => { Picture = n.GetObjectValue<global::MyApi.Client.Models.Contact_info_picture>(global::MyApi.Client.Models.Contact_info_picture.CreateFromDiscriminatorValue); } },
+                { "profilePicture", n => { ProfilePicture = n.GetStringValue(); } },
+                { "urls", n => { Urls = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_urls>(global::MyApi.Client.Models.Contact_info_urls.CreateFromDiscriminatorValue)?.AsList(); } },
             };
         }
         /// <summary>
@@ -119,14 +139,15 @@ namespace MyApi.Client.Models
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_addresses>("addresses", Addresses);
-            writer.WriteDateValue("anniversary", Anniversary);
-            writer.WriteDateValue("birthdate", Birthdate);
-            writer.WriteStringValue("company", Company);
+            writer.WriteObjectValue<global::MyApi.Client.Models.Contact_info_company>("company", Company);
+            writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_dates>("dates", Dates);
             writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_emails>("emails", Emails);
-            writer.WriteStringValue("jobTitle", JobTitle);
+            writer.WriteObjectValue<global::MyApi.Client.Models.Contact_info_extendedFields>("extendedFields", ExtendedFields);
             writer.WriteObjectValue<global::MyApi.Client.Models.Contact_info_name>("name", Name);
             writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_phones>("phones", Phones);
-            writer.WriteStringValue("picture", Picture);
+            writer.WriteObjectValue<global::MyApi.Client.Models.Contact_info_picture>("picture", Picture);
+            writer.WriteStringValue("profilePicture", ProfilePicture);
+            writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Contact_info_urls>("urls", Urls);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

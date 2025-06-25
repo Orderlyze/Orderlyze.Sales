@@ -38,6 +38,22 @@ namespace MyApi.Client.Models
 #else
         public string Country { get; set; }
 #endif
+        /// <summary>The _id property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Id { get; set; }
+#nullable restore
+#else
+        public string Id { get; set; }
+#endif
+        /// <summary>The neighborhood property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Neighborhood { get; set; }
+#nullable restore
+#else
+        public string Neighborhood { get; set; }
+#endif
         /// <summary>The postalCode property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -46,13 +62,13 @@ namespace MyApi.Client.Models
 #else
         public string PostalCode { get; set; }
 #endif
-        /// <summary>The subdivision property</summary>
+        /// <summary>The region property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Subdivision { get; set; }
+        public string? Region { get; set; }
 #nullable restore
 #else
-        public string Subdivision { get; set; }
+        public string Region { get; set; }
 #endif
         /// <summary>The tag property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -61,14 +77,6 @@ namespace MyApi.Client.Models
 #nullable restore
 #else
         public string Tag { get; set; }
-#endif
-        /// <summary>The unit property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Unit { get; set; }
-#nullable restore
-#else
-        public string Unit { get; set; }
 #endif
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Models.Contact_info_addresses"/> and sets the default values.
@@ -98,10 +106,11 @@ namespace MyApi.Client.Models
                 { "address", n => { Address = n.GetStringValue(); } },
                 { "city", n => { City = n.GetStringValue(); } },
                 { "country", n => { Country = n.GetStringValue(); } },
+                { "_id", n => { Id = n.GetStringValue(); } },
+                { "neighborhood", n => { Neighborhood = n.GetStringValue(); } },
                 { "postalCode", n => { PostalCode = n.GetStringValue(); } },
-                { "subdivision", n => { Subdivision = n.GetStringValue(); } },
+                { "region", n => { Region = n.GetStringValue(); } },
                 { "tag", n => { Tag = n.GetStringValue(); } },
-                { "unit", n => { Unit = n.GetStringValue(); } },
             };
         }
         /// <summary>
@@ -114,10 +123,11 @@ namespace MyApi.Client.Models
             writer.WriteStringValue("address", Address);
             writer.WriteStringValue("city", City);
             writer.WriteStringValue("country", Country);
+            writer.WriteStringValue("_id", Id);
+            writer.WriteStringValue("neighborhood", Neighborhood);
             writer.WriteStringValue("postalCode", PostalCode);
-            writer.WriteStringValue("subdivision", Subdivision);
+            writer.WriteStringValue("region", Region);
             writer.WriteStringValue("tag", Tag);
-            writer.WriteStringValue("unit", Unit);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

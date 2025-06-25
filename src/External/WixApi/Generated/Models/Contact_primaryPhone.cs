@@ -22,13 +22,13 @@ namespace MyApi.Client.Models
 #else
         public string CountryCode { get; set; }
 #endif
-        /// <summary>The e164Phone property</summary>
+        /// <summary>The deliverabilityStatus property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? E164Phone { get; set; }
+        public string? DeliverabilityStatus { get; set; }
 #nullable restore
 #else
-        public string E164Phone { get; set; }
+        public string DeliverabilityStatus { get; set; }
 #endif
         /// <summary>The formattedPhone property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -80,7 +80,7 @@ namespace MyApi.Client.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "countryCode", n => { CountryCode = n.GetStringValue(); } },
-                { "e164Phone", n => { E164Phone = n.GetStringValue(); } },
+                { "deliverabilityStatus", n => { DeliverabilityStatus = n.GetStringValue(); } },
                 { "formattedPhone", n => { FormattedPhone = n.GetStringValue(); } },
                 { "phone", n => { Phone = n.GetStringValue(); } },
                 { "subscriptionStatus", n => { SubscriptionStatus = n.GetStringValue(); } },
@@ -94,7 +94,7 @@ namespace MyApi.Client.Models
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteStringValue("countryCode", CountryCode);
-            writer.WriteStringValue("e164Phone", E164Phone);
+            writer.WriteStringValue("deliverabilityStatus", DeliverabilityStatus);
             writer.WriteStringValue("formattedPhone", FormattedPhone);
             writer.WriteStringValue("phone", Phone);
             writer.WriteStringValue("subscriptionStatus", SubscriptionStatus);

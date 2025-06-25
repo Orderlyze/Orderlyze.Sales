@@ -14,7 +14,7 @@ namespace MyApi.Client.Models
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
-        /// <summary>The createdDate property</summary>
+        /// <summary>Date and time the contact was created.</summary>
         public DateTimeOffset? CreatedDate { get; set; }
         /// <summary>The email property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -32,6 +32,14 @@ namespace MyApi.Client.Models
 #else
         public string Id { get; set; }
 #endif
+        /// <summary>Contact&apos;s detailed information, including additional emails, phones, addresses, etc.</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Models.Info? Info { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Models.Info Info { get; set; }
+#endif
         /// <summary>The labels property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -39,6 +47,14 @@ namespace MyApi.Client.Models
 #nullable restore
 #else
         public List<string> Labels { get; set; }
+#endif
+        /// <summary>The lastActivity property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Models.LastActivity? LastActivity { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Models.LastActivity LastActivity { get; set; }
 #endif
         /// <summary>The name property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -56,6 +72,42 @@ namespace MyApi.Client.Models
 #else
         public string Phone { get; set; }
 #endif
+        /// <summary>Contact&apos;s primary email details.</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Models.PrimaryEmail? PrimaryEmail { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Models.PrimaryEmail PrimaryEmail { get; set; }
+#endif
+        /// <summary>Contact&apos;s primary phone and email.</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Models.PrimaryInfo? PrimaryInfo { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Models.PrimaryInfo PrimaryInfo { get; set; }
+#endif
+        /// <summary>Contact&apos;s primary phone details.</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Models.PrimaryPhone? PrimaryPhone { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Models.PrimaryPhone PrimaryPhone { get; set; }
+#endif
+        /// <summary>Revision number, which increments by 1 each time the contact is updated. Must specify existing revision when updating the contact to avoid conflicting changes.</summary>
+        public int? Revision { get; set; }
+        /// <summary>The source property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Models.Source? Source { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Models.Source Source { get; set; }
+#endif
+        /// <summary>Date and time the contact was last updated.</summary>
+        public DateTimeOffset? UpdatedDate { get; set; }
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Models.Contact"/> and sets the default values.
         /// </summary>
@@ -84,9 +136,17 @@ namespace MyApi.Client.Models
                 { "createdDate", n => { CreatedDate = n.GetDateTimeOffsetValue(); } },
                 { "email", n => { Email = n.GetStringValue(); } },
                 { "id", n => { Id = n.GetStringValue(); } },
+                { "info", n => { Info = n.GetObjectValue<global::MyApi.Client.Models.Info>(global::MyApi.Client.Models.Info.CreateFromDiscriminatorValue); } },
                 { "labels", n => { Labels = n.GetCollectionOfPrimitiveValues<string>()?.AsList(); } },
+                { "lastActivity", n => { LastActivity = n.GetObjectValue<global::MyApi.Client.Models.LastActivity>(global::MyApi.Client.Models.LastActivity.CreateFromDiscriminatorValue); } },
                 { "name", n => { Name = n.GetStringValue(); } },
                 { "phone", n => { Phone = n.GetStringValue(); } },
+                { "primaryEmail", n => { PrimaryEmail = n.GetObjectValue<global::MyApi.Client.Models.PrimaryEmail>(global::MyApi.Client.Models.PrimaryEmail.CreateFromDiscriminatorValue); } },
+                { "primaryInfo", n => { PrimaryInfo = n.GetObjectValue<global::MyApi.Client.Models.PrimaryInfo>(global::MyApi.Client.Models.PrimaryInfo.CreateFromDiscriminatorValue); } },
+                { "primaryPhone", n => { PrimaryPhone = n.GetObjectValue<global::MyApi.Client.Models.PrimaryPhone>(global::MyApi.Client.Models.PrimaryPhone.CreateFromDiscriminatorValue); } },
+                { "revision", n => { Revision = n.GetIntValue(); } },
+                { "source", n => { Source = n.GetObjectValue<global::MyApi.Client.Models.Source>(global::MyApi.Client.Models.Source.CreateFromDiscriminatorValue); } },
+                { "updatedDate", n => { UpdatedDate = n.GetDateTimeOffsetValue(); } },
             };
         }
         /// <summary>
@@ -99,9 +159,17 @@ namespace MyApi.Client.Models
             writer.WriteDateTimeOffsetValue("createdDate", CreatedDate);
             writer.WriteStringValue("email", Email);
             writer.WriteStringValue("id", Id);
+            writer.WriteObjectValue<global::MyApi.Client.Models.Info>("info", Info);
             writer.WriteCollectionOfPrimitiveValues<string>("labels", Labels);
+            writer.WriteObjectValue<global::MyApi.Client.Models.LastActivity>("lastActivity", LastActivity);
             writer.WriteStringValue("name", Name);
             writer.WriteStringValue("phone", Phone);
+            writer.WriteObjectValue<global::MyApi.Client.Models.PrimaryEmail>("primaryEmail", PrimaryEmail);
+            writer.WriteObjectValue<global::MyApi.Client.Models.PrimaryInfo>("primaryInfo", PrimaryInfo);
+            writer.WriteObjectValue<global::MyApi.Client.Models.PrimaryPhone>("primaryPhone", PrimaryPhone);
+            writer.WriteIntValue("revision", Revision);
+            writer.WriteObjectValue<global::MyApi.Client.Models.Source>("source", Source);
+            writer.WriteDateTimeOffsetValue("updatedDate", UpdatedDate);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

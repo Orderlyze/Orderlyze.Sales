@@ -41,7 +41,7 @@ namespace MyApi.Client.Stores.V1.Products
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ProductsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/stores/v1/products{?Limit*,offset*}", pathParameters)
+        public ProductsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/stores/v1/products", pathParameters)
         {
         }
         /// <summary>
@@ -49,29 +49,11 @@ namespace MyApi.Client.Stores.V1.Products
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ProductsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/stores/v1/products{?Limit*,offset*}", rawUrl)
+        public ProductsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/stores/v1/products", rawUrl)
         {
         }
         /// <summary>
-        /// Retrieves a list of products in the store catalog. Supports basic pagination or use the query endpoint for advanced filtering.
-        /// </summary>
-        /// <returns>A <see cref="global::MyApi.Client.Models.ProductList"/></returns>
-        /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
-        /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public async Task<global::MyApi.Client.Models.ProductList?> GetAsync(Action<RequestConfiguration<global::MyApi.Client.Stores.V1.Products.ProductsRequestBuilder.ProductsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
-        {
-#nullable restore
-#else
-        public async Task<global::MyApi.Client.Models.ProductList> GetAsync(Action<RequestConfiguration<global::MyApi.Client.Stores.V1.Products.ProductsRequestBuilder.ProductsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
-        {
-#endif
-            var requestInfo = ToGetRequestInformation(requestConfiguration);
-            return await RequestAdapter.SendAsync<global::MyApi.Client.Models.ProductList>(requestInfo, global::MyApi.Client.Models.ProductList.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
-        }
-        /// <summary>
-        /// Creates a new product in the Wix Stores catalog.
+        /// Creates a new product in the store.
         /// </summary>
         /// <returns>A <see cref="global::MyApi.Client.Models.Product"/></returns>
         /// <param name="body">The request body</param>
@@ -91,26 +73,7 @@ namespace MyApi.Client.Stores.V1.Products
             return await RequestAdapter.SendAsync<global::MyApi.Client.Models.Product>(requestInfo, global::MyApi.Client.Models.Product.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Retrieves a list of products in the store catalog. Supports basic pagination or use the query endpoint for advanced filtering.
-        /// </summary>
-        /// <returns>A <see cref="RequestInformation"/></returns>
-        /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::MyApi.Client.Stores.V1.Products.ProductsRequestBuilder.ProductsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
-        {
-#nullable restore
-#else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::MyApi.Client.Stores.V1.Products.ProductsRequestBuilder.ProductsRequestBuilderGetQueryParameters>> requestConfiguration = default)
-        {
-#endif
-            var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
-            requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/json");
-            return requestInfo;
-        }
-        /// <summary>
-        /// Creates a new product in the Wix Stores catalog.
+        /// Creates a new product in the store.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
@@ -139,27 +102,6 @@ namespace MyApi.Client.Stores.V1.Products
         public global::MyApi.Client.Stores.V1.Products.ProductsRequestBuilder WithUrl(string rawUrl)
         {
             return new global::MyApi.Client.Stores.V1.Products.ProductsRequestBuilder(rawUrl, RequestAdapter);
-        }
-        /// <summary>
-        /// Retrieves a list of products in the store catalog. Supports basic pagination or use the query endpoint for advanced filtering.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class ProductsRequestBuilderGetQueryParameters 
-        {
-            /// <summary>Maximum number of products to return.</summary>
-            [QueryParameter("Limit")]
-            public int? Limit { get; set; }
-            /// <summary>Offset for pagination.</summary>
-            [QueryParameter("offset")]
-            public int? Offset { get; set; }
-        }
-        /// <summary>
-        /// Configuration for the request such as headers, query parameters, and middleware options.
-        /// </summary>
-        [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class ProductsRequestBuilderGetRequestConfiguration : RequestConfiguration<global::MyApi.Client.Stores.V1.Products.ProductsRequestBuilder.ProductsRequestBuilderGetQueryParameters>
-        {
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.

@@ -2,7 +2,7 @@
 #pragma warning disable CS0618
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions;
-using MyApi.Client.Forms.V1;
+using MyApi.Client.Forms.V2;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -15,10 +15,10 @@ namespace MyApi.Client.Forms
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class FormsRequestBuilder : BaseRequestBuilder
     {
-        /// <summary>The v1 property</summary>
-        public global::MyApi.Client.Forms.V1.V1RequestBuilder V1
+        /// <summary>The v2 property</summary>
+        public global::MyApi.Client.Forms.V2.V2RequestBuilder V2
         {
-            get => new global::MyApi.Client.Forms.V1.V1RequestBuilder(PathParameters, RequestAdapter);
+            get => new global::MyApi.Client.Forms.V2.V2RequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Forms.FormsRequestBuilder"/> and sets the default values.

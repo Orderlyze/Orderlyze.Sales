@@ -34,7 +34,7 @@ namespace MyApi.Client.Blog.V3.Posts.Slugs.Item
         {
         }
         /// <summary>
-        /// Retrieves a blog post using its slug (SEO friendly URL identifier).
+        /// Retrieves a blog post by its slug (SEO-friendly URL identifier).
         /// </summary>
         /// <returns>A <see cref="global::MyApi.Client.Models.BlogPost"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
@@ -52,7 +52,7 @@ namespace MyApi.Client.Blog.V3.Posts.Slugs.Item
             return await RequestAdapter.SendAsync<global::MyApi.Client.Models.BlogPost>(requestInfo, global::MyApi.Client.Models.BlogPost.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Retrieves a blog post using its slug (SEO friendly URL identifier).
+        /// Retrieves a blog post by its slug (SEO-friendly URL identifier).
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>

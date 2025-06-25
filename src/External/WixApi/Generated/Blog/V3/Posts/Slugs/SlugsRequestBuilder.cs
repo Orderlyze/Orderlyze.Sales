@@ -16,7 +16,7 @@ namespace MyApi.Client.Blog.V3.Posts.Slugs
     public partial class SlugsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>Gets an item from the MyApi.Client.blog.v3.posts.slugs.item collection</summary>
-        /// <param name="position">Slug of the blog post (as seen in the post URL).</param>
+        /// <param name="position">Post slug</param>
         /// <returns>A <see cref="global::MyApi.Client.Blog.V3.Posts.Slugs.Item.WithSlugItemRequestBuilder"/></returns>
         public global::MyApi.Client.Blog.V3.Posts.Slugs.Item.WithSlugItemRequestBuilder this[string position]
         {

@@ -28,6 +28,7 @@ namespace WixApi.Sample
             var request = new ListContactsRequest { };
 
             var result = await myService.Request(request);
+            var xyz = result.Result.Contacts[0].Info;
             await host.RunAsync();
         }
     }

@@ -34,7 +34,7 @@ namespace MyApi.Client.Stores.V1.Products.Query
         {
         }
         /// <summary>
-        /// Query the product catalog with filters (by name, price, etc.), sorting, and pagination.
+        /// Queries products with filters (e.g., by inventory status, price range).
         /// </summary>
         /// <returns>A <see cref="global::MyApi.Client.Models.ProductList"/></returns>
         /// <param name="body">The request body</param>
@@ -54,7 +54,7 @@ namespace MyApi.Client.Stores.V1.Products.Query
             return await RequestAdapter.SendAsync<global::MyApi.Client.Models.ProductList>(requestInfo, global::MyApi.Client.Models.ProductList.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Query the product catalog with filters (by name, price, etc.), sorting, and pagination.
+        /// Queries products with filters (e.g., by inventory status, price range).
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>

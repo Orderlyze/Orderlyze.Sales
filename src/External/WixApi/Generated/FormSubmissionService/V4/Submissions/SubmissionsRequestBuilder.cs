@@ -53,7 +53,7 @@ namespace MyApi.Client.FormSubmissionService.V4.Submissions
         {
         }
         /// <summary>
-        /// Manually creates (injects) a new form submission for a Wix Form.
+        /// Submits a form data entry.
         /// </summary>
         /// <returns>A <see cref="global::MyApi.Client.Models.FormSubmission"/></returns>
         /// <param name="body">The request body</param>
@@ -73,7 +73,7 @@ namespace MyApi.Client.FormSubmissionService.V4.Submissions
             return await RequestAdapter.SendAsync<global::MyApi.Client.Models.FormSubmission>(requestInfo, global::MyApi.Client.Models.FormSubmission.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Manually creates (injects) a new form submission for a Wix Form.
+        /// Submits a form data entry.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>

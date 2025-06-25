@@ -14,7 +14,7 @@ namespace MyApi.Client.Models
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
-        /// <summary>The Limit property</summary>
+        /// <summary>The limit property</summary>
         public int? Limit { get; set; }
         /// <summary>The next property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -51,7 +51,7 @@ namespace MyApi.Client.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "Limit", n => { Limit = n.GetIntValue(); } },
+                { "limit", n => { Limit = n.GetIntValue(); } },
                 { "next", n => { Next = n.GetStringValue(); } },
                 { "offset", n => { Offset = n.GetIntValue(); } },
             };
@@ -63,7 +63,7 @@ namespace MyApi.Client.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteIntValue("Limit", Limit);
+            writer.WriteIntValue("limit", Limit);
             writer.WriteStringValue("next", Next);
             writer.WriteIntValue("offset", Offset);
             writer.WriteAdditionalData(AdditionalData);

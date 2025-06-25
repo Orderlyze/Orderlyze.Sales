@@ -23,6 +23,14 @@ namespace MyApi.Client.Events.V3.Events
 #else
         public List<global::MyApi.Client.Models.Event> Events { get; set; }
 #endif
+        /// <summary>The paging property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Events.V3.Events.EventsGetResponse_paging? Paging { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Events.V3.Events.EventsGetResponse_paging Paging { get; set; }
+#endif
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Events.V3.Events.EventsGetResponse"/> and sets the default values.
         /// </summary>
@@ -49,6 +57,7 @@ namespace MyApi.Client.Events.V3.Events
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "events", n => { Events = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Event>(global::MyApi.Client.Models.Event.CreateFromDiscriminatorValue)?.AsList(); } },
+                { "paging", n => { Paging = n.GetObjectValue<global::MyApi.Client.Events.V3.Events.EventsGetResponse_paging>(global::MyApi.Client.Events.V3.Events.EventsGetResponse_paging.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -59,6 +68,7 @@ namespace MyApi.Client.Events.V3.Events
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Event>("events", Events);
+            writer.WriteObjectValue<global::MyApi.Client.Events.V3.Events.EventsGetResponse_paging>("paging", Paging);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

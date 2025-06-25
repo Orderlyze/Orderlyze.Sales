@@ -24,6 +24,24 @@ namespace MyApi.Client.Models
 #endif
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
+        /// <summary>The date property</summary>
+        public DateTimeOffset? Date { get; set; }
+        /// <summary>The description property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Description { get; set; }
+#nullable restore
+#else
+        public string Description { get; set; }
+#endif
+        /// <summary>The icon property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Models.Contact_lastActivity_icon? Icon { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Models.Contact_lastActivity_icon Icon { get; set; }
+#endif
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Models.Contact_lastActivity"/> and sets the default values.
         /// </summary>
@@ -51,6 +69,9 @@ namespace MyApi.Client.Models
             {
                 { "activityDate", n => { ActivityDate = n.GetDateTimeOffsetValue(); } },
                 { "activityType", n => { ActivityType = n.GetStringValue(); } },
+                { "date", n => { Date = n.GetDateTimeOffsetValue(); } },
+                { "description", n => { Description = n.GetStringValue(); } },
+                { "icon", n => { Icon = n.GetObjectValue<global::MyApi.Client.Models.Contact_lastActivity_icon>(global::MyApi.Client.Models.Contact_lastActivity_icon.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -62,6 +83,9 @@ namespace MyApi.Client.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteDateTimeOffsetValue("activityDate", ActivityDate);
             writer.WriteStringValue("activityType", ActivityType);
+            writer.WriteDateTimeOffsetValue("date", Date);
+            writer.WriteStringValue("description", Description);
+            writer.WriteObjectValue<global::MyApi.Client.Models.Contact_lastActivity_icon>("icon", Icon);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

@@ -23,14 +23,6 @@ namespace MyApi.Client.Members.V1.Members
 #else
         public List<global::MyApi.Client.Models.Member> Members { get; set; }
 #endif
-        /// <summary>The paging property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public global::MyApi.Client.Members.V1.Members.MembersGetResponse_paging? Paging { get; set; }
-#nullable restore
-#else
-        public global::MyApi.Client.Members.V1.Members.MembersGetResponse_paging Paging { get; set; }
-#endif
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Members.V1.Members.MembersGetResponse"/> and sets the default values.
         /// </summary>
@@ -57,7 +49,6 @@ namespace MyApi.Client.Members.V1.Members
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "members", n => { Members = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Member>(global::MyApi.Client.Models.Member.CreateFromDiscriminatorValue)?.AsList(); } },
-                { "paging", n => { Paging = n.GetObjectValue<global::MyApi.Client.Members.V1.Members.MembersGetResponse_paging>(global::MyApi.Client.Members.V1.Members.MembersGetResponse_paging.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -68,7 +59,6 @@ namespace MyApi.Client.Members.V1.Members
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Member>("members", Members);
-            writer.WriteObjectValue<global::MyApi.Client.Members.V1.Members.MembersGetResponse_paging>("paging", Paging);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

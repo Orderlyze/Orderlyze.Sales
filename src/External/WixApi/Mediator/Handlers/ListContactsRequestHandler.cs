@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Kiota.Abstractions;
 using MyApi.Client;
 using MyApi.Client.Contacts.V4.Contacts;
+using MyApi.Client.Models;
 using WixApi.Constants;
 using WixApi.Mediator.Requests;
 using WixApi.Models;
@@ -16,9 +17,9 @@ namespace WixApi.Mediator.Handlers
 {
     [SingletonHandler]
     internal class ListContactsRequestHandler(ApiClient apiClient)
-        : IRequestHandler<ListContactsRequest, ContactsGetResponse>
+        : IRequestHandler<ListContactsRequest, ContactList>
     {
-        public Task<ContactsGetResponse> Handle(
+        public Task<ContactList> Handle(
             ListContactsRequest request,
             IMediatorContext context,
             CancellationToken cancellationToken
@@ -28,7 +29,7 @@ namespace WixApi.Mediator.Handlers
                 .Contacts.V4.Contacts.WithUrl(
                     $"{WixConstants.BaseUrl}/contacts/v4/contacts?sort.fieldName=updatedDate&paging.limit={request.Limit}"
                 )
-                .GetAsContactsGetResponseAsync();
+                .GetAsync();
         }
     }
 }

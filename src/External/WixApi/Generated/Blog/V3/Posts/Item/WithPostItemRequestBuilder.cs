@@ -34,7 +34,7 @@ namespace MyApi.Client.Blog.V3.Posts.Item
         {
         }
         /// <summary>
-        /// Retrieves a specific blog post by its ID.
+        /// Retrieves a blog post by ID.
         /// </summary>
         /// <returns>A <see cref="global::MyApi.Client.Models.BlogPost"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
@@ -52,7 +52,7 @@ namespace MyApi.Client.Blog.V3.Posts.Item
             return await RequestAdapter.SendAsync<global::MyApi.Client.Models.BlogPost>(requestInfo, global::MyApi.Client.Models.BlogPost.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Retrieves a specific blog post by its ID.
+        /// Retrieves a blog post by ID.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>

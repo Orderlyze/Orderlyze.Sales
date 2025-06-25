@@ -14,7 +14,7 @@ namespace MyApi.Client.Blog.V3.Posts
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
-        /// <summary>The Limit property</summary>
+        /// <summary>The limit property</summary>
         public int? Limit { get; set; }
         /// <summary>The offset property</summary>
         public int? Offset { get; set; }
@@ -43,7 +43,7 @@ namespace MyApi.Client.Blog.V3.Posts
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "Limit", n => { Limit = n.GetIntValue(); } },
+                { "limit", n => { Limit = n.GetIntValue(); } },
                 { "offset", n => { Offset = n.GetIntValue(); } },
             };
         }
@@ -54,7 +54,7 @@ namespace MyApi.Client.Blog.V3.Posts
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteIntValue("Limit", Limit);
+            writer.WriteIntValue("limit", Limit);
             writer.WriteIntValue("offset", Offset);
             writer.WriteAdditionalData(AdditionalData);
         }

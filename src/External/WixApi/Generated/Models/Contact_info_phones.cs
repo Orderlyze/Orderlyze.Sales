@@ -14,6 +14,22 @@ namespace MyApi.Client.Models
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
+        /// <summary>The countryCode property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? CountryCode { get; set; }
+#nullable restore
+#else
+        public string CountryCode { get; set; }
+#endif
+        /// <summary>The _id property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Id { get; set; }
+#nullable restore
+#else
+        public string Id { get; set; }
+#endif
         /// <summary>The phone property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -22,6 +38,8 @@ namespace MyApi.Client.Models
 #else
         public string Phone { get; set; }
 #endif
+        /// <summary>The primary property</summary>
+        public bool? Primary { get; set; }
         /// <summary>The tag property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -55,7 +73,10 @@ namespace MyApi.Client.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
+                { "countryCode", n => { CountryCode = n.GetStringValue(); } },
+                { "_id", n => { Id = n.GetStringValue(); } },
                 { "phone", n => { Phone = n.GetStringValue(); } },
+                { "primary", n => { Primary = n.GetBoolValue(); } },
                 { "tag", n => { Tag = n.GetStringValue(); } },
             };
         }
@@ -66,7 +87,10 @@ namespace MyApi.Client.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            writer.WriteStringValue("countryCode", CountryCode);
+            writer.WriteStringValue("_id", Id);
             writer.WriteStringValue("phone", Phone);
+            writer.WriteBoolValue("primary", Primary);
             writer.WriteStringValue("tag", Tag);
             writer.WriteAdditionalData(AdditionalData);
         }
