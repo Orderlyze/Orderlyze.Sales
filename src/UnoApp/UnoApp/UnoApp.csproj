@@ -50,5 +50,15 @@
   <ItemGroup>
     <Folder Include="Presentation\Views\" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\Pages\WixContacts\WixContactsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\Pages\WixDetail\WixDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 
 </Project>

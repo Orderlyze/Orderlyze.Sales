@@ -19,7 +19,8 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Spacing="16">
-            <ItemsRepeater ItemsSource="{Binding Entities}">
+                <ContentControl uen:Region.Attached="True" uen:Region.Name="WixRegion"/>
+                <ItemsRepeater ItemsSource="{Binding Entities}">
 <ItemsRepeater.ItemTemplate>
     <DataTemplate x:DataType="models:Entity">
         <Grid>
