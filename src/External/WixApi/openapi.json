@@ -651,6 +651,20 @@
                 }
               }
             }
+          },
+          "labelKeys": {
+            "type": "object",
+            "description": "List of contact's labels.",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 2000,
+                "description": "List of contact label keys."
+              }
+            }
           }
         }
       },
@@ -703,6 +717,18 @@
           },
           "pagingMetadata": {
             "$ref": "#/components/schemas/PagingMetadata"
+          }
+        }
+      },
+      "LabelContactRequest": {
+        "type": "object",
+        "properties": {
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 2000
           }
         }
       }
@@ -2514,6 +2540,96 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/contacts/v4/contacts/{contactId}/labels": {
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Label Contact",
+        "description": "Adds one or more existing labels to a contact.",
+        "security": [
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Contact ID"
+          }
+        ],
+        "requestBody": {
+          "description": "Object containing labels to add",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelContactRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Labels added to contact (no content)"
+          }
+        }
+      }
+    },
+    "/contacts/v4/contacts/{contactId}/labels/{labelKey}": {
+      "delete": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Unlabel Contact",
+        "description": "Removes a label from a contact.",
+        "security": [
+          {
+            "OAuth2": [
+              "manage:site"
+            ]
+          },
+          {
+            "APIKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Contact ID"
+          },
+          {
+            "name": "labelKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Label key"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Label removed from contact (no content)"
           }
         }
       }

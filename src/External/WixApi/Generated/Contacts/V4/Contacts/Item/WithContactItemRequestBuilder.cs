@@ -3,6 +3,7 @@
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions.Serialization;
 using Microsoft.Kiota.Abstractions;
+using MyApi.Client.Contacts.V4.Contacts.Item.Labels;
 using MyApi.Client.Models;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,11 @@ namespace MyApi.Client.Contacts.V4.Contacts.Item
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class WithContactItemRequestBuilder : BaseRequestBuilder
     {
+        /// <summary>The labels property</summary>
+        public global::MyApi.Client.Contacts.V4.Contacts.Item.Labels.LabelsRequestBuilder Labels
+        {
+            get => new global::MyApi.Client.Contacts.V4.Contacts.Item.Labels.LabelsRequestBuilder(PathParameters, RequestAdapter);
+        }
         /// <summary>
         /// Instantiates a new <see cref="global::MyApi.Client.Contacts.V4.Contacts.Item.WithContactItemRequestBuilder"/> and sets the default values.
         /// </summary>

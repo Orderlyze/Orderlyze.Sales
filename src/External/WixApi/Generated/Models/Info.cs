@@ -13,7 +13,6 @@ namespace MyApi.Client.Models
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class Info : IAdditionalDataHolder, IParsable
     {
-        public List<object> LabelKeys { get; set; }
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
         /// <summary>The addresses property</summary>
@@ -31,6 +30,14 @@ namespace MyApi.Client.Models
 #nullable restore
 #else
         public List<global::MyApi.Client.Models.Info_emails> Emails { get; set; }
+#endif
+        /// <summary>List of contact&apos;s labels.</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::MyApi.Client.Models.Info_labelKeys? LabelKeys { get; set; }
+#nullable restore
+#else
+        public global::MyApi.Client.Models.Info_labelKeys LabelKeys { get; set; }
 #endif
         /// <summary>The name property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -75,6 +82,7 @@ namespace MyApi.Client.Models
             {
                 { "addresses", n => { Addresses = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Info_addresses>(global::MyApi.Client.Models.Info_addresses.CreateFromDiscriminatorValue)?.AsList(); } },
                 { "emails", n => { Emails = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Info_emails>(global::MyApi.Client.Models.Info_emails.CreateFromDiscriminatorValue)?.AsList(); } },
+                { "labelKeys", n => { LabelKeys = n.GetObjectValue<global::MyApi.Client.Models.Info_labelKeys>(global::MyApi.Client.Models.Info_labelKeys.CreateFromDiscriminatorValue); } },
                 { "name", n => { Name = n.GetObjectValue<global::MyApi.Client.Models.Info_name>(global::MyApi.Client.Models.Info_name.CreateFromDiscriminatorValue); } },
                 { "phones", n => { Phones = n.GetCollectionOfObjectValues<global::MyApi.Client.Models.Info_phones>(global::MyApi.Client.Models.Info_phones.CreateFromDiscriminatorValue)?.AsList(); } },
             };
@@ -88,6 +96,7 @@ namespace MyApi.Client.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Info_addresses>("addresses", Addresses);
             writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Info_emails>("emails", Emails);
+            writer.WriteObjectValue<global::MyApi.Client.Models.Info_labelKeys>("labelKeys", LabelKeys);
             writer.WriteObjectValue<global::MyApi.Client.Models.Info_name>("name", Name);
             writer.WriteCollectionOfObjectValues<global::MyApi.Client.Models.Info_phones>("phones", Phones);
             writer.WriteAdditionalData(AdditionalData);
