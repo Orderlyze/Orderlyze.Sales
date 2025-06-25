@@ -1,0 +1,11 @@
+{
+  "Mediator": {
+    "Http": {
+      //"Your.Namespace.Contract": "https://yourapi.com",
+      // OR
+      //"Your.Namespace.*": "https://www.wixapis.com",
+      // OR
+      "*": "https://www.wixapis.com"
+    }
+  }
+}
