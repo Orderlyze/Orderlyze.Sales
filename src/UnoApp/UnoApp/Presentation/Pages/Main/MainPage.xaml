@@ -9,11 +9,21 @@
     xmlns:utu="using:Uno.Toolkit.UI"
     NavigationCacheMode="Required">
 
-    <ScrollViewer IsTabStop="True">
-        <StackPanel>
-            <Button Content="Navigiere zu Region" uen:Navigation.Request="./WixRegion/WixContacts"/>
-            <ContentControl uen:Region.Attached="True" uen:Region.Name="WixRegion"/>
-        </StackPanel>
-        
-    </ScrollViewer>
+    <Grid uen:Region.Attached="True">
+
+        <NavigationView uen:Region.Attached="true">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="One"
+                                    uen:Region.Name="One" />
+                <NavigationViewItem Content="Two"
+                                    uen:Region.Name="Two" />
+                <NavigationViewItem Content="Three"
+                                    uen:Region.Name="Three" />
+                <NavigationViewItem Content="Products" 
+                                    uen:Region.Name="WixContacts" />
+            </NavigationView.MenuItems>
+
+            <ContentControl uen:Region.Name="WixContacts"  uen:Region.Attached="true"/>
+        </NavigationView>
+    </Grid>
 </base:BasePage>
