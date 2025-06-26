@@ -9,6 +9,6 @@
     xmlns:base="using:UnoApp.Presentation.Common">
 
     <Grid>
-
+        <Button Content="WixList"/>
     </Grid>
 </base:BaseView>

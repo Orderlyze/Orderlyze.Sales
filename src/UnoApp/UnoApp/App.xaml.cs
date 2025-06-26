@@ -3,6 +3,7 @@ using UnoApp.Presentation.Pages.Main;
 using UnoApp.Presentation.Pages.WixContacts;
 using UnoApp.Presentation.Views.WixContacts;
 using UnoApp.Startup;
+using WixApi.Models;
 
 namespace UnoApp;
 
@@ -57,8 +58,8 @@ public partial class App : Application
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
             new ViewMap<MainPage, MainViewModel>(),
-            new ViewMap<WixContactsPage, WixContactsPageViewModel>()
-        //new DataViewMap<WixContactsListView, WixContactsListViewModel, Entity>()
+            new ViewMap<WixContactsPage, WixContactsPageViewModel>(),
+            new DataViewMap<WixContactsListView, WixContactsListViewModel, List<WixContact>>()
         );
 
         routes.Register(
@@ -75,7 +76,14 @@ public partial class App : Application
                         [
                             new(
                                 "WixContacts",
-                                View: views.FindByViewModel<WixContactsPageViewModel>()
+                                View: views.FindByViewModel<WixContactsPageViewModel>(),
+                                Nested:
+                                [
+                                    new(
+                                        "WixContactsList",
+                                        View: views.FindByViewModel<WixContactsListViewModel>()
+                                    ),
+                                ]
                             ),
                         ]
                     ),

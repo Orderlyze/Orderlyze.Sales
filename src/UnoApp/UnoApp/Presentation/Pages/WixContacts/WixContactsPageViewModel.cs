@@ -22,5 +22,11 @@ internal partial class WixContactsPageViewModel(
     {
         await base.InitializeAsync(e);
         WixContacts = await wixContactsRepository.GetContactsAsync();
+        return;
+        await baseServices.Navigator.NavigateRouteAsync(
+            this,
+            "./List/WixContactsList",
+            data: WixContacts
+        );
     }
 }
