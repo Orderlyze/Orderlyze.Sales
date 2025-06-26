@@ -39,7 +39,7 @@ public partial class MainViewModel : BasePageViewModel
 
     private async Task GoToSecondView()
     {
-        await _navigator.NavigateViewModelAsync<SecondViewModel>(this, data: new Entity(Name!));
+        //await _navigator.NavigateViewModelAsync<SecondViewModel>(this, data: new Entity(Name!));
     }
 
     private async Task Wix()

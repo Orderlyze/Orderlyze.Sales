@@ -1,4 +1,7 @@
-﻿using WixApi.Constants;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using WixApi.Constants;
 
 namespace WixApi.Models
 {

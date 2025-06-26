@@ -1,4 +1,8 @@
-﻿namespace WixApi.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace WixApi.Models
 {
     public class AuthRefreshPayload
     {

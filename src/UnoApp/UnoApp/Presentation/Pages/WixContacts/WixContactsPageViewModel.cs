@@ -6,22 +6,21 @@ using System.Threading.Tasks;
 using UnoApp.Presentation.Common;
 using UnoApp.Presentation.Pages.WixDetail;
 using UnoApp.Services.Common;
+using WixApi.Models;
+using WixApi.Repositories;
 
 namespace UnoApp.Presentation.Pages.WixContacts;
 
-internal class WixContactsPageViewModel : BasePageViewModel
+internal partial class WixContactsPageViewModel(
+    BaseServices baseServices,
+    IWixContactsRepository wixContactsRepository
+) : BasePageViewModel(baseServices)
 {
-    private readonly INavigator navigator;
+    List<WixContact> WixContacts = new List<WixContact>();
 
-    public WixContactsPageViewModel(INavigator navigator, BaseServices baseServices)
-        : base(baseServices)
+    public override async Task InitializeAsync(NavigationEventArgs e)
     {
-        this.navigator = navigator;
-        Test();
-    }
-
-    private async Task Test()
-    {
-        await navigator.NavigateViewAsync<WixDetailPage>(this);
+        await base.InitializeAsync(e);
+        WixContacts = await wixContactsRepository.GetContactsAsync();
     }
 }

@@ -7,4 +7,5 @@ using UnoApp.Services.Common;
 
 namespace UnoApp.Presentation.Common;
 
-public partial class BasePageViewModel(BaseServices Services) : BaseViewModel(Services) { }
+public partial class BasePageViewModel(BaseServices Services)
+    : BaseBaseViewModel<NavigationEventArgs>(Services);

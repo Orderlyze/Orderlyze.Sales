@@ -13,30 +13,34 @@ using Microsoft.UI.Xaml.Navigation;
 using UnoApp.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Notifications;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace UnoApp.Presentation.Common;
 
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
-public partial class BasePage
+public partial class BaseView
 {
-    private NavigationEventArgs? _pendingNavigationArgs;
+    private RoutedEventArgs? _pendingNavigationArgs;
 
-    public BasePage()
+    public BaseView()
     {
         this.InitializeComponent();
         this.DataContextChanged += OnDataContextChanged;
+        this.Loaded += BaseView_Loaded;
+        this.Unloaded += BaseView_Unloaded;
     }
 
-    protected override void OnNavigatedTo(NavigationEventArgs e)
+    private void BaseView_Unloaded(object sender, RoutedEventArgs e)
     {
-        base.OnNavigatedTo(e);
+        if (DataContext is INavigationAware<RoutedEventArgs> aware)
+        {
+            aware.OnNavigatedFrom(e);
+        }
+    }
 
-        if (this.DataContext is INavigationAware<NavigationEventArgs> aware)
+    private void BaseView_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (this.DataContext is INavigationAware<RoutedEventArgs> aware)
         {
             aware.OnNavigatedTo(e);
         }
@@ -51,21 +55,11 @@ public partial class BasePage
     {
         if (
             _pendingNavigationArgs is not null
-            && this.DataContext is INavigationAware<NavigationEventArgs> aware
+            && this.DataContext is INavigationAware<RoutedEventArgs> aware
         )
         {
             aware.OnNavigatedTo(_pendingNavigationArgs);
             _pendingNavigationArgs = null;
-        }
-    }
-
-    protected override void OnNavigatedFrom(NavigationEventArgs e)
-    {
-        base.OnNavigatedFrom(e);
-
-        if (DataContext is INavigationAware<NavigationEventArgs> aware)
-        {
-            aware.OnNavigatedFrom(e);
         }
     }
 }

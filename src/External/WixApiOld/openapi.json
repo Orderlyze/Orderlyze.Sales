@@ -651,20 +651,6 @@
                 }
               }
             }
-          },
-          "labelKeys": {
-            "type": "object",
-            "description": "List of contact's labels.",
-            "properties": {
-              "items": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "maxItems": 2000,
-                "description": "List of contact label keys."
-              }
-            }
           }
         }
       },
@@ -2546,6 +2532,7 @@
     },
     "/contacts/v4/contacts/{contactId}/labels": {
       "post": {
+        "operationId": "contactLabel",
         "tags": [
           "Contacts"
         ],
@@ -2592,6 +2579,7 @@
     },
     "/contacts/v4/contacts/{contactId}/labels/{labelKey}": {
       "delete": {
+        "operationId": "contactUnlabel",
         "tags": [
           "Contacts"
         ],

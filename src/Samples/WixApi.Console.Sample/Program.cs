@@ -2,8 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WixApi.Constants;
-using WixApi.Mediator.Requests;
+using WixApi.Repositories;
 
 namespace WixApi.Sample
 {
@@ -14,7 +13,7 @@ namespace WixApi.Sample
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureHostConfiguration(options =>
                 {
-                    options.AddWixApi();
+                    //options.AddWixApi();
                 })
                 .ConfigureServices(
                     (context, services) =>
@@ -24,11 +23,9 @@ namespace WixApi.Sample
                 )
                 .Build();
 
-            var myService = host.Services.GetRequiredService<IMediator>();
-            var request = new ListContactsRequest { };
+            var myService = host.Services.GetRequiredService<IWixContactsRepository>();
 
-            var result = await myService.Request(request);
-            var xyz = result.Result.Contacts[0].Info;
+            var test = await myService.GetContactsAsync();
             await host.RunAsync();
         }
     }

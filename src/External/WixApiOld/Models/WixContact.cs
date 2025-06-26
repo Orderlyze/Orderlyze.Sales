@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace WixApi.Models
 {
@@ -27,12 +30,9 @@ namespace WixApi.Models
     {
         [JsonPropertyName("contacts.displayByLastName")]
         public string Name { get; set; }
+
         [JsonPropertyName("custom.branche")]
         public string Branche { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("custom.zusagedatum")]
-        public string customzusagedatum { get; set; }
-
     }
 
     public class ExtendedFields
@@ -167,5 +167,4 @@ namespace WixApi.Models
         public string number { get; set; }
         public string name { get; set; }
     }
-
 }

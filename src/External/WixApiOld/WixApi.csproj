@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="mediatorconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="mediatorconfig.json" />
+  </ItemGroup>
+
+
+  <Target Name="GenerateKiotaClient" BeforeTargets="BeforeBuild">
+    <!-- KIOTA muss als dotnet-Tool installiert sein: `dotnet tool install bindestrichbindestrichglobal Kiota` -->
+    <Exec Command="kiota generate -d $(ProjectDir)openapi.json -l CSharp -n MyApi.Client -o Generated" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Kiota.Bundle" />
+    <PackageReference Include="Microsoft.Kiota.Cli.Commons" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <!--<MediatorHttp Include="openapi.json" Namespace="My.Namespace" ContractPrefix="optional" ContractPostfix="HttpRequest" Visible="false" />-->
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" />
+    <PackageReference Include="Refit" />
+    <PackageReference Include="Refit.HttpClientFactory" />
+    <PackageReference Include="Shiny.Mediator" />
+  </ItemGroup>
+
+</Project>

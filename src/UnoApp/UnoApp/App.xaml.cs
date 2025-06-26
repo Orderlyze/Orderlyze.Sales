@@ -1,6 +1,7 @@
 using Uno.Resizetizer;
 using UnoApp.Presentation.Pages.Main;
 using UnoApp.Presentation.Pages.WixContacts;
+using UnoApp.Presentation.Views.WixContacts;
 using UnoApp.Startup;
 
 namespace UnoApp;
@@ -56,8 +57,8 @@ public partial class App : Application
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
             new ViewMap<MainPage, MainViewModel>(),
-            new ViewMap<WixContactsPage, WixContactsPageViewModel>(),
-            new DataViewMap<SecondPage, SecondViewModel, Entity>()
+            new ViewMap<WixContactsPage, WixContactsPageViewModel>()
+        //new DataViewMap<WixContactsListView, WixContactsListViewModel, Entity>()
         );
 
         routes.Register(
@@ -78,7 +79,6 @@ public partial class App : Application
                             ),
                         ]
                     ),
-                    new("Second", View: views.FindByViewModel<SecondViewModel>()),
                 ]
             )
         );

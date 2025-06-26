@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace UnoApp.Navigation;
 
-internal interface INavigationAware
+internal interface INavigationAware<T>
 {
-    void OnNavigatedTo(NavigationEventArgs e);
-    void OnNavigatedFrom(NavigationEventArgs e);
+    void OnNavigatedTo(T e);
+    void OnNavigatedFrom(T e);
 }

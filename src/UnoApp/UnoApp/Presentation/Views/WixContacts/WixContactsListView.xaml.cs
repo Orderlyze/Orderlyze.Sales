@@ -13,16 +13,13 @@ using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace UnoApp.Presentation.Pages.WixContacts;
+namespace UnoApp.Presentation.Views.WixContacts;
 
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
-public partial class WixContactsPage
+public partial class WixContactsListView
 {
-    public WixContactsPage()
+    public WixContactsListView()
     {
         this.InitializeComponent();
     }
