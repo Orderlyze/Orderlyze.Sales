@@ -33,18 +33,20 @@
       https://aka.platform.uno/singleproject-features
     -->
     <UnoFeatures>
-      Lottie;
-      Hosting;
-      Toolkit;
-      Logging;
-      Mvvm;
-      Configuration;
-      HttpKiota;
-      Serialization;
-      Localization;
-      Navigation;
-      ThemeService;
-      SkiaRenderer;
+        Lottie;
+        Hosting;
+        Extensions;
+        Toolkit;
+        Logging;
+        Mvvm;
+        MVUX;
+        Configuration;
+        HttpKiota;
+        Serialization;
+        Localization;
+        Navigation;
+        ThemeService;
+        SkiaRenderer;
     </UnoFeatures>
   </PropertyGroup>
   <ItemGroup>
@@ -71,12 +73,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Presentation\Common\BaseView.xaml">
+    <Page Update="Presentation\Common\BaseBaseControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Presentation\Common\BaseBaseControl.xaml">
+    <Page Update="Presentation\Common\Pages\BaseView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

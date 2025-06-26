@@ -59,7 +59,11 @@ public partial class App : Application
             new ViewMap(ViewModel: typeof(ShellViewModel)),
             new ViewMap<MainPage, MainViewModel>(),
             new ViewMap<WixContactsPage, WixContactsPageViewModel>(),
-            new DataViewMap<WixContactsListView, WixContactsListViewModel, List<WixContact>>()
+            new DataViewMap<
+                WixContactsListView,
+                WixContactsListViewModel,
+                IFeed<IEnumerable<WixContactsListModel>>
+            >()
         );
 
         routes.Register(

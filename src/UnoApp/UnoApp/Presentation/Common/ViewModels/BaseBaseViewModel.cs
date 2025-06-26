@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Uno.Extensions.Navigation.Regions;
+using UnoApp.Extensions;
 using UnoApp.Navigation;
 using UnoApp.Services.Common;
 
-namespace UnoApp.Presentation.Common;
+namespace UnoApp.Presentation.Common.ViewModels;
 
 public abstract class BaseBaseViewModel<TNavigationEventArgs>(BaseServices Services)
     : ObservableObject,
@@ -34,8 +36,19 @@ public abstract class BaseBaseViewModel<TNavigationEventArgs>(BaseServices Servi
             {
                 NavigatedTo(e); // allow derived class to run custom logic
 
-                if (Regions is not null)
+                var regions = GetRegions(e);
+                if (regions is not null)
                 {
+                    foreach (var item in regions)
+                    {
+                        Services.Navigator.NavigateRegionAsync(
+                            this,
+                            item.Region,
+                            item.View,
+                            item.PreRoute ?? @"./",
+                            item.data
+                        );
+                    }
                     // Base class region handling (if needed)
                 }
 
@@ -45,5 +58,6 @@ public abstract class BaseBaseViewModel<TNavigationEventArgs>(BaseServices Servi
 
     public virtual void OnNavigatedFrom(TNavigationEventArgs e) { }
 
-    public virtual (string, string)? Regions => null;
+    public virtual IEnumerable<RegionModel> GetRegions(TNavigationEventArgs e) =>
+        Enumerable.Empty<RegionModel>();
 }

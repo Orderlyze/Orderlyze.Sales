@@ -1,6 +1,6 @@
-﻿namespace UnoApp.Presentation;
+namespace UnoApp.Presentation;
 
-public sealed partial class MainPage : Page
+public partial class MainPage
 {
     public MainPage()
     {

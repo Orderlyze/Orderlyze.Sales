@@ -7,10 +7,10 @@
       xmlns:uen="using:Uno.Extensions.Navigation.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:base="using:UnoApp.Presentation.Common">
+    xmlns:base="using:UnoApp.Presentation.Common.Presentation">
 
     <Grid>
-        <Button Content="test" Height="200" Width="200"/>
-        <!--<ContentControl uen:Region.Attached="True" uen:Region.Name="List"/>-->
+        <Button Content="Test"/>
+        <ContentControl uen:Region.Attached="True" uen:Region.Name="List"/>
     </Grid>
 </base:BasePage>

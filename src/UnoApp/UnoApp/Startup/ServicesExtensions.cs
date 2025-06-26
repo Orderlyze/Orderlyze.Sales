@@ -14,6 +14,6 @@ internal static class ServicesExtensions
     internal static void AddCommonServices(this IServiceCollection services)
     {
         services.AddWixApi();
-        services.TryAddSingleton<BaseServices>();
+        services.TryAddScoped<BaseServices>();
     }
 }
