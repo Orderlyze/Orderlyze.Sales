@@ -38,7 +38,7 @@ public partial class App : Application
                     .ConfigureServices(
                         (context, services) =>
                         {
-                            services.AddCommonServices();
+                            services.AddCommonServices(context.Configuration);
                         }
                     )
                     .UseNavigation(RegisterRoutes)

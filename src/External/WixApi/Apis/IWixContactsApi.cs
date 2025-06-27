@@ -1,14 +1,8 @@
 ﻿using Refit;
-using WixApi.Constants;
 using WixApi.Models;
 
 namespace WixApi.Apis
 {
-    [Headers(
-        $"Authorization: {WixConstants.ApiKey}",
-        $"wix-account-id: {WixConstants.AccountId}",
-        $"wix-site-id: {WixConstants.SiteId}"
-    )]
     public interface IWixContactsApi
     {
         [Get("/contacts/v4/contacts?sort.fieldName=updatedDate&sort.order=DESC")]
