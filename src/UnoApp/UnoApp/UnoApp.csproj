@@ -51,6 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\External\WixApi\WixApi.csproj" />
+    <ProjectReference Include="..\SharedModels\SharedModels.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Presentation\Pages\WixContacts\WixContactsPage.xaml">
