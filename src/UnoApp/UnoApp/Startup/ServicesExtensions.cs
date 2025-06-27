@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using UnoApp.Services.Common;
 using WixApi;
+using Microsoft.Extensions.Configuration;
 
 namespace UnoApp.Startup;
 
 internal static class ServicesExtensions
 {
-    internal static void AddCommonServices(this IServiceCollection services)
+    internal static void AddCommonServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddWixApi();
+        services.AddWixApi(configuration);
         services.TryAddScoped<BaseServices>();
     }
 }
