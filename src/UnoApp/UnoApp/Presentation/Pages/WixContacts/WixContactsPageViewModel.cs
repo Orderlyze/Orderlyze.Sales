@@ -29,20 +29,8 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
         this.wixContactsRepository = wixContactsRepository;
     }
 
-    public string Test => "Hallo";
-
-    public override async Task InitializeAsync(NavigationEventArgs e)
-    {
-        var result = await navigator.NavigateRouteAsync(
-            this,
-            "./List/WixContactsList",
-            data: WixContacts
-        );
-    }
-
     public override IEnumerable<RegionModel> GetRegions(NavigationEventArgs e)
     {
-        return null;
         return [new("List", "WixContactsList", data: WixContacts)];
     }
 
@@ -52,7 +40,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
             var wixContacts = await wixContactsRepository.GetContactsAsync();
             return wixContacts.Select(x => new WixContactsListModel(
                 x.id,
-                x.info.name.first,
+                x.info.name.first + " " + x.info.name.last,
                 x.primaryInfo.email,
                 x.info.addresses?.items?.FirstOrDefault()?.address?.addressLine,
                 x.info.company,
