@@ -1,4 +1,6 @@
 
+using Aspire.Hosting;
+
 namespace WebApi
 {
     public class Program
@@ -7,8 +9,9 @@ namespace WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.AddServiceDefaults();
 
+            // Add services to the container.
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
@@ -21,6 +24,7 @@ namespace WebApi
                 app.MapOpenApi();
             }
 
+            app.MapDefaultEndpoints();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
