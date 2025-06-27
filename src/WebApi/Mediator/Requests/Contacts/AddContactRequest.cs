@@ -1,6 +1,6 @@
 using SharedModels.Dtos.Contacts;
 
-namespace WebApi.Mediator.Requests
+namespace WebApi.Mediator.Requests.Contacts
 {
     public class AddContactRequest : IRequest<ContactDto>
     {
