@@ -1,15 +1,9 @@
 <Project>
-    <Import Project="Directory.Packages.props" Condition="exists('Directory.Packages.props')" />
-    <Import Project="..\Directory.Packages.props" Condition="exists('..\Directory.Packages.props')" />
-    <Import Project="..\..\Directory.Packages.props" Condition="exists('..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\Directory.Packages.props" Condition="exists('..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\..\..\..\Directory.Packages.props')" />
-    <ItemGroup>
+  <PropertyGroup>
+    <_DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Directory.Packages.props'))\Directory.Packages.props</_DirectoryPackagesPropsPath>
+  </PropertyGroup>
+  <Import Project="$(_DirectoryPackagesPropsPath)" Condition="Exists('$(_DirectoryPackagesPropsPath)')" />
+  <ItemGroup>
 
-    </ItemGroup>
+  </ItemGroup>
 </Project>
