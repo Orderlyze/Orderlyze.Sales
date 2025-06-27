@@ -1,6 +1,3 @@
-
-using Aspire.Hosting;
-
 namespace WebApi
 {
     public class Program
@@ -8,8 +5,6 @@ namespace WebApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            builder.AddServiceDefaults();
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -24,11 +19,9 @@ namespace WebApi
                 app.MapOpenApi();
             }
 
-            app.MapDefaultEndpoints();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
