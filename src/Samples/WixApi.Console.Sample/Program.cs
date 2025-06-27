@@ -18,7 +18,7 @@ namespace WixApi.Sample
                 .ConfigureServices(
                     (context, services) =>
                     {
-                        services.AddWixApi();
+                        services.AddWixApi(context.Configuration);
                     }
                 )
                 .Build();

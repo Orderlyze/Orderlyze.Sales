@@ -1,12 +1,7 @@
 ﻿using Refit;
-using WixApi.Constants;
 
 namespace WixApi.Apis
 {
-    [Headers($"Authorization: {WixConstants.ApiKey}",
-        $"wix-account-id: {WixConstants.AccountId}",
-        $"wix-site-id: {WixConstants.SiteId}"
-        )]
     public interface IConversationApi
     {
         [Post("/inbox/v2/conversations")]

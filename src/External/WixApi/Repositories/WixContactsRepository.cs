@@ -1,11 +1,13 @@
 ﻿using WixApi.Apis;
 using WixApi.Models;
+using Microsoft.Extensions.Options;
 
 namespace WixApi.Repositories
 {
     public class WixContactsRepository : BaseWixRepository<IWixContactsApi>, IWixContactsRepository
     {
-        public WixContactsRepository() { }
+        public WixContactsRepository(IHttpClientFactory clientFactory, IOptions<WixApiOptions> options)
+            : base(clientFactory, options) { }
 
         public async Task<List<WixContact>> GetContactsAsync(int limit = 20)
         {
