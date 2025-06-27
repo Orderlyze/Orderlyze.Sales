@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using Microsoft.Extensions.ApiDescription.Server;
 using WebApi.Data;
 
 namespace WebApi
@@ -18,6 +19,7 @@ namespace WebApi
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+            builder.Services.AddApiDescription();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -27,6 +29,7 @@ namespace WebApi
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.MapApiDescription();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }

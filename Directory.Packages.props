@@ -19,5 +19,6 @@
     <PackageVersion Include="Aspire.Dashboard" Version="9.0.0-preview.4" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="9.0.6" />
   </ItemGroup>
 </Project>
