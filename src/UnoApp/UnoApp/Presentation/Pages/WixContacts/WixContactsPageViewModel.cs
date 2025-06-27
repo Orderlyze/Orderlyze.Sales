@@ -29,6 +29,8 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
         this.wixContactsRepository = wixContactsRepository;
     }
 
+    public string Test => "Hallo";
+
     public override async Task InitializeAsync(NavigationEventArgs e)
     {
         var result = await navigator.NavigateRouteAsync(

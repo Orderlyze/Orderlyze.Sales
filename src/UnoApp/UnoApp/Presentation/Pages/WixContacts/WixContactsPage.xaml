@@ -9,8 +9,7 @@
     mc:Ignorable="d"
     xmlns:base="using:UnoApp.Presentation.Common.Presentation">
 
-    <Grid>
-        <Button Content="Test"/>
+    <StackPanel>
         <ContentControl uen:Region.Attached="True" uen:Region.Name="List"/>
-    </Grid>
+    </StackPanel>
 </base:BasePage>
