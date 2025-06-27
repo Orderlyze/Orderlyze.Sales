@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using WebApi.Data;
 
 namespace WebApi
 {
@@ -9,6 +11,8 @@ namespace WebApi
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddShinyMediator(x => x.AddGeneratedEndpoints());
             // Add services to the container.
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseInMemoryDatabase("SalesDb"));
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
