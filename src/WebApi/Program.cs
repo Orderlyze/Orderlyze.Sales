@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 using Microsoft.Extensions.ApiDescription.Server;
 using WebApi.Data;
 
@@ -11,6 +12,7 @@ namespace WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddShinyMediator(x => x.AddGeneratedEndpoints());
+            builder.Services.AddScalar();
             // Add services to the container.
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseInMemoryDatabase("SalesDb"));
@@ -35,6 +37,7 @@ namespace WebApi
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+            app.UseScalar();
 
             app.MapControllers();
             app.MapGeneratedMediatorEndpoints();
