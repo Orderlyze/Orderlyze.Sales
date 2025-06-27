@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Microsoft.Extensions.ApiDescription.Server;
 using WebApi.Data;
+using WebApi.Constants;
 
 namespace WebApi
 {
@@ -26,8 +27,8 @@ namespace WebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var jwtSection = builder.Configuration.GetSection("Jwt");
-            var key = Encoding.UTF8.GetBytes(jwtSection.GetValue<string>("Key") ?? string.Empty);
+            var jwtSection = builder.Configuration.GetSection(JwtConstants.SectionName);
+            var key = Encoding.UTF8.GetBytes(jwtSection.GetValue<string>(JwtConstants.Key) ?? string.Empty);
 
             builder.Services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -39,8 +40,8 @@ namespace WebApi
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtSection["Issuer"],
-                        ValidAudience = jwtSection["Audience"],
+                        ValidIssuer = jwtSection[JwtConstants.Issuer],
+                        ValidAudience = jwtSection[JwtConstants.Audience],
                         IssuerSigningKey = new SymmetricSecurityKey(key)
                     };
                 });
