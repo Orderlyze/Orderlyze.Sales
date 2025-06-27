@@ -1,15 +1,2 @@
 <Project>
-    <Import Project="Directory.Packages.props" Condition="exists('Directory.Packages.props')" />
-    <Import Project="..\Directory.Packages.props" Condition="exists('..\Directory.Packages.props')" />
-    <Import Project="..\..\Directory.Packages.props" Condition="exists('..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\Directory.Packages.props" Condition="exists('..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\..\..\Directory.Packages.props')" />
-    <Import Project="..\..\..\..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\..\..\..\Directory.Packages.props')" />
-    <ItemGroup>
-
-    </ItemGroup>
 </Project>

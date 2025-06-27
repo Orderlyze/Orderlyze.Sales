@@ -1,7 +1,17 @@
 <Project>
+  <PropertyGroup>
+    <!-- Sucht Directory.Packages.props in übergeordneten Verzeichnissen -->
+    <_DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Directory.Packages.props'))\Directory.Packages.props</_DirectoryPackagesPropsPath>
+  </PropertyGroup>
+
+  <!-- Importiert zentrale Package-Versionen -->
+  <Import Project="$(_DirectoryPackagesPropsPath)" Condition="Exists('$(_DirectoryPackagesPropsPath)')" />
+
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
+    <!-- Lokale Paketversionen (überschreiben ggf. zentrale falls vorhanden) -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+    <PackageVersion Include="Shiny.Mediator.AspNet" Version="4.7.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.1" />
   </ItemGroup>
 </Project>
