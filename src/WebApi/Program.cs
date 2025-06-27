@@ -1,10 +1,7 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
-using WebApi.Constants;
 using WebApi.Data;
 
 namespace WebApi
@@ -25,27 +22,12 @@ namespace WebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var jwtSection = builder.Configuration.GetSection(JwtConstants.SectionName);
-            var key = Encoding.UTF8.GetBytes(
-                jwtSection.GetValue<string>(JwtConstants.Key) ?? string.Empty
-            );
+            builder.Services
+                .AddIdentityCore<AppUser>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddApiEndpoints();
 
-            builder
-                .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtSection[JwtConstants.Issuer],
-                        ValidAudience = jwtSection[JwtConstants.Audience],
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                    };
-                });
-
+            builder.Services.AddAuthentication();
             builder.Services.AddAuthorization();
 
             var app = builder.Build();
@@ -65,6 +47,7 @@ namespace WebApi
             app.MapScalarApiReference();
 
             app.MapControllers();
+            app.MapIdentityApi<AppUser>();
             app.MapGeneratedMediatorEndpoints();
             app.Run();
         }
