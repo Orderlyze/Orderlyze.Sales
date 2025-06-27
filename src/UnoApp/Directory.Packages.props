@@ -1,15 +1,9 @@
 <Project ToolsVersion="15.0">
 
-  <Import Project="Directory.Packages.props" Condition="exists('Directory.Packages.props')" />
-  <Import Project="..\Directory.Packages.props" Condition="exists('..\Directory.Packages.props')" />
-  <Import Project="..\..\Directory.Packages.props" Condition="exists('..\..\Directory.Packages.props')" />
-  <Import Project="..\..\..\Directory.Packages.props" Condition="exists('..\..\..\Directory.Packages.props')" />
-  <Import Project="..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\Directory.Packages.props')" />
-  <Import Project="..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\Directory.Packages.props')" />
-  <Import Project="..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\Directory.Packages.props')" />
-  <Import Project="..\..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\..\Directory.Packages.props')" />
-  <Import Project="..\..\..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\..\..\Directory.Packages.props')" />
-  <Import Project="..\..\..\..\..\..\..\..\..\Directory.Packages.props" Condition="exists('..\..\..\..\..\..\..\..\..\Directory.Packages.props')" />
+  <PropertyGroup>
+    <_DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Directory.Packages.props'))\Directory.Packages.props</_DirectoryPackagesPropsPath>
+  </PropertyGroup>
+  <Import Project="$(_DirectoryPackagesPropsPath)" Condition="Exists('$(_DirectoryPackagesPropsPath)')" />
   <!--
     To update the version of Uno, you should instead update the Sdk version in the global.json file.
 
