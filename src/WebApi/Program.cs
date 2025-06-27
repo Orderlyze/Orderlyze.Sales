@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using WebApi.Data;
 
@@ -20,7 +21,27 @@ namespace WebApi
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                var securityScheme = new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme."
+                };
+
+                options.AddSecurityDefinition("Bearer", securityScheme);
+
+                var requirement = new OpenApiSecurityRequirement
+                {
+                    { securityScheme, Array.Empty<string>() }
+                };
+
+                options.AddSecurityRequirement(requirement);
+            });
 
             builder.Services
                 .AddIdentityCore<AppUser>()
