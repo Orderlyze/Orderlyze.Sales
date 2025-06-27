@@ -16,9 +16,41 @@
             <mvux:FeedView.ValueTemplate>
                 <DataTemplate>
                     <ItemsRepeater ItemsSource="{Binding Data}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Vertical" Spacing="8" />
+                        </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="local:WixContactsListModel">
-                                <TextBlock Text="{Binding Email}" />
+                                <Border Margin="8"
+                                        Padding="8"
+                                        CornerRadius="4"
+                                        BorderBrush="LightGray"
+                                        BorderThickness="1">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Email}" />
+                                        <TextBlock Text="{Binding Branche}" />
+                                        <TextBlock Text="{Binding Company}" />
+                                        <ItemsControl ItemsSource="{Binding Labels}" Margin="0,4,0,0">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="LightGray"
+                                                            Margin="0,0,4,4"
+                                                            Padding="4,2"
+                                                            CornerRadius="4">
+                                                        <TextBlock Text="{Binding}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>
                     </ItemsRepeater>
