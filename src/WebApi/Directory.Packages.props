@@ -1,12 +1,8 @@
 <Project>
-  <PropertyGroup>
-    <!-- Sucht Directory.Packages.props in übergeordneten Verzeichnissen -->
-    <_DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Directory.Packages.props'))\Directory.Packages.props</_DirectoryPackagesPropsPath>
-  </PropertyGroup>
-
-  <!-- Importiert zentrale Package-Versionen -->
-  <Import Project="$(_DirectoryPackagesPropsPath)" Condition="Exists('$(_DirectoryPackagesPropsPath)')" />
-
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildThisFileDirectory)', 'Directory.Packages.props'))\Directory.Packages.props"
+          Condition="Exists('$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildThisFileDirectory)', 'Directory.Packages.props'))\Directory.Packages.props')" />
+</Project>
   <ItemGroup>
     <!-- Lokale Paketversionen (überschreiben ggf. zentrale falls vorhanden) -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
