@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WixApi.Sample", "..\Samples
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WixApi", "..\External\WixApi\WixApi.csproj", "{65B19D79-BF60-5013-6C5E-5CD2EE409288}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "..\WebApi\WebApi.csproj", "{D144B7B1-F73E-4FCA-981E-0085808205F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{65B19D79-BF60-5013-6C5E-5CD2EE409288}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65B19D79-BF60-5013-6C5E-5CD2EE409288}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65B19D79-BF60-5013-6C5E-5CD2EE409288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D144B7B1-F73E-4FCA-981E-0085808205F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D144B7B1-F73E-4FCA-981E-0085808205F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D144B7B1-F73E-4FCA-981E-0085808205F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D144B7B1-F73E-4FCA-981E-0085808205F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
