@@ -1,8 +1,6 @@
 <Project>
-<Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildThisFileDirectory)', 'Directory.Packages.props'))\Directory.Packages.props"
-          Condition="Exists('$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildThisFileDirectory)', 'Directory.Packages.props'))\Directory.Packages.props')" />
-</Project>
+  <Import Project="..\..\Directory.Packages.props" Condition="exists('..\..\Directory.Packages.props')" />
+
   <ItemGroup>
   </ItemGroup>
 </Project>
