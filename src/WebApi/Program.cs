@@ -27,7 +27,9 @@ namespace WebApi
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddApiEndpoints();
 
-            builder.Services.AddAuthentication();
+            builder.Services
+                .AddAuthentication(IdentityConstants.BearerScheme)
+                .AddBearerToken(IdentityConstants.BearerScheme);
             builder.Services.AddAuthorization();
 
             var app = builder.Build();
