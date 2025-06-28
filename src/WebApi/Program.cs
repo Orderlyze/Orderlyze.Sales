@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using WebApi.Data;
+using WebApi.Helpers.Authentication;
 
 namespace WebApi
 {
@@ -19,37 +20,21 @@ namespace WebApi
             );
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
-            {
-                var securityScheme = new OpenApiSecurityScheme
+            builder.Services.AddOpenApi(
+                "v1",
+                options =>
                 {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "JWT Authorization header using the Bearer scheme."
-                };
+                    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+                }
+            );
 
-                options.AddSecurityDefinition("Bearer", securityScheme);
-
-                var requirement = new OpenApiSecurityRequirement
-                {
-                    { securityScheme, Array.Empty<string>() }
-                };
-
-                options.AddSecurityRequirement(requirement);
-            });
-
-            builder.Services
-                .AddIdentityCore<AppUser>()
+            builder
+                .Services.AddIdentityCore<AppUser>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddApiEndpoints();
 
-            builder.Services
-                .AddAuthentication(IdentityConstants.BearerScheme)
+            builder
+                .Services.AddAuthentication(IdentityConstants.BearerScheme)
                 .AddBearerToken(IdentityConstants.BearerScheme);
             builder.Services.AddAuthorization();
 
@@ -59,15 +44,23 @@ namespace WebApi
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.MapScalarApiReference(options =>
+                    options
+                        .AddPreferredSecuritySchemes("BearerAuth")
+                        .AddHttpAuthentication(
+                            "BearerAuth",
+                            auth =>
+                            {
+                                auth.Token = "eyJhbGciOiJ...";
+                            }
+                        )
+                );
             }
 
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.MapScalarApiReference();
 
             app.MapControllers();
             app.MapIdentityApi<AppUser>();
