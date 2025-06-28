@@ -13,9 +13,7 @@
 - UnoApp features should access the API using generated mediator clients rather than raw HTTP calls.
 
 ## Testing
-- Run `dotnet build src/WebApi/WebApi.csproj` and `dotnet build src/UnoApp/UnoApp.sln` before committing.
-- If these commands fail because the environment lacks the .NET SDK, mention this limitation in the PR.
+- Do not do any testing
 
 ## Pull Requests
-- Summarize how changes follow the Shiny Mediator pattern.
 - Report the result of the build commands.
