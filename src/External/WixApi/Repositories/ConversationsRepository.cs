@@ -1,12 +1,11 @@
 ﻿using WixApi.Apis;
-using Microsoft.Extensions.Options;
 
 namespace WixApi.Repositories
 {
     public class ConversationsRepository : BaseWixRepository<IConversationApi>, IConversationsRepository
     {
-        public ConversationsRepository(IHttpClientFactory clientFactory, IOptions<WixApiOptions> options)
-            : base(clientFactory, options)
+        public ConversationsRepository(IHttpClientFactory clientFactory)
+            : base(clientFactory)
         {
         }
         public async Task<string> GetConversations()
