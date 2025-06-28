@@ -405,3 +405,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /src/WebApi/appsettings.Development.json
+/src/Samples/WixApi.Console.Sample/appsettings.json
