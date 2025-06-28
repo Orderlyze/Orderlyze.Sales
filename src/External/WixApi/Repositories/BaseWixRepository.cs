@@ -1,5 +1,5 @@
 ﻿using Refit;
-using Microsoft.Extensions.Options;
+
 
 namespace WixApi.Repositories
 {
@@ -7,14 +7,11 @@ namespace WixApi.Repositories
     {
         protected readonly TApi RepositoryApi;
         private readonly IHttpClientFactory _clientFactory;
-        private readonly WixApiOptions _options;
 
-        protected BaseWixRepository(IHttpClientFactory clientFactory, IOptions<WixApiOptions> options)
+        protected BaseWixRepository(IHttpClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
-            _options = options.Value;
             var client = _clientFactory.CreateClient("WixApiClient");
-            client.BaseAddress = new Uri(_options.BaseUrl);
             RepositoryApi = RestService.For<TApi>(client, BuildApiSettings());
         }
 
@@ -35,7 +32,7 @@ namespace WixApi.Repositories
         /// <returns>Current access token</returns>
         protected virtual Task<string> GetAuthorizationHeaderValueAsync(HttpRequestMessage message, CancellationToken token)
         {
-            return Task.FromResult("Authorization: " + _options.ApiKey);
+            return Task.FromResult(string.Empty);
         }
 
         protected virtual async Task<T> TryRequest<T>(Func<Task<T>> func, T defaultValue = default(T))
