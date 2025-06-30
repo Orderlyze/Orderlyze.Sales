@@ -18,7 +18,7 @@ internal static class ServicesExtensions
     )
     {
         services.AddWixApi(configuration);
-        services.AddShinyMediator(cfg => cfg.UseUno());
+        // services.AddShinyMediator(cfg => cfg.UseUno());
         services.TryAddScoped<BaseServices>();
     }
 }
