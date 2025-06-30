@@ -1,4 +1,4 @@
-<Project Sdk="Uno.Sdk">
+﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net9.0-android;net9.0-windows10.0.26100;net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
 
@@ -49,6 +49,10 @@
         SkiaRenderer;
     </UnoFeatures>
   </PropertyGroup>
+  <ItemGroup>
+      <MediatorHttp Include="..\..\External\WixApi\WebApi.json" Namespace="UnoApp.ApiClient" ContractPrefix="optional" ContractPostfix="HttpRequest" Visible="false" />
+    <PackageReference Include="Shiny.Mediator.Uno" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\External\WixApi\WixApi.csproj" />
     <ProjectReference Include="..\..\SharedModels\SharedModels.csproj" />

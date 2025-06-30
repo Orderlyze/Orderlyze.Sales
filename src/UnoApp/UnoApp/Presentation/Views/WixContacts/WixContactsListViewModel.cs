@@ -20,7 +20,6 @@ internal partial class WixContactsListViewModel
 
     public override Task InitializeAsync(RoutedEventArgs e)
     {
-        var test = this.Item;
         return base.InitializeAsync(e);
     }
 }
