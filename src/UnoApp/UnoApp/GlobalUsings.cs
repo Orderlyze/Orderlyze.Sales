@@ -6,6 +6,7 @@ global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Localization;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Options;
+global using Shiny.Mediator;
 global using Uno.Extensions.Http.Kiota;
 global using UnoApp.Client;
 global using UnoApp.DataContracts;
