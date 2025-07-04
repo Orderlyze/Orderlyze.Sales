@@ -6,4 +6,4 @@ using System.Threading.Tasks;
 
 namespace UnoApp.Mediator.Requests.Contacts;
 
-internal class AddContactWithDateRequest : IRequest { }
+internal record AddContactWithDateRequest : IRequest<string> { }

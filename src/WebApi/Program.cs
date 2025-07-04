@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using WebApi.Data;
 using WebApi.Helpers.Authentication;
+using WebApi.Startup;
 
 namespace WebApi
 {
@@ -64,6 +65,7 @@ namespace WebApi
 
             app.MapControllers();
             app.MapIdentityApi<AppUser>();
+            app.FixOpenApiErrorShinyMediator();
             app.MapGeneratedMediatorEndpoints();
             app.Run();
         }
