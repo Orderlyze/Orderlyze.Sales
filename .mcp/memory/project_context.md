@@ -20,6 +20,8 @@
 4. Implemented secure API key configuration
 5. Created clean DotEnvLoader service for environment loading
 6. Fixed ContactListView scrolling by using ListView instead of ItemsRepeater
+7. Created ContactsPage with ViewModel to display contacts from GetAllContactsRequest
+8. Updated navigation: "Products" menu now opens ContactsPage, added "Wix Contacts" menu item
 
 ### Project Structure
 - `/workspace/src/UnoApp/` - Main Uno application
