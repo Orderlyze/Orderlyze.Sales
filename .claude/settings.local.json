@@ -12,7 +12,10 @@
       "Bash(dotnet --version)",
       "Bash(git submodule:*)",
       "Bash(ls:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(mkdir:*)",
+      "WebFetch(domain:learn.microsoft.com)"
     ],
     "deny": []
   }

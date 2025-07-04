@@ -414,3 +414,8 @@ FodyWeavers.xsd
 .env.development.local
 .env.test.local
 .env.production.local
+
+# MCP memory files (keep structure but not personal data)
+.mcp/memory/*.log
+.mcp/memory/*.tmp
+.mcp/memory/personal_*

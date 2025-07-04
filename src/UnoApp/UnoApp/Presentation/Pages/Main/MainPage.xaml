@@ -19,11 +19,13 @@
                                     uen:Region.Name="Two" />
                 <NavigationViewItem Content="Three"
                                     uen:Region.Name="Three" />
-                <NavigationViewItem Content="Products" 
+                <NavigationViewItem Content="Kontakte" 
+                                    uen:Region.Name="Contacts" />
+                <NavigationViewItem Content="Wix-Kontakte" 
                                     uen:Region.Name="WixContacts" />
             </NavigationView.MenuItems>
 
-            <ContentControl uen:Region.Name="WixContacts"  uen:Region.Attached="true"/>
+            <ContentControl uen:Region.Name="Contacts"  uen:Region.Attached="true"/>
         </NavigationView>
     </Grid>
 </base:BasePage>
