@@ -11,49 +11,56 @@
                                      IsDesignTimeCreatable=True}"
     mc:Ignorable="d">
 
-    <mvux:FeedView Source="{Binding Item}">
-        <mvux:FeedView.ValueTemplate>
-            <DataTemplate>
-                <ItemsRepeater ItemsSource="{Binding Data}">
-                    <ItemsRepeater.Layout>
-                        <StackLayout Orientation="Vertical" Spacing="8" />
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate x:DataType="local:WixContactsListModel">
-                            <Border Margin="8"
-                                        Padding="8"
-                                        CornerRadius="4"
-                                        BorderBrush="LightGray"
-                                        BorderThickness="1">
-                                <StackPanel Spacing="4">
-                                    <TextBlock Text="{Binding Name}"
-                                                   FontWeight="SemiBold" />
-                                    <TextBlock Text="{Binding Email}" />
-                                    <TextBlock Text="{Binding Branche}" />
-                                    <TextBlock Text="{Binding Company}" />
-                                    <ItemsControl ItemsSource="{Binding Labels}" Margin="0,4,0,0">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="LightGray"
-                                                            Margin="0,0,4,4"
-                                                            Padding="4,2"
-                                                            CornerRadius="4">
-                                                    <TextBlock Text="{Binding}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
-            </DataTemplate>
-        </mvux:FeedView.ValueTemplate>
-    </mvux:FeedView>
+    <Grid>
+        <mvux:FeedView Source="{Binding Item}">
+            <mvux:FeedView.ValueTemplate>
+                <DataTemplate>
+                    <ListView ItemsSource="{Binding Data}"
+                              SelectionMode="None"
+                              IsItemClickEnabled="False">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="local:WixContactsListModel">
+                                <Border Margin="8"
+                                            Padding="8"
+                                            CornerRadius="4"
+                                            BorderBrush="LightGray"
+                                            BorderThickness="1">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding Name}"
+                                                       FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Email}" />
+                                        <TextBlock Text="{Binding Branche}" />
+                                        <TextBlock Text="{Binding Company}" />
+                                        <ItemsControl ItemsSource="{Binding Labels}" Margin="0,4,0,0">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="LightGray"
+                                                                Margin="0,0,4,4"
+                                                                Padding="4,2"
+                                                                CornerRadius="4">
+                                                        <TextBlock Text="{Binding}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DataTemplate>
+            </mvux:FeedView.ValueTemplate>
+        </mvux:FeedView>
+    </Grid>
 </base:BaseView>

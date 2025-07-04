@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     xmlns:base="using:UnoApp.Presentation.Common.Presentation">
 
-    <StackPanel>
+    <Grid>
         <ContentControl uen:Region.Attached="True" uen:Region.Name="List"/>
-    </StackPanel>
+    </Grid>
 </base:BasePage>
