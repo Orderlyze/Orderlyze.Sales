@@ -2,7 +2,7 @@
 
 ## Setting up your Wix API Key
 
-For security reasons, the Wix API key should never be committed to source control. Here are the recommended ways to configure it:
+For security reasons, the Wix API key should never be committed to source control and MUST be provided via environment variables.
 
 ### Option 1: Environment Variables (Recommended for Production)
 
@@ -35,11 +35,11 @@ $env:WixApi__ApiKey="YOUR_API_KEY_HERE"
    dotnet user-secrets set "WixApi:ApiKey" "YOUR_API_KEY_HERE"
    ```
 
-### Option 3: appsettings.Development.json (Local Development Only)
+### Option 3: .env File (Local Development Only)
 
-1. Update `src/UnoApp/UnoApp/appsettings.Development.json`
-2. Replace `YOUR_WIX_API_KEY_HERE` with your actual API key
-3. **IMPORTANT**: Ensure `appsettings.Development.json` is in your `.gitignore`
+1. The `.env` file in `src/UnoApp/UnoApp/.env` will be automatically loaded
+2. This file is already in `.gitignore` and contains the API key
+3. The environment variable will be loaded at startup
 
 ### Option 4: Azure Key Vault or other Secret Management Services
 
@@ -50,12 +50,12 @@ For production environments, consider using:
 
 ## Configuration Priority
 
-The configuration is loaded in this order (later sources override earlier ones):
-1. appsettings.json
-2. appsettings.{Environment}.json
-3. Environment variables
-4. User secrets (Development only)
-5. Command line arguments
+The API key is ONLY loaded from environment variables for security reasons:
+1. Environment variable `WixApi__ApiKey` (double underscore)
+2. Environment variable `WIXAPI__APIKEY` (all caps fallback)
+3. `.env` file (automatically loaded in development)
+
+The API key is NOT loaded from appsettings.json or appsettings.Development.json.
 
 ## Verifying Configuration
 
