@@ -50,7 +50,7 @@
     </UnoFeatures>
   </PropertyGroup>
   <ItemGroup>
-      <!--<MediatorHttp Include="WebApi.json" Namespace="UnoApp.ApiClient" ContractPrefix="optional" ContractPostfix="HttpRequest" Visible="false" />-->
+      <MediatorHttp Include="WebApi.json" Namespace="UnoApp.ApiClient" ContractPrefix="optional" ContractPostfix="HttpRequest" Visible="false" />
     <ProjectReference Include="..\..\..\submodules\mediator\src\Shiny.Mediator.SourceGenerators\Shiny.Mediator.SourceGenerators.csproj" 
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"/>
