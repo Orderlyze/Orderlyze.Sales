@@ -25,7 +25,6 @@
                                     uen:Region.Name="WixContacts" />
             </NavigationView.MenuItems>
 
-            <ContentControl uen:Region.Name="Contacts"  uen:Region.Attached="true"/>
         </NavigationView>
     </Grid>
 </base:BasePage>
