@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+
 namespace UnoApp.Startup;
 
 internal static class HostBuilderExtensions
@@ -41,8 +43,36 @@ internal static class HostBuilderExtensions
     internal static IHostBuilder AddConfig(this IHostBuilder hostBuilder)
     {
         return hostBuilder.UseConfiguration(configure: configBuilder =>
-            configBuilder.EmbeddedSource<App>().Section<AppConfig>()
-        );
+            configBuilder
+                .EmbeddedSource<App>()
+                .Section<AppConfig>()
+        )
+        .ConfigureHostConfiguration(configBuilder =>
+        {
+            // Add environment variables to configuration
+            configBuilder.AddEnvironmentVariables();
+        })
+        .ConfigureAppConfiguration((context, configBuilder) =>
+        {
+            // Add environment variables to app configuration
+            configBuilder.AddEnvironmentVariables();
+            
+            // Load .env file if it exists (for local development)
+            var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+            if (File.Exists(envPath))
+            {
+                var envVars = File.ReadAllLines(envPath)
+                    .Where(line => !string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
+                    .Select(line => line.Split('=', 2))
+                    .Where(parts => parts.Length == 2)
+                    .ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim());
+
+                foreach (var kvp in envVars)
+                {
+                    Environment.SetEnvironmentVariable(kvp.Key, kvp.Value);
+                }
+            }
+        });
     }
 
     internal static IHostBuilder AddEnvironment(this IHostBuilder hostBuilder)
