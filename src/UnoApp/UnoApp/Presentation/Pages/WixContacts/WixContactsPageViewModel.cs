@@ -43,7 +43,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
                 x.primaryInfo.email,
                 x.info.addresses?.items?.FirstOrDefault()?.address?.addressLine,
                 x.info.company,
-                x.info.labelKeys.items
+                x.info.labelKeys?.items
             ));
         });
 }
