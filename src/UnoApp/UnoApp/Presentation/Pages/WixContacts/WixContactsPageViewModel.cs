@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnoApp.Navigation;
 using UnoApp.Presentation.Common;
-using UnoApp.Presentation.Pages.WixDetail;
 using UnoApp.Presentation.Views.WixContacts;
 using UnoApp.Services.Common;
 using WixApi.Models;
