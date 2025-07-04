@@ -26,11 +26,11 @@
             </NavigationView.MenuItems>
 
             <Grid uen:Region.Attached="True" uen:Region.Navigator="Visibility">
-                <Grid uen:Region.Name="One" Visibility="Collapsed" />
-                <Grid uen:Region.Name="Two" Visibility="Collapsed" />
-                <Grid uen:Region.Name="Three" Visibility="Collapsed" />
-                <ContentControl uen:Region.Name="Contacts" Visibility="Collapsed" uen:Region.Attached="true"/>
-                <ContentControl uen:Region.Name="WixContacts" Visibility="Collapsed" uen:Region.Attached="true"/>
+                <Grid uen:Region.Name="One" />
+                <Grid uen:Region.Name="Two" />
+                <Grid uen:Region.Name="Three" />
+                <ContentControl uen:Region.Name="Contacts" uen:Region.Attached="true"/>
+                <ContentControl uen:Region.Name="WixContacts" uen:Region.Attached="true"/>
             </Grid>
         </NavigationView>
     </Grid>
