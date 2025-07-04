@@ -39,7 +39,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
             var wixContacts = await wixContactsRepository.GetContactsAsync();
             return wixContacts.Select(x => new WixContactsListModel(
                 x.id,
-                x.info.name.first + " " + x.info.name.last,
+                x.info.name?.first + " " + x.info.name?.last,
                 x.primaryInfo.email,
                 x.info.addresses?.items?.FirstOrDefault()?.address?.addressLine,
                 x.info.company,
