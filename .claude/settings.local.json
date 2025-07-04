@@ -7,7 +7,12 @@
       "Bash(git checkout:*)",
       "Bash(dotnet build:*)",
       "Bash(git commit:*)",
-      "Bash(gh pr create:*)"
+      "Bash(gh pr create:*)",
+      "Bash(find:*)",
+      "Bash(dotnet --version)",
+      "Bash(git submodule:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }

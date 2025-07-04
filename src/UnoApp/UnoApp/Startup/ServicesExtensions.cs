@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Shiny.Mediator;
 using UnoApp.Services.Common;
 using WixApi;
 
@@ -18,7 +19,7 @@ internal static class ServicesExtensions
     )
     {
         services.AddWixApi(configuration);
-        // services.AddShinyMediator(cfg => cfg.UseUno());
+        services.AddShinyMediator(cfg => cfg.UseUno());
         services.TryAddScoped<BaseServices>();
     }
 }
