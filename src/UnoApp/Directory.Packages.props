@@ -2,7 +2,4 @@
   <Import Project="..\..\Directory.Packages.props" Condition="exists('..\..\Directory.Packages.props')" />
   <ItemGroup>
   </ItemGroup>
-  <ItemGroup>
-    <PackageVersion Include="Shiny.Mediator.Uno" Version="4.7.0" />
-  </ItemGroup>
 </Project>
