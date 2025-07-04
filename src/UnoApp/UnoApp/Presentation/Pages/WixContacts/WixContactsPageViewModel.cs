@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnoApp.Navigation;
 using UnoApp.Presentation.Common;
-using UnoApp.Presentation.Pages.WixDetail;
 using UnoApp.Presentation.Views.WixContacts;
 using UnoApp.Services.Common;
 using WixApi.Models;
@@ -40,11 +39,11 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
             var wixContacts = await wixContactsRepository.GetContactsAsync();
             return wixContacts.Select(x => new WixContactsListModel(
                 x.id,
-                x.info.name.first + " " + x.info.name.last,
+                x.info.name?.first + " " + x.info.name?.last,
                 x.primaryInfo.email,
                 x.info.addresses?.items?.FirstOrDefault()?.address?.addressLine,
                 x.info.company,
-                x.info.labelKeys.items
+                x.info.labelKeys?.items
             ));
         });
 }

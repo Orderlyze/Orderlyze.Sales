@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Configuration;
+using UnoApp.Services.Configuration;
+
 namespace UnoApp.Startup;
 
 internal static class HostBuilderExtensions
@@ -40,13 +43,24 @@ internal static class HostBuilderExtensions
 
     internal static IHostBuilder AddConfig(this IHostBuilder hostBuilder)
     {
-        return hostBuilder.UseConfiguration(configure: configBuilder =>
-            configBuilder.EmbeddedSource<App>().Section<AppConfig>()
-        );
+        return hostBuilder
+            .UseConfiguration(configure: configBuilder =>
+                configBuilder
+                    .EmbeddedSource<App>()
+                    .Section<AppConfig>()
+            )
+            .ConfigureAppConfiguration((context, configBuilder) =>
+            {
+                // Add environment variables to app configuration
+                configBuilder.AddEnvironmentVariables();
+            });
     }
 
     internal static IHostBuilder AddEnvironment(this IHostBuilder hostBuilder)
     {
+        // Load environment variables from .env file if present
+        DotEnvLoader.Load();
+        
 #if DEBUG
         // Switch to Development environment when running in DEBUG
         hostBuilder = hostBuilder.UseEnvironment(Environments.Development);

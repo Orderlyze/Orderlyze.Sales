@@ -60,27 +60,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Presentation\Pages\WixDetail\WixDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Presentation\Common\BasePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="Presentation\Views\WixContacts\WixContactsListView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Presentation\Common\BaseBaseControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Presentation\Common\Pages\BaseView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
