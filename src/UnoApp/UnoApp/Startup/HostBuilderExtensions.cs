@@ -1,5 +1,8 @@
 using Microsoft.Extensions.Configuration;
+using UnoApp.Client;
+using UnoApp.DataContracts.Serialization;
 using UnoApp.Services.Configuration;
+using UnoApp.Services.Endpoints;
 
 namespace UnoApp.Startup;
 
@@ -94,7 +97,7 @@ internal static class HostBuilderExtensions
 #endif
                 services.AddKiotaClient<WeatherServiceClient>(
                     context,
-                    options: new EndpointOptions { Url = context.Configuration["ApiClient:Url"]! }
+                    options: new() { Url = context.Configuration["ApiClient:Url"]! }
                 );
             }
         );

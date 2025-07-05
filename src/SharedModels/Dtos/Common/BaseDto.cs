@@ -8,6 +8,6 @@ namespace SharedModels.Dtos.Common
 {
     public record BaseDto
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
     }
 }

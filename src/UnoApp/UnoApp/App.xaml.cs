@@ -55,9 +55,6 @@ public partial class App : Application
         MainWindow.SetWindowIcon();
 
         Host = await builder.NavigateAsync<Shell>();
-        
-        // Run startup tasks
-        await Host.RunStartupTasks();
     }
 
     private static void RegisterRoutes(IViewRegistry views, IRouteRegistry routes)
