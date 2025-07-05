@@ -19,6 +19,7 @@ internal static class ServicesExtensions
         IConfiguration configuration
     )
     {
+        services.TryAddScoped<BaseServices>();
         // Add all services marked with [Service] attribute
         services.AddGeneratedServices();
         
