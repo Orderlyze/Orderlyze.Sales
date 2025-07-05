@@ -1,7 +1,10 @@
 using System.Net;
+using Shiny.Extensions.DependencyInjection;
 using WeatherForecast = UnoApp.Client.Models.WeatherForecast;
 
 namespace UnoApp.Services.Caching;
+
+[Service(ServiceLifetime.Singleton)]
 public sealed class WeatherCache : IWeatherCache
 {
     private readonly WeatherServiceClient _client;

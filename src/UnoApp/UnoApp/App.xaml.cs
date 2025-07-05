@@ -1,4 +1,5 @@
 using Uno.Resizetizer;
+using Shiny.Extensions.DependencyInjection;
 using UnoApp.Presentation.Pages.Contacts;
 using UnoApp.Presentation.Pages.Main;
 using UnoApp.Presentation.Pages.WixContacts;
@@ -54,6 +55,9 @@ public partial class App : Application
         MainWindow.SetWindowIcon();
 
         Host = await builder.NavigateAsync<Shell>();
+        
+        // Run startup tasks
+        await Host.RunStartupTasks();
     }
 
     private static void RegisterRoutes(IViewRegistry views, IRouteRegistry routes)

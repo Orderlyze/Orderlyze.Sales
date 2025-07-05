@@ -62,6 +62,40 @@ public static IServiceCollection AddCommonServices(
 }
 ```
 
+## Shiny.Extensions Patterns
+
+### Service Registration with Attributes
+```csharp
+// Simple service registration
+[Service(ServiceLifetime.Singleton)]
+public class MyService : IMyService { }
+
+// Keyed service registration
+[Service(ServiceLifetime.Scoped, "MyKey")]
+public class KeyedService : IMyService { }
+
+// Multiple interface registration
+[Service(ServiceLifetime.Singleton)]
+public class MultiService : IService1, IService2 { }
+```
+
+### Startup Tasks
+```csharp
+[Service(ServiceLifetime.Singleton)]
+public class MyStartupTask : IStartupTask
+{
+    public int Order => 1;
+    public Task RunAsync(CancellationToken cancellationToken) { }
+}
+```
+
+### Registration in DI
+```csharp
+services.AddGeneratedServices();
+services.AddGeneratedStartupTasks();
+await host.RunStartupTasks();
+```
+
 ## Git Workflow
 1. Always create feature branches for changes
 2. Use descriptive commit messages

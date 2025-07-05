@@ -50,6 +50,9 @@
     </UnoFeatures>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
       <MediatorHttp Include="WebApi.json" Namespace="UnoApp.ApiClient" ContractPrefix="optional" ContractPostfix="HttpRequest" Visible="false" />
     <ProjectReference Include="..\..\..\submodules\mediator\src\Shiny.Mediator.SourceGenerators\Shiny.Mediator.SourceGenerators.csproj" 
                           OutputItemType="Analyzer"

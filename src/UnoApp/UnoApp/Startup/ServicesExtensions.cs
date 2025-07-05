@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Shiny.Extensions.DependencyInjection;
 using Shiny.Mediator;
 using UnoApp.Services.Common;
 using WixApi;
@@ -18,9 +19,14 @@ internal static class ServicesExtensions
         IConfiguration configuration
     )
     {
+        // Add all services marked with [Service] attribute
+        services.AddGeneratedServices();
+        
+        // Add startup tasks for initialization
+        services.AddGeneratedStartupTasks();
+        
         services.AddWixApi(configuration);
         services.AddShinyMediator(cfg => cfg.UseUno());
-        services.TryAddScoped<BaseServices>();
         
         // Register HttpClient
         services.AddHttpClient();
