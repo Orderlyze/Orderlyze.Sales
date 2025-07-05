@@ -25,9 +25,17 @@ internal static class ServicesExtensions
         
         
         services.AddWixApi(configuration);
-        services.AddShinyMediator(cfg => cfg.UseUno());
         
         // Register HttpClient
         services.AddHttpClient();
+        
+        // Add Shiny Mediator without standard middleware to avoid automatic HTTP handler registration
+        services.AddShinyMediator(cfg =>
+        {
+            cfg.UseUno();
+            cfg.PreventEventExceptions();
+            cfg.AddTimerRefreshStreamMiddleware();
+            // Note: We're not calling AddHttpClient() to avoid registering the generic HttpRequestHandler
+        }, includeStandardMiddleware: false);
     }
 }
