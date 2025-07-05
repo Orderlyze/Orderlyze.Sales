@@ -6,7 +6,6 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Shiny.Extensions.DependencyInjection;
 using Shiny.Mediator;
 using SharedModels.Dtos.Contacts;
 using UnoApp.Mediator.Requests.Contacts;
@@ -14,7 +13,6 @@ using UnoApp.Mediator.Requests.Contacts;
 namespace UnoApp.Mediator.Handlers.Contacts;
 
 [SingletonHandler]
-[Service(ServiceLifetime.Singleton)]
 public class GetAllContactsRequestHandler : IRequestHandler<GetAllContactsRequest, IEnumerable<ContactDto>>
 {
     private readonly HttpClient httpClient;

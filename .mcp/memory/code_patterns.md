@@ -96,6 +96,13 @@ public class KeyedService : IMyService { }
 public class MultiService : IService1, IService2 { }
 ```
 
+**Important**: Do NOT use `[Service]` attribute on Shiny.Mediator handlers that already have:
+- `[SingletonHandler]`
+- `[ScopedHandler]`
+- `[TransientHandler]`
+
+These are already registered by Shiny.Mediator's source generators.
+
 ### Startup Tasks
 ```csharp
 [Service(ServiceLifetime.Singleton)]
