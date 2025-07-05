@@ -25,9 +25,11 @@ internal static class ServicesExtensions
         
         
         services.AddWixApi(configuration);
-        services.AddShinyMediator(cfg => cfg.UseUno());
         
         // Register HttpClient
         services.AddHttpClient();
+        
+        // Add Shiny Mediator with standard configuration
+        services.AddShinyMediator(cfg => cfg.UseUno());
     }
 }
