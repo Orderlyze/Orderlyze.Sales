@@ -4,6 +4,7 @@
 - **Repository**: github.com/Orderlyze/Orderlyze.Sales
 - **Type**: Uno Platform application with Wix API integration
 - **Architecture**: MVVM with Shiny.Mediator for CQRS pattern
+- **Package Management**: Central Package Management using Directory.Packages.props
 
 ## Key Technical Details
 

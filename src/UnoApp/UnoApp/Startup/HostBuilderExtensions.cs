@@ -92,7 +92,6 @@ internal static class HostBuilderExtensions
                 // DelegatingHandler will be automatically injected
                 services.AddTransient<DelegatingHandler, DebugHttpHandler>();
 #endif
-                services.AddSingleton<IWeatherCache, WeatherCache>();
                 services.AddKiotaClient<WeatherServiceClient>(
                     context,
                     options: new EndpointOptions { Url = context.Configuration["ApiClient:Url"]! }

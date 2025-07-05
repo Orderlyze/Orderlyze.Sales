@@ -1,5 +1,22 @@
 # Code Patterns and Best Practices
 
+## Project Structure Fundamentals
+
+### Central Package Management
+- **ALWAYS** use Directory.Packages.props for NuGet package versions
+- **NEVER** specify versions in individual .csproj files
+- Add package references without version: `<PackageReference Include="PackageName" />`
+- Version management in Directory.Packages.props: `<PackageVersion Include="PackageName" Version="X.Y.Z" />`
+
+Example:
+```xml
+<!-- Directory.Packages.props -->
+<PackageVersion Include="Shiny.Extensions.DependencyInjection" Version="1.0.0" />
+
+<!-- UnoApp.csproj -->
+<PackageReference Include="Shiny.Extensions.DependencyInjection" />
+```
+
 ## Uno Platform Patterns
 
 ### NavigationView with Multiple Pages
