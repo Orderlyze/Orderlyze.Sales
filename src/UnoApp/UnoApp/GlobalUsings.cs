@@ -1,4 +1,4 @@
-﻿global using System.Collections.Immutable;
+global using System.Collections.Immutable;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
 global using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +13,5 @@ global using UnoApp.DataContracts;
 global using UnoApp.DataContracts.Serialization;
 global using UnoApp.Models;
 global using UnoApp.Presentation;
-global using UnoApp.Services.Caching;
 global using UnoApp.Services.Endpoints;
 global using ApplicationExecutionState = Windows.ApplicationModel.Activation.ApplicationExecutionState;
