@@ -22,8 +22,6 @@ internal static class ServicesExtensions
         // Add all services marked with [Service] attribute
         services.AddGeneratedServices();
         
-        // Add startup tasks for initialization
-        services.AddGeneratedStartupTasks();
         
         services.AddWixApi(configuration);
         services.AddShinyMediator(cfg => cfg.UseUno());
