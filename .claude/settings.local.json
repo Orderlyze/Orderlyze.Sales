@@ -15,7 +15,8 @@
       "Bash(grep:*)",
       "WebFetch(domain:github.com)",
       "Bash(mkdir:*)",
-      "WebFetch(domain:learn.microsoft.com)"
+      "WebFetch(domain:learn.microsoft.com)",
+      "Bash(git cherry-pick:*)"
     ],
     "deny": []
   }
