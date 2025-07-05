@@ -2,6 +2,23 @@
 
 ## Uno Platform Patterns
 
+### NavigationView with Multiple Pages
+```xml
+<!-- Correct pattern - Use Region.Navigator="Visibility" WITHOUT Region.Attached on container -->
+<NavigationView uen:Region.Attached="true">
+    <NavigationView.MenuItems>
+        <NavigationViewItem Content="Page1" uen:Region.Name="Page1" />
+        <NavigationViewItem Content="Page2" uen:Region.Name="Page2" />
+    </NavigationView.MenuItems>
+    
+    <Grid uen:Region.Navigator="Visibility">
+        <ContentControl uen:Region.Name="Page1" uen:Region.Attached="true"/>
+        <ContentControl uen:Region.Name="Page2" uen:Region.Attached="true"/>
+    </Grid>
+</NavigationView>
+```
+**Important**: Do NOT add `uen:Region.Attached="True"` to the container Grid - only use it on the NavigationView and ContentControls!
+
 ### Making Views Scrollable
 ```xml
 <!-- Use ListView for built-in scrolling -->

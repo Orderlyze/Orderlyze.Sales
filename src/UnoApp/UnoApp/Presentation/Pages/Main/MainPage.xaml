@@ -1,4 +1,4 @@
-﻿<base:BasePage
+<base:BasePage
     x:Class="UnoApp.Presentation.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -25,6 +25,13 @@
                                     uen:Region.Name="WixContacts" />
             </NavigationView.MenuItems>
 
+            <Grid uen:Region.Navigator="Visibility">
+                <Grid uen:Region.Name="One" />
+                <Grid uen:Region.Name="Two" />
+                <Grid uen:Region.Name="Three" />
+                <ContentControl uen:Region.Name="Contacts" uen:Region.Attached="true"/>
+                <ContentControl uen:Region.Name="WixContacts" uen:Region.Attached="true"/>
+            </Grid>
         </NavigationView>
     </Grid>
 </base:BasePage>
