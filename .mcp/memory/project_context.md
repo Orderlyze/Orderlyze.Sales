@@ -33,6 +33,7 @@
 1. **Scrolling not working**: Replace StackPanel with Grid in parent containers
 2. **API key not loading**: Ensure .env file exists with `WixApi__ApiKey=YOUR_KEY`
 3. **Build errors**: Check SDK versions match across all projects
+4. **NavigationView pages not switching**: Do NOT use `uen:Region.Attached="True"` on the container Grid - only use `uen:Region.Navigator="Visibility"`
 
 ## User Preferences
 - Prefers clean, centralized code architecture

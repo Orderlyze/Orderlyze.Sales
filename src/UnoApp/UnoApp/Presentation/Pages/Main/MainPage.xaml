@@ -25,7 +25,7 @@
                                     uen:Region.Name="WixContacts" />
             </NavigationView.MenuItems>
 
-            <Grid >
+            <Grid uen:Region.Navigator="Visibility">
                 <Grid uen:Region.Name="One" />
                 <Grid uen:Region.Name="Two" />
                 <Grid uen:Region.Name="Three" />
