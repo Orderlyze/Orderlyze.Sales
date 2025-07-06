@@ -16,12 +16,21 @@
     <PackageVersion Include="Shiny.Extensions.DependencyInjection" Version="1.1.0-beta-0004" />
     <PackageVersion Include="Microsoft.Kiota.Bundle" Version="1.19.0" />
     <PackageVersion Include="Microsoft.Kiota.Cli.Commons" Version="1.1.2" />
-    <PackageVersion Include="Aspire.Hosting" Version="9.0.0-preview.4" />
-    <PackageVersion Include="Aspire.Dashboard" Version="9.0.0-preview.4" />
+    <PackageVersion Include="Aspire.Hosting" Version="8.2.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" />
     <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="9.0.6" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.6" />
+    <!-- Packages for Shiny.Mediator submodules -->
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="SharpYaml" Version="2.1.1" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="1.6.22" />
+    <PackageVersion Include="Microsoft.OpenApi.Readers" Version="1.6.22" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
   </ItemGroup>
 </Project>
