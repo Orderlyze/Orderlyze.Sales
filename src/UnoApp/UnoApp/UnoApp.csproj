@@ -59,21 +59,15 @@
     <ProjectReference Include="..\..\External\WixApi\WixApi.csproj" />
     <ProjectReference Include="..\..\SharedModels\SharedModels.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Page Update="Presentation\Pages\WixContacts\WixContactsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Presentation\Views\WixContacts\WixContactsListView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Presentation\Views\" />
   </ItemGroup>
 
     <Import Project="..\..\..\submodules\mediator\src\Shiny.Mediator.SourceGenerators\SourceGenerators.targets" />

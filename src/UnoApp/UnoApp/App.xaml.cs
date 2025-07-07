@@ -62,18 +62,6 @@ public partial class App : Application
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
             new ViewMap<MainPage, MainViewModel>(),
-            new ViewMap<WixContactsPage, WixContactsPageViewModel>(),
-            new ViewMap<ContactsPage, ContactsPageViewModel>(),
-            new DataViewMap<
-                WixContactsListView,
-                WixContactsListViewModel,
-                IFeed<IEnumerable<WixContactsListModel>>
-            >(),
-            new DataViewMap<
-                ContactsListView,
-                ContactsListViewModel,
-                IFeed<IEnumerable<ContactsListModel>>
-            >()
         );
 
         routes.Register(
@@ -85,32 +73,7 @@ public partial class App : Application
                     new(
                         "Main",
                         View: views.FindByViewModel<MainViewModel>(),
-                        IsDefault: true,
-                        Nested:
-                        [
-                            new(
-                                "WixContacts",
-                                View: views.FindByViewModel<WixContactsPageViewModel>(),
-                                Nested:
-                                [
-                                    new(
-                                        "WixContactsList",
-                                        View: views.FindByViewModel<WixContactsListViewModel>()
-                                    ),
-                                ]
-                            ),
-                            new(
-                                "Contacts",
-                                View: views.FindByViewModel<ContactsPageViewModel>(),
-                                Nested:
-                                [
-                                    new(
-                                        "ContactsList",
-                                        View: views.FindByViewModel<ContactsListViewModel>()
-                                    ),
-                                ]
-                            ),
-                        ]
+                        IsDefault: true
                     ),
                 ]
             )
