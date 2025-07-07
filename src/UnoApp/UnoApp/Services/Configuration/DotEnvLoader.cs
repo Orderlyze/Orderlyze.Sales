@@ -8,11 +8,13 @@ public static class DotEnvLoader
 {
     public static void Load()
     {
+#if !__WASM__
         var envFile = FindEnvFile();
         if (envFile != null)
         {
             LoadEnvironmentVariables(envFile);
         }
+#endif
     }
 
     private static string? FindEnvFile()
