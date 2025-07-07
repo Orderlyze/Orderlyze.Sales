@@ -10,7 +10,6 @@
     NavigationCacheMode="Required">
 
     <Grid Height="500" Width="500" Background="Red">
-
         <Button Content="TEST"/>
     </Grid>
 </Page>
