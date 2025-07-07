@@ -8,13 +8,17 @@ public static class DotEnvLoader
 {
     public static void Load()
     {
-#if !__WASM__
+        // Skip file system operations in WebAssembly
+        if (OperatingSystem.IsBrowser())
+        {
+            return;
+        }
+        
         var envFile = FindEnvFile();
         if (envFile != null)
         {
             LoadEnvironmentVariables(envFile);
         }
-#endif
     }
 
     private static string? FindEnvFile()
