@@ -1,10 +1,6 @@
 using Uno.Resizetizer;
 using Shiny.Extensions.DependencyInjection;
-using UnoApp.Presentation.Pages.Contacts;
 using UnoApp.Presentation.Pages.Main;
-using UnoApp.Presentation.Pages.WixContacts;
-using UnoApp.Presentation.Views.Contacts;
-using UnoApp.Presentation.Views.WixContacts;
 using UnoApp.Startup;
 using WixApi.Models;
 using SharedModels.Dtos.Contacts;
@@ -33,7 +29,6 @@ public partial class App : Application
             .Configure(host =>
                 host.AddEnvironment()
                     .AddLogging()
-                    .AddConfig()
                     // Enable localization (see appsettings.json for supported languages)
                     .AddLocalization()
                     // Register Json serializers (ISerializer and ISerializer)
@@ -61,7 +56,7 @@ public partial class App : Application
     {
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
-            new ViewMap<MainPage, MainViewModel>(),
+            new ViewMap<MainPage, MainViewModel>()
         );
 
         routes.Register(
