@@ -34,7 +34,7 @@ internal partial class ContactsPageViewModel : BasePageViewModel
     public IFeed<IEnumerable<ContactsListModel>> Contacts =>
         Feed.Async(async ct =>
         {
-            var contacts = await mediator.Request(new GetAllHttpRequest(), ct);
+            var contacts = await mediator.Request(new UnoApp.ApiClient.GetAllHttpRequest(), ct);
             return contacts.Result.Select(x => new ContactsListModel(
                 x.Id,
                 x.Name,
