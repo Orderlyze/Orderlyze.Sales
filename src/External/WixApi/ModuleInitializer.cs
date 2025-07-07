@@ -15,9 +15,13 @@ public static class ModuleInitializer
         var accountId = wixApiSection["AccountId"] ?? throw new InvalidOperationException("WixApi:AccountId is not configured");
         var siteId = wixApiSection["SiteId"] ?? throw new InvalidOperationException("WixApi:SiteId is not configured");
 
-        // API key MUST come from environment variable for security
+        // Get logger for debugging
+        var logger = services.BuildServiceProvider().GetService<ILogger<IConfiguration>>();
+
+        // API key handling
         var apiKey = configuration["WixApi:ApiKey"]; // This will pick up environment variables due to configuration setup
         
+#if !__WASM__
         if (string.IsNullOrEmpty(apiKey))
         {
             // Also try direct environment variable access as fallback
@@ -31,9 +35,18 @@ public static class ModuleInitializer
                 "WixApi:ApiKey is not configured. Please set the environment variable WixApi__ApiKey. " +
                 "For local development, you can use a .env file or set the environment variable directly.");
         }
+#else
+        // In WebAssembly, we need to handle API key differently
+        // For development, we can use a placeholder or require it to be set in appsettings
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            // In WASM, we might want to use a development key or handle authentication differently
+            logger?.LogWarning("WixApi:ApiKey is not configured in WebAssembly. WixApi functionality will be limited.");
+            apiKey = "WASM_PLACEHOLDER_KEY"; // This will need proper handling in production
+        }
+#endif
 
         // Log configuration for debugging
-        var logger = services.BuildServiceProvider().GetService<ILogger<IConfiguration>>();
         logger?.LogInformation($"WixApi configured with BaseUrl: {baseUrl}, AccountId: {accountId}, SiteId: {siteId}, ApiKey is {(string.IsNullOrEmpty(apiKey) ? "NOT SET" : "SET")}");
 
         services.AddHttpClient("WixApiClient", client =>

@@ -74,6 +74,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="appsettings.wasm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
     <Import Project="..\..\..\submodules\mediator\src\Shiny.Mediator.SourceGenerators\SourceGenerators.targets" />
