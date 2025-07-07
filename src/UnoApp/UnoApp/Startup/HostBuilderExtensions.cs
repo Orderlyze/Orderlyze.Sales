@@ -54,8 +54,13 @@ internal static class HostBuilderExtensions
             )
             .ConfigureAppConfiguration((context, configBuilder) =>
             {
+#if __WASM__
+                // In WebAssembly, add platform-specific configuration
+                configBuilder.AddJsonFile("appsettings.wasm.json", optional: true, reloadOnChange: false);
+#else
                 // Add environment variables to app configuration
                 configBuilder.AddEnvironmentVariables();
+#endif
             });
     }
 
