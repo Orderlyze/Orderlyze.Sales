@@ -100,12 +100,7 @@ public partial class App : Application
                         View: views.FindByViewModel<MainViewModel>(),
                         Nested:
                         [
-                            new(
-                                "MainContent",
-                                IsDefault: true,
-                                Nested:
-                                [
-                                    new(
+                             new(
                                         PageNames.WixContacts,
                                         View: views.FindByViewModel<WixContactsPageViewModel>(),
                                         Nested:
@@ -126,9 +121,7 @@ public partial class App : Application
                                                 View: views.FindByViewModel<ContactsListViewModel>()
                                             ),
                                         ]
-                                    ),
-                                ]
-                            ),
+                                    )
                         ]
                     ),
                 ]

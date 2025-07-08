@@ -14,12 +14,6 @@
 
         <NavigationView uen:Region.Attached="true">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="One"
-                                    uen:Region.Name="One" />
-                <NavigationViewItem Content="Two"
-                                    uen:Region.Name="Two" />
-                <NavigationViewItem Content="Three"
-                                    uen:Region.Name="Three" />
                 <NavigationViewItem Content="Kontakte" 
                                     uen:Navigation.Request="./MainContent/Contacts" />
                 <NavigationViewItem Content="Wix-Kontakte" 
@@ -27,19 +21,6 @@
             </NavigationView.MenuItems>
 
             <Grid>
-                <!-- Visibility Navigator for static content -->
-                <Grid uen:Region.Navigator="Visibility">
-                    <Grid uen:Region.Name="One">
-                        <TextBlock Text="One Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Grid>
-                    <Grid uen:Region.Name="Two">
-                        <TextBlock Text="Two Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Grid>
-                    <Grid uen:Region.Name="Three">
-                        <TextBlock Text="Three Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Grid>
-                </Grid>
-                
                 <!-- Single ContentControl for dynamic navigation -->
                 <ContentControl uen:Region.Attached="true" 
                                 uen:Region.Name="MainContent"
