@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Shiny.Extensions.DependencyInjection;
 using Shiny.Mediator;
 using UnoApp.ApiClient;
 using UnoApp.Presentation.Pages.Login;
@@ -11,6 +12,7 @@ using Authentication = UnoApp.Services.Authentication;
 
 namespace UnoApp.Presentation.Pages.Register;
 
+[Service(ServiceLifetime.Transient)]
 public partial class RegisterPageViewModel : ObservableObject
 {
     private readonly IMediator _mediator;

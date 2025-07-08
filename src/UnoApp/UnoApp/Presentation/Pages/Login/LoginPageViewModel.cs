@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Shiny.Extensions.DependencyInjection;
 using UnoApp.Navigation;
 using UnoApp.Presentation.Common;
 using UnoApp.Presentation.Pages.Main;
@@ -11,6 +12,7 @@ using ICommand = System.Windows.Input.ICommand;
 
 namespace UnoApp.Presentation.Pages.Login;
 
+[Service(ServiceLifetime.Transient)]
 internal partial class LoginPageViewModel : BasePageViewModel
 {
     private readonly Authentication.IAuthenticationService _authService;
