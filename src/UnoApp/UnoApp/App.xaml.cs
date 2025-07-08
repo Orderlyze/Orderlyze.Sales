@@ -1,7 +1,9 @@
 using Uno.Resizetizer;
 using Shiny.Extensions.DependencyInjection;
 using UnoApp.Presentation.Pages.Contacts;
+using UnoApp.Presentation.Pages.Login;
 using UnoApp.Presentation.Pages.Main;
+using UnoApp.Presentation.Pages.Register;
 using UnoApp.Presentation.Pages.WixContacts;
 using UnoApp.Presentation.Views.Contacts;
 using UnoApp.Presentation.Views.WixContacts;
@@ -62,6 +64,8 @@ public partial class App : Application
     {
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
+            new ViewMap<LoginPage, LoginPageViewModel>(),
+            new ViewMap<RegisterPage, RegisterPageViewModel>(),
             new ViewMap<MainPage, MainViewModel>(),
             new ViewMap<WixContactsPage, WixContactsPageViewModel>(),
             new ViewMap<ContactsPage, ContactsPageViewModel>(),
@@ -84,9 +88,16 @@ public partial class App : Application
                 Nested:
                 [
                     new(
+                        "Login",
+                        View: views.FindByViewModel<LoginPageViewModel>()
+                    ),
+                    new(
+                        "Register",
+                        View: views.FindByViewModel<RegisterPageViewModel>()
+                    ),
+                    new(
                         PageNames.Main,
                         View: views.FindByViewModel<MainViewModel>(),
-                        IsDefault: true,
                         Nested:
                         [
                             new(
