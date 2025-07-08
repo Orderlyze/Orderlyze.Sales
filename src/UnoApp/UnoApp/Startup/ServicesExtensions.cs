@@ -12,6 +12,7 @@ using Authentication = UnoApp.Services.Authentication;
 using UnoApp.Services.Common;
 using UnoApp.Services.Http;
 using WixApi;
+using UnoApp;
 
 namespace UnoApp.Startup;
 
@@ -41,6 +42,9 @@ internal static class ServicesExtensions
             cfg.UseUno();
             cfg.AddUnoPersistentCache();
         });
+        
+        // Register generated handlers
+        services.AddDiscoveredMediatorHandlersFromUnoApp();
         
         // Register HTTP decorator
         services.AddSingleton<IHttpRequestDecorator, BearerAuthenticationHttpDecorator>();

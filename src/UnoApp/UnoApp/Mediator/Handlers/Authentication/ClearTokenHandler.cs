@@ -6,6 +6,7 @@ using UnoApp.Mediator.Requests.Authentication;
 
 namespace UnoApp.Mediator.Handlers.Authentication;
 
+[SingletonHandler]
 public class ClearTokenHandler : ICommandHandler<ClearTokenCommand>
 {
     private readonly ICacheService _cacheService;

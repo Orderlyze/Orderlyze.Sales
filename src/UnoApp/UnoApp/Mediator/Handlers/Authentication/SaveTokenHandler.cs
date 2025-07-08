@@ -7,6 +7,7 @@ using UnoApp.Mediator.Requests.Authentication;
 
 namespace UnoApp.Mediator.Handlers.Authentication;
 
+[SingletonHandler]
 public class SaveTokenHandler : ICommandHandler<SaveTokenCommand>
 {
     private readonly ICacheService _cacheService;

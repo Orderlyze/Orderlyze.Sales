@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using UnoApp.Navigation;
 using UnoApp.Presentation.Common;
 using UnoApp.Presentation.Pages.Main;
+using UnoApp.Presentation.Pages.Register;
 using UnoApp.Services.Common;
 using Authentication = UnoApp.Services.Authentication;
 using ICommand = System.Windows.Input.ICommand;
@@ -39,9 +40,11 @@ internal partial class LoginPageViewModel : BasePageViewModel
         _logger = logger;
         
         LoginCommand = new AsyncRelayCommand(LoginAsync);
+        NavigateToRegisterCommand = new AsyncRelayCommand(NavigateToRegisterAsync);
     }
 
     public ICommand LoginCommand { get; }
+    public ICommand NavigateToRegisterCommand { get; }
 
     private async Task LoginAsync()
     {
@@ -79,5 +82,10 @@ internal partial class LoginPageViewModel : BasePageViewModel
         {
             IsLoading = false;
         }
+    }
+    
+    private async Task NavigateToRegisterAsync()
+    {
+        await _navigator.NavigateViewModelAsync<RegisterPageViewModel>(this);
     }
 }

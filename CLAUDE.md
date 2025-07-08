@@ -67,3 +67,4 @@ All changes made by Claude are automatically logged to:
 - WebAssembly builds require special handling for environment variables
 - Git submodules are used (especially for mediator)
 - Scalar is used for API documentation
+- **IMPORTANT**: Always add `[SingletonHandler]` attribute to all Mediator handlers (Request/Command handlers)
