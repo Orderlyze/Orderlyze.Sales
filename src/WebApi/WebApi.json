@@ -349,12 +349,12 @@
         }
       }
     },
-    "/contacts": {
+    "/contact": {
       "post": {
         "tags": [
           "WebApi"
         ],
-        "operationId": "Add",
+        "operationId": "Addcontact",
         "requestBody": {
           "content": {
             "application/json": {
@@ -382,7 +382,7 @@
         "tags": [
           "WebApi"
         ],
-        "operationId": "GetAll",
+        "operationId": "GetAllcontact",
         "responses": {
           "200": {
             "description": "OK",
@@ -400,12 +400,12 @@
         }
       }
     },
-    "/contacts/{Id}": {
+    "/contact/{Id}": {
       "get": {
         "tags": [
           "WebApi"
         ],
-        "operationId": "Get",
+        "operationId": "Getcontact",
         "parameters": [
           {
             "name": "Id",
@@ -434,7 +434,7 @@
         "tags": [
           "WebApi"
         ],
-        "operationId": "Delete",
+        "operationId": "Deletecontact",
         "parameters": [
           {
             "name": "Id",

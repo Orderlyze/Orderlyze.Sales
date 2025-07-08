@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using SharedModels.Dtos.Contacts;
 using Shiny.Mediator;
+using WebApi.Constants;
 using WebApi.Data;
 using WebApi.Mediator.Requests.Contacts;
 
 namespace WebApi.Mediator.Handlers.Contacts
 {
-    [MediatorHttpGroup("/contacts", RequiresAuthorization = true)]
+    [MediatorHttpGroup(GroupConstants.Contact, RequiresAuthorization = true)]
     public class ContactsGroup
         : IRequestHandler<AddContactRequest, ContactDto>,
             IRequestHandler<GetContactRequest, ContactDto?>,
@@ -17,7 +18,7 @@ namespace WebApi.Mediator.Handlers.Contacts
 
         public ContactsGroup(AppDbContext db) => _db = db;
 
-        [MediatorHttpPost("Add", "/")]
+        [MediatorHttpPost($"{GroupConstants.AddPrefix}{GroupConstants.Contact}", GroupConstants.NoTemplate)]
         public async Task<ContactDto> Handle(
             AddContactRequest request,
             IMediatorContext context,
@@ -40,7 +41,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             return contact;
         }
 
-        [MediatorHttpGet("Get", "/{Id:guid}")]
+        [MediatorHttpGet($"{GroupConstants.GetPrefix}{GroupConstants.Contact}", GroupConstants.IdTemplate)]
         public async Task<ContactDto?> Handle(
             GetContactRequest request,
             IMediatorContext context,
@@ -50,7 +51,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             return await _db.Contacts.FirstOrDefaultAsync(x => x.Id == request.Id, ct);
         }
 
-        [MediatorHttpGet("GetAll", "/")]
+        [MediatorHttpGet($"{GroupConstants.GetAllPrefix}{GroupConstants.Contact}", GroupConstants.NoTemplate)]
         public async Task<IEnumerable<ContactDto>> Handle(
             GetAllContactsRequest request,
             IMediatorContext context,
@@ -60,7 +61,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             return await _db.Contacts.ToListAsync(ct);
         }
 
-        [MediatorHttpDelete("Delete", "/{Id:guid}")]
+        [MediatorHttpDelete($"{GroupConstants.DeletePrefix}{GroupConstants.Contact}", GroupConstants.IdTemplate)]
         public async Task<bool> Handle(
             DeleteContactRequest request,
             IMediatorContext context,
