@@ -8,7 +8,7 @@ using WebApi.Mediator.Requests.Contacts;
 namespace WebApi.Mediator.Handlers.Contacts
 {
     [MediatorHttpGroup(GroupConstants.Contact, RequiresAuthorization = true)]
-    public class ContactsGroup
+    internal class ContactsGroup
         : IRequestHandler<AddContactRequest, ContactDto>,
             IRequestHandler<GetContactRequest, ContactDto?>,
             IRequestHandler<GetAllContactsRequest, IEnumerable<ContactDto>>,

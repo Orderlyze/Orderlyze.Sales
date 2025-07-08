@@ -2,7 +2,7 @@ using SharedModels.Dtos.Contacts;
 
 namespace WebApi.Mediator.Requests.Contacts
 {
-    public class AddContactRequest : IRequest<ContactDto>
+    internal class AddContactRequest : IRequest<ContactDto>
     {
         public string WixId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;

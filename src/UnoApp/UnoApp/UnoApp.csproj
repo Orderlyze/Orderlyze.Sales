@@ -53,7 +53,7 @@
     <PackageReference Include="Shiny.Extensions.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
-      <MediatorHttp Include="WebApi.json" Namespace="UnoApp.ApiClient" ContractPostfix="HttpRequest" Visible="false" />
+      <MediatorHttp Include="WebApi.json" Namespace="UnoApp.ApiClient" ContractPostfix="HttpRequest" Visible="true" />
     <ProjectReference Include="..\..\..\submodules\mediator\src\Shiny.Mediator.SourceGenerators\Shiny.Mediator.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\..\submodules\mediator\src\Shiny.Mediator.Uno\Shiny.Mediator.Uno.csproj" />
     <ProjectReference Include="..\..\External\WixApi\WixApi.csproj" />
