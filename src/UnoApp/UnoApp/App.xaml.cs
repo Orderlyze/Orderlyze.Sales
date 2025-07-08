@@ -121,7 +121,7 @@ public partial class App : Application
                                         View: views.FindByViewModel<ContactsListViewModel>()
                                     ),
                                 ]
-                            ),
+                            )
                         ]
                     ),
                 ]
