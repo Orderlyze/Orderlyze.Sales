@@ -17,7 +17,8 @@
                 <DataTemplate>
                     <ListView ItemsSource="{Binding Data}"
                               SelectionMode="None"
-                              IsItemClickEnabled="False">
+                              IsItemClickEnabled="True"
+                              ItemClick="ListView_ItemClick">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

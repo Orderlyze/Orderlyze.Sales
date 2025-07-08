@@ -68,3 +68,4 @@ All changes made by Claude are automatically logged to:
 - Git submodules are used (especially for mediator)
 - Scalar is used for API documentation
 - **IMPORTANT**: Always add `[SingletonHandler]` attribute to all Mediator handlers (Request/Command handlers)
+- Hooks are working and logging changes to claude-changes.json
