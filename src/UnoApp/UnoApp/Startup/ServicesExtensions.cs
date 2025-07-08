@@ -7,7 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shiny.Extensions.DependencyInjection;
 using Shiny.Mediator;
+using Shiny.Mediator.Http;
+using Authentication = UnoApp.Services.Authentication;
 using UnoApp.Services.Common;
+using UnoApp.Services.Http;
 using WixApi;
 
 namespace UnoApp.Startup;
@@ -29,7 +32,17 @@ internal static class ServicesExtensions
         // Register HttpClient
         services.AddHttpClient();
         
+        // Register Authentication Service
+        services.AddSingleton<Authentication.IAuthenticationService, Authentication.AuthenticationService>();
+        
         // Add Shiny Mediator with standard configuration
-        services.AddShinyMediator(cfg => cfg.UseUno());
+        services.AddShinyMediator(cfg => 
+        {
+            cfg.UseUno();
+            cfg.AddUnoPersistentCache();
+        });
+        
+        // Register HTTP decorator
+        services.AddSingleton<IHttpRequestDecorator, BearerAuthenticationHttpDecorator>();
     }
 }

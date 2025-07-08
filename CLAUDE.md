@@ -17,16 +17,45 @@ This is the Orderlyze.Sales project - a cross-platform application built with:
 ```
 /src
   /WebApi           - ASP.NET Core backend
+    /Controllers    - API controllers
+    /Data          - Entity Framework context and models
+    /Helpers       - Authentication and other helpers
+    /Mediator      - Mediator handlers
+    
   /UnoApp/UnoApp    - Uno Platform client
+    /Mediator      - Mediator pattern implementation
+      /Handlers    - Request handlers
+        /Authentication - Auth-related handlers
+      /Requests    - Request objects
+        /Authentication - Auth-related requests
+    /Navigation    - Navigation framework
+    /Presentation  - UI layer
+      /Common      - Shared UI components
+      /Pages       - Page views and view models
+        /Contacts  - Contacts management
+        /Login     - Login page
+        /Main      - Main page
+        /WixContacts - Wix contacts
+      /Views       - Reusable views
+    /Services      - Business services
+      /Authentication - Auth service and interfaces
+      /Common      - Shared services
+      /Configuration - Config services
+      /Http        - HTTP decorators and handlers
+    /Startup       - Application startup configuration
+    
   /External/WixApi  - Wix integration
-  /Common           - Shared models and constants
+  /SharedModels     - Shared models between projects
 ```
 
 ## Recent Work Patterns
 - Environment-specific configuration (appsettings.{environment}.json)
 - Platform-specific behavior using runtime checks
-- Mediator pattern for API requests
+- Mediator pattern for API requests and handlers
 - Constants for navigation and region names
+- Bearer authentication with automatic token refresh
+- Persistent token storage using Shiny.Mediator caching
+- Request/Handler separation following project structure
 
 ## Change Tracking
 All changes made by Claude are automatically logged to:
