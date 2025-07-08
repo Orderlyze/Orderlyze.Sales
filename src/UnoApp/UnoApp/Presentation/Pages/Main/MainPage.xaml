@@ -21,17 +21,32 @@
                 <NavigationViewItem Content="Three"
                                     uen:Region.Name="Three" />
                 <NavigationViewItem Content="Kontakte" 
-                                    uen:Region.Name="{x:Bind constants:PageNames.Contacts}" />
+                                    uen:Navigation.Request="./MainContent/Contacts" />
                 <NavigationViewItem Content="Wix-Kontakte" 
-                                    uen:Region.Name="{x:Bind constants:PageNames.WixContacts}" />
+                                    uen:Navigation.Request="./MainContent/WixContacts" />
             </NavigationView.MenuItems>
 
-            <Grid uen:Region.Navigator="Visibility">
-                <Grid uen:Region.Name="One" />
-                <Grid uen:Region.Name="Two" />
-                <Grid uen:Region.Name="Three" />
-                <ContentControl uen:Region.Name="{x:Bind constants:PageNames.Contacts}" uen:Region.Attached="true"/>
-                <ContentControl uen:Region.Name="{x:Bind constants:PageNames.WixContacts}" uen:Region.Attached="true"/>
+            <Grid>
+                <!-- Visibility Navigator for static content -->
+                <Grid uen:Region.Navigator="Visibility">
+                    <Grid uen:Region.Name="One">
+                        <TextBlock Text="One Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid uen:Region.Name="Two">
+                        <TextBlock Text="Two Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid uen:Region.Name="Three">
+                        <TextBlock Text="Three Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                </Grid>
+                
+                <!-- Single ContentControl for dynamic navigation -->
+                <ContentControl uen:Region.Attached="true" 
+                                uen:Region.Name="MainContent"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"/>
             </Grid>
         </NavigationView>
     </Grid>
