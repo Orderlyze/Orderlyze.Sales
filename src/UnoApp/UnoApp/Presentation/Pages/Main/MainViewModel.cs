@@ -12,13 +12,20 @@ namespace UnoApp.Presentation.Pages.Main;
 
 public partial class MainViewModel : BasePageViewModel
 {
+    private readonly INavigator _navigator;
+    
     public MainViewModel(
         IStringLocalizer localizer,
         IOptions<AppConfig> appInfo,
         INavigator navigator,
         BaseServices baseServices
     )
-        : base(baseServices) { }
+        : base(baseServices) 
+    { 
+        _navigator = navigator;
+    }
+    
+    public INavigator GetNavigator() => _navigator;
 
     //public override IEnumerable<RegionModel> GetRegions(NavigationEventArgs e)
     //{

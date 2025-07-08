@@ -12,30 +12,37 @@
 
     <Grid uen:Region.Attached="True">
 
-        <NavigationView uen:Region.Attached="true">
+        <NavigationView x:Name="NavView" 
+                        SelectionChanged="NavigationView_SelectionChanged"
+                        IsBackButtonVisible="Collapsed">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="One"
-                                    uen:Region.Name="One" />
-                <NavigationViewItem Content="Two"
-                                    uen:Region.Name="Two" />
-                <NavigationViewItem Content="Three"
-                                    uen:Region.Name="Three" />
-                <NavigationViewItem Content="Kontakte" 
-                                    uen:Region.Name="{x:Bind constants:PageNames.Contacts}" />
-                <NavigationViewItem Content="Wix-Kontakte" 
-                                    uen:Region.Name="{x:Bind constants:PageNames.WixContacts}" />
+                <NavigationViewItem Content="One" Tag="One" />
+                <NavigationViewItem Content="Two" Tag="Two" />
+                <NavigationViewItem Content="Three" Tag="Three" />
+                <NavigationViewItem Content="Kontakte" Tag="{x:Bind constants:PageNames.Contacts}" />
+                <NavigationViewItem Content="Wix-Kontakte" Tag="{x:Bind constants:PageNames.WixContacts}" />
             </NavigationView.MenuItems>
 
             <Grid>
-                <Grid uen:Region.Navigator="Visibility">
-                    <Grid uen:Region.Name="One" />
-                    <Grid uen:Region.Name="Two" />
-                    <Grid uen:Region.Name="Three" />
+                <!-- Static content areas -->
+                <Grid x:Name="OneContent" Visibility="Collapsed">
+                    <TextBlock Text="One Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Grid>
-                <Frame x:Name="ContentFrame" 
-                       uen:Region.Attached="true"
-                       HorizontalAlignment="Stretch"
-                       VerticalAlignment="Stretch"/>
+                <Grid x:Name="TwoContent" Visibility="Collapsed">
+                    <TextBlock Text="Two Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid x:Name="ThreeContent" Visibility="Collapsed">
+                    <TextBlock Text="Three Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                
+                <!-- Dynamic content for Contacts and WixContacts -->
+                <ContentControl x:Name="DynamicContent" 
+                                uen:Region.Attached="true"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                Visibility="Collapsed"/>
             </Grid>
         </NavigationView>
     </Grid>
