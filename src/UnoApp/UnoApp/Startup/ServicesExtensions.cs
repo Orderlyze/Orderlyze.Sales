@@ -36,21 +36,15 @@ internal static class ServicesExtensions
         // Register Authentication Service
         services.AddSingleton<Authentication.IAuthenticationService, Authentication.AuthenticationService>();
         
-        // Add Shiny Mediator without HTTP client (to avoid conflicts with non-HTTP requests)
+        // Add Shiny Mediator with standard configuration
         services.AddShinyMediator(cfg => 
         {
             cfg.UseUno();
             cfg.AddUnoPersistentCache();
-            cfg.PreventEventExceptions();
-            cfg.AddTimerRefreshStreamMiddleware();
-        }, includeStandardMiddleware: false);
+        });
         
         // Register generated handlers
         services.AddDiscoveredMediatorHandlersFromUnoApp();
-        
-        // Manually register HTTP handlers for generated HTTP requests
-        services.AddScoped(typeof(IRequestHandler<,>), typeof(HttpRequestHandler<,>));
-        services.AddSingleton<IRequestHandler<HttpDirectRequest, object?>, HttpDirectRequestHandler>();
         
         // Register HTTP decorator
         services.AddSingleton<IHttpRequestDecorator, BearerAuthenticationHttpDecorator>();
