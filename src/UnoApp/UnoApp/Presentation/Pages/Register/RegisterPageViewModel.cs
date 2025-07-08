@@ -143,7 +143,7 @@ public partial class RegisterPageViewModel : ObservableObject
     [RelayCommand]
     private async Task NavigateToLoginAsync()
     {
-        await _navigator.NavigateViewModelAsync<LoginPageViewModel>(this);
+        await _navigator.NavigateBackAsync(this);
     }
 
     private bool IsValidEmail(string email)
