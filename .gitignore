@@ -420,3 +420,7 @@ FodyWeavers.xsd
 .mcp/memory/*.tmp
 .mcp/memory/personal_*
 /src/UnoApp/UnoApp/appsettings.development.json
+
+# Claude Code tracking
+claude-changes.json
+claude-changes.log
