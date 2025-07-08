@@ -41,6 +41,8 @@ public class IdentityOperationIdTransformer : IOpenApiDocumentTransformer
             ("/manage/2fa", OperationType.Post) => "ManageTwoFactor",
             ("/manage/info", OperationType.Get) => "GetManageInfo",
             ("/manage/info", OperationType.Post) => "PostManageInfo",
+            ("/api/auth/login", OperationType.Post) => "ExtendedLogin",
+            ("/api/auth/refresh", OperationType.Post) => "ExtendedRefresh",
             _ => null
         };
     }
