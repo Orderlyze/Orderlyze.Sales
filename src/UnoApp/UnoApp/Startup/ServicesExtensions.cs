@@ -38,6 +38,7 @@ internal static class ServicesExtensions
         services.AddShinyMediator(cfg => 
         {
             cfg.UseUno();
+            cfg.AddCaching(); // Enable caching for persistent token storage
             cfg.AddHttp(httpBuilder =>
             {
                 var webApiUrl = configuration["ApiClient:Url"] ?? "https://localhost:5062";

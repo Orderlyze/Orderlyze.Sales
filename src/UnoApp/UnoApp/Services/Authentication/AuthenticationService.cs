@@ -19,6 +19,9 @@ public class AuthenticationService : IAuthenticationService
     {
         _mediator = mediator;
         _logger = logger;
+        
+        // Try to restore tokens from persistent storage
+        Task.Run(async () => await RestoreTokensAsync());
     }
 
     public string? AccessToken => _accessToken;
@@ -89,12 +92,14 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
-    public Task LogoutAsync()
+    public async Task LogoutAsync()
     {
         _accessToken = null;
         _refreshToken = null;
         _tokenExpiresAt = null;
-        return Task.CompletedTask;
+        
+        // Clear persistent storage
+        await _mediator.Send(new ClearTokenRequest());
     }
 
     public async Task<string?> GetValidTokenAsync()
@@ -118,7 +123,7 @@ public class AuthenticationService : IAuthenticationService
         return null;
     }
 
-    private void StoreTokens(AccessTokenResponse tokenResponse)
+    private async void StoreTokens(AccessTokenResponse tokenResponse)
     {
         _accessToken = tokenResponse.AccessToken;
         _refreshToken = tokenResponse.RefreshToken;
@@ -128,5 +133,41 @@ public class AuthenticationService : IAuthenticationService
         _tokenExpiresAt = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn - 60);
         
         _logger.LogInformation("Tokens stored, expires at: {ExpiresAt}", _tokenExpiresAt);
+        
+        // Persist tokens
+        try
+        {
+            await _mediator.Send(new SaveTokenRequest
+            {
+                AccessToken = _accessToken,
+                RefreshToken = _refreshToken,
+                ExpiresAt = _tokenExpiresAt.Value
+            });
+            _logger.LogDebug("Tokens persisted successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to persist tokens");
+        }
+    }
+    
+    private async Task RestoreTokensAsync()
+    {
+        try
+        {
+            var storedToken = await _mediator.Request(new GetStoredTokenRequest());
+            if (storedToken != null)
+            {
+                _accessToken = storedToken.AccessToken;
+                _refreshToken = storedToken.RefreshToken;
+                _tokenExpiresAt = storedToken.ExpiresAt;
+                
+                _logger.LogInformation("Tokens restored from storage, expires at: {ExpiresAt}", _tokenExpiresAt);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to restore tokens from storage");
+        }
     }
 }
