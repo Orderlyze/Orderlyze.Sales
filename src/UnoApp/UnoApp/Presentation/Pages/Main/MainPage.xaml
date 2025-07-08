@@ -30,8 +30,12 @@
                 <Grid uen:Region.Name="One" />
                 <Grid uen:Region.Name="Two" />
                 <Grid uen:Region.Name="Three" />
-                <ContentControl uen:Region.Name="{x:Bind constants:PageNames.Contacts}" uen:Region.Attached="true"/>
-                <ContentControl uen:Region.Name="{x:Bind constants:PageNames.WixContacts}" uen:Region.Attached="true"/>
+                <Grid uen:Region.Name="{x:Bind constants:PageNames.Contacts}">
+                    <ContentControl uen:Region.Attached="true"/>
+                </Grid>
+                <Grid uen:Region.Name="{x:Bind constants:PageNames.WixContacts}">
+                    <ContentControl uen:Region.Attached="true"/>
+                </Grid>
             </Grid>
         </NavigationView>
     </Grid>
