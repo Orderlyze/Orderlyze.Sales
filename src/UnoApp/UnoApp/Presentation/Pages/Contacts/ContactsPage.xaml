@@ -7,6 +7,7 @@
     xmlns:uen="using:Uno.Extensions.Navigation.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:constants="using:UnoApp.Constants"
     xmlns:base="using:UnoApp.Presentation.Common.Presentation">
 
     <Grid>

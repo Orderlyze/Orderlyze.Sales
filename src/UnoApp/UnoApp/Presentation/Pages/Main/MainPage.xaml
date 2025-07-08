@@ -1,4 +1,4 @@
-<base:BasePage
+﻿<base:BasePage
     x:Class="UnoApp.Presentation.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,6 +6,7 @@
     xmlns:local="using:UnoApp.Presentation"
     xmlns:models="using:UnoApp.Models"
     xmlns:uen="using:Uno.Extensions.Navigation.UI"
+    xmlns:constants="using:UnoApp.Constants"
     xmlns:utu="using:Uno.Toolkit.UI"
     NavigationCacheMode="Required">
 
@@ -20,17 +21,17 @@
                 <NavigationViewItem Content="Three"
                                     uen:Region.Name="Three" />
                 <NavigationViewItem Content="Kontakte" 
-                                    uen:Region.Name="Contacts" />
+                                    uen:Region.Name="{x:Bind constants:PageNames.Contacts}" />
                 <NavigationViewItem Content="Wix-Kontakte" 
-                                    uen:Region.Name="WixContacts" />
+                                    uen:Region.Name="{x:Bind constants:PageNames.WixContacts}" />
             </NavigationView.MenuItems>
 
             <Grid uen:Region.Navigator="Visibility">
                 <Grid uen:Region.Name="One" />
                 <Grid uen:Region.Name="Two" />
                 <Grid uen:Region.Name="Three" />
-                <ContentControl uen:Region.Name="Contacts" uen:Region.Attached="true"/>
-                <ContentControl uen:Region.Name="WixContacts" uen:Region.Attached="true"/>
+                <ContentControl uen:Region.Name="{x:Bind constants:PageNames.Contacts}" uen:Region.Attached="true"/>
+                <ContentControl uen:Region.Name="{x:Bind constants:PageNames.WixContacts}" uen:Region.Attached="true"/>
             </Grid>
         </NavigationView>
     </Grid>

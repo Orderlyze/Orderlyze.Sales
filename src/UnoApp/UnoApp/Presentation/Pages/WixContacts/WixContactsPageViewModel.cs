@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnoApp.Constants;
 using UnoApp.Navigation;
 using UnoApp.Presentation.Common;
 using UnoApp.Presentation.Views.WixContacts;
@@ -30,7 +31,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
 
     public override IEnumerable<RegionModel> GetRegions(NavigationEventArgs e)
     {
-        return [new("List", "WixContactsList", data: WixContacts)];
+        return [new("List", RegionViewsNames.WixContactList, data: WixContacts)];
     }
 
     public IFeed<IEnumerable<WixContactsListModel>> WixContacts =>

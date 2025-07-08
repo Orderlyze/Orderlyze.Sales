@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:UnoApp.Presentation.Views.Contacts"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:constants="using:UnoApp.Constants"
     xmlns:mvux="using:Uno.Extensions.Reactive.UI"
     d:DataContext="{d:DesignInstance Type=local:ContactsListViewModel,
                                      IsDesignTimeCreatable=True}"

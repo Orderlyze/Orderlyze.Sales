@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shiny.Mediator;
 using UnoApp.ApiClient;
+using UnoApp.Constants;
 using UnoApp.Navigation;
 using UnoApp.Presentation.Common;
 using UnoApp.Presentation.Views.Contacts;
@@ -28,7 +29,7 @@ internal partial class ContactsPageViewModel : BasePageViewModel
 
     public override IEnumerable<RegionModel> GetRegions(NavigationEventArgs e)
     {
-        return [new("List", "ContactsList", data: Contacts)];
+        return [new("List", RegionViewsNames.ContactList, data: Contacts)];
     }
 
     public IFeed<IEnumerable<ContactsListModel>> Contacts =>

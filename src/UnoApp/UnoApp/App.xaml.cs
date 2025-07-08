@@ -8,6 +8,7 @@ using UnoApp.Presentation.Views.WixContacts;
 using UnoApp.Startup;
 using WixApi.Models;
 using SharedModels.Dtos.Contacts;
+using UnoApp.Constants;
 
 namespace UnoApp;
 
@@ -83,29 +84,29 @@ public partial class App : Application
                 Nested:
                 [
                     new(
-                        "Main",
+                        PageNames.Main,
                         View: views.FindByViewModel<MainViewModel>(),
                         IsDefault: true,
                         Nested:
                         [
                             new(
-                                "WixContacts",
+                                PageNames.WixContacts,
                                 View: views.FindByViewModel<WixContactsPageViewModel>(),
                                 Nested:
                                 [
                                     new(
-                                        "WixContactsList",
+                                        RegionViewsNames.WixContactList,
                                         View: views.FindByViewModel<WixContactsListViewModel>()
                                     ),
                                 ]
                             ),
                             new(
-                                "Contacts",
+                                PageNames.Contacts,
                                 View: views.FindByViewModel<ContactsPageViewModel>(),
                                 Nested:
                                 [
                                     new(
-                                        "ContactsList",
+                                        RegionViewsNames.ContactList,
                                         View: views.FindByViewModel<ContactsListViewModel>()
                                     ),
                                 ]
