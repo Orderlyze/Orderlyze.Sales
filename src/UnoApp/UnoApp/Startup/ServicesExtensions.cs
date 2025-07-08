@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shiny.Extensions.DependencyInjection;
 using Shiny.Mediator;
+using Shiny.Mediator.Http;
 using Authentication = UnoApp.Services.Authentication;
 using UnoApp.Services.Common;
 using UnoApp.Services.Http;
@@ -38,13 +39,17 @@ internal static class ServicesExtensions
         services.AddShinyMediator(cfg => 
         {
             cfg.UseUno();
-            cfg.UseUnoPersistenceCache(); // Enable persistent caching for token storage
-            cfg.AddHttp(httpBuilder =>
-            {
-                var webApiUrl = configuration["ApiClient:Url"] ?? "https://localhost:5062";
-                httpBuilder.UseBaseUrl(webApiUrl);
-                httpBuilder.AddRequestDecorator<BearerAuthenticationHttpDecorator>();
-            });
+            cfg.AddUnoPersistentCache();
         });
+        
+        // Configure HTTP client
+        services.AddHttpClient("UnoApp.ApiClient", client =>
+        {
+            var webApiUrl = configuration["ApiClient:Url"] ?? "https://localhost:5062";
+            client.BaseAddress = new Uri(webApiUrl);
+        });
+        
+        // Register HTTP decorator
+        services.AddSingleton<IHttpRequestDecorator, BearerAuthenticationHttpDecorator>();
     }
 }

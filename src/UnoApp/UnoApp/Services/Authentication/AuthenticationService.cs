@@ -34,7 +34,7 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
-            var response = await _mediator.Request(new LoginHttpRequest
+            var result = await _mediator.Request(new LoginHttpRequest
             {
                 Body = new LoginRequest
                 {
@@ -43,13 +43,13 @@ public class AuthenticationService : IAuthenticationService
                 }
             });
 
-            if (response.IsSuccess && response.Result != null)
+            if (result.Result != null)
             {
-                StoreTokens(response.Result);
+                StoreTokens(result.Result);
                 return true;
             }
 
-            _logger.LogWarning("Login failed: {Error}", response.Error?.Exception?.Message ?? "Unknown error");
+            _logger.LogWarning("Login failed");
             return false;
         }
         catch (Exception ex)
@@ -69,7 +69,7 @@ public class AuthenticationService : IAuthenticationService
 
         try
         {
-            var response = await _mediator.Request(new RefreshHttpRequest
+            var result = await _mediator.Request(new RefreshHttpRequest
             {
                 Body = new RefreshRequest
                 {
@@ -77,13 +77,13 @@ public class AuthenticationService : IAuthenticationService
                 }
             });
 
-            if (response.IsSuccess && response.Result != null)
+            if (result.Result != null)
             {
-                StoreTokens(response.Result);
+                StoreTokens(result.Result);
                 return true;
             }
 
-            _logger.LogWarning("Token refresh failed: {Error}", response.Error?.Exception?.Message ?? "Unknown error");
+            _logger.LogWarning("Token refresh failed");
             return false;
         }
         catch (Exception ex)
@@ -100,7 +100,7 @@ public class AuthenticationService : IAuthenticationService
         _tokenExpiresAt = null;
         
         // Clear persistent storage
-        await _mediator.Send(new ClearTokenRequest());
+        await _mediator.Send(new ClearTokenCommand());
     }
 
     public async Task<string?> GetValidTokenAsync()
@@ -138,7 +138,7 @@ public class AuthenticationService : IAuthenticationService
         // Persist tokens
         try
         {
-            await _mediator.Send(new SaveTokenRequest
+            await _mediator.Send(new SaveTokenCommand
             {
                 AccessToken = _accessToken,
                 RefreshToken = _refreshToken,
@@ -156,12 +156,12 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
-            var storedToken = await _mediator.Request(new GetStoredTokenRequest());
-            if (storedToken != null)
+            var result = await _mediator.Request(new GetStoredTokenRequest());
+            if (result.Result != null)
             {
-                _accessToken = storedToken.AccessToken;
-                _refreshToken = storedToken.RefreshToken;
-                _tokenExpiresAt = storedToken.ExpiresAt;
+                _accessToken = result.Result.AccessToken;
+                _refreshToken = result.Result.RefreshToken;
+                _tokenExpiresAt = result.Result.ExpiresAt;
                 
                 _logger.LogInformation("Tokens restored from storage, expires at: {ExpiresAt}", _tokenExpiresAt);
             }

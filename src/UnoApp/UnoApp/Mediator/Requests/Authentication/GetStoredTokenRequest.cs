@@ -9,5 +9,4 @@ public record TokenData(
     DateTime ExpiresAt
 );
 
-[Cache]
 public record GetStoredTokenRequest : IRequest<TokenData?>;

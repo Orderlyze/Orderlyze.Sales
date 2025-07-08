@@ -2,32 +2,33 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Shiny.Mediator;
+using Shiny.Mediator.Infrastructure;
 using UnoApp.Mediator.Requests.Authentication;
 
 namespace UnoApp.Mediator.Handlers.Authentication;
 
-public class SaveTokenHandler : IRequestHandler<SaveTokenRequest>
+public class SaveTokenHandler : ICommandHandler<SaveTokenCommand>
 {
-    private readonly IMediator _mediator;
+    private readonly ICacheService _cacheService;
 
-    public SaveTokenHandler(IMediator mediator)
+    public SaveTokenHandler(ICacheService cacheService)
     {
-        _mediator = mediator;
+        _cacheService = cacheService;
     }
 
-    public async Task Handle(SaveTokenRequest request, CancellationToken cancellationToken)
+    public async Task Handle(SaveTokenCommand command, IMediatorContext context, CancellationToken cancellationToken)
     {
         var tokenData = new TokenData(
-            request.AccessToken,
-            request.RefreshToken,
-            request.ExpiresAt
+            command.AccessToken,
+            command.RefreshToken,
+            command.ExpiresAt
         );
 
         // Store in cache using the key from configuration
-        await _mediator.CacheSet(
-            "GetStoredTokenRequest",
+        await _cacheService.Set(
+            $"{typeof(GetStoredTokenRequest).FullName}",
             tokenData,
-            absoluteExpiration: DateTimeOffset.UtcNow.AddDays(30)
+            new CacheItemConfig(AbsoluteExpiration: TimeSpan.FromDays(30))
         );
     }
 }
