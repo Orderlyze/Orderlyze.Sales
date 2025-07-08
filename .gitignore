@@ -419,3 +419,4 @@ FodyWeavers.xsd
 .mcp/memory/*.log
 .mcp/memory/*.tmp
 .mcp/memory/personal_*
+/src/UnoApp/UnoApp/appsettings.development.json
