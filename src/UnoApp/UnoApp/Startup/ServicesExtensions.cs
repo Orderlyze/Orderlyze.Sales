@@ -42,13 +42,6 @@ internal static class ServicesExtensions
             cfg.AddUnoPersistentCache();
         });
         
-        // Configure HTTP client
-        services.AddHttpClient("UnoApp.ApiClient", client =>
-        {
-            var webApiUrl = configuration["ApiClient:Url"] ?? "https://localhost:5062";
-            client.BaseAddress = new Uri(webApiUrl);
-        });
-        
         // Register HTTP decorator
         services.AddSingleton<IHttpRequestDecorator, BearerAuthenticationHttpDecorator>();
     }
