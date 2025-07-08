@@ -26,6 +26,7 @@ namespace WebApi
                 options =>
                 {
                     options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+                    options.AddDocumentTransformer<IdentityOperationIdTransformer>();
                 }
             );
 
