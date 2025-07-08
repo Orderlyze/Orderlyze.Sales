@@ -26,16 +26,16 @@
                                     uen:Region.Name="{x:Bind constants:PageNames.WixContacts}" />
             </NavigationView.MenuItems>
 
-            <Grid uen:Region.Navigator="Visibility">
-                <Grid uen:Region.Name="One" />
-                <Grid uen:Region.Name="Two" />
-                <Grid uen:Region.Name="Three" />
-                <Grid uen:Region.Name="{x:Bind constants:PageNames.Contacts}" Visibility="Collapsed">
-                    <ContentControl uen:Region.Attached="true"/>
+            <Grid>
+                <Grid uen:Region.Navigator="Visibility">
+                    <Grid uen:Region.Name="One" />
+                    <Grid uen:Region.Name="Two" />
+                    <Grid uen:Region.Name="Three" />
                 </Grid>
-                <Grid uen:Region.Name="{x:Bind constants:PageNames.WixContacts}" Visibility="Collapsed">
-                    <ContentControl uen:Region.Attached="true"/>
-                </Grid>
+                <Frame x:Name="ContentFrame" 
+                       uen:Region.Attached="true"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"/>
             </Grid>
         </NavigationView>
     </Grid>

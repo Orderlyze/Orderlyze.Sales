@@ -62,6 +62,9 @@ All changes made by Claude are automatically logged to:
 - `/claude-changes.json` - Structured JSON format for learning
 - `/claude-changes.log` - Human-readable log (deprecated)
 
+**Note**: Hooks are configured in `~/.config/claude/settings.json` and loaded at Claude Code startup.
+The logging script is at `.claude-hooks/log-change.py`
+
 ## Notes for Future Sessions
 - The project uses .NET 9
 - WebAssembly builds require special handling for environment variables
