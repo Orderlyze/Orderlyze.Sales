@@ -100,28 +100,28 @@ public partial class App : Application
                         View: views.FindByViewModel<MainViewModel>(),
                         Nested:
                         [
-                             new(
-                                        PageNames.WixContacts,
-                                        View: views.FindByViewModel<WixContactsPageViewModel>(),
-                                        Nested:
-                                        [
-                                            new(
-                                                RegionViewsNames.WixContactList,
-                                                View: views.FindByViewModel<WixContactsListViewModel>()
-                                            ),
-                                        ]
-                                    ),
+                            new(
+                                PageNames.WixContacts,
+                                View: views.FindByViewModel<WixContactsPageViewModel>(),
+                                Nested:
+                                [
                                     new(
-                                        PageNames.Contacts,
-                                        View: views.FindByViewModel<ContactsPageViewModel>(),
-                                        Nested:
-                                        [
-                                            new(
-                                                RegionViewsNames.ContactList,
-                                                View: views.FindByViewModel<ContactsListViewModel>()
-                                            ),
-                                        ]
-                                    )
+                                        RegionViewsNames.WixContactList,
+                                        View: views.FindByViewModel<WixContactsListViewModel>()
+                                    ),
+                                ]
+                            ),
+                            new(
+                                PageNames.Contacts,
+                                View: views.FindByViewModel<ContactsPageViewModel>(),
+                                Nested:
+                                [
+                                    new(
+                                        RegionViewsNames.ContactList,
+                                        View: views.FindByViewModel<ContactsListViewModel>()
+                                    ),
+                                ]
+                            )
                         ]
                     ),
                 ]
