@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Shiny.Mediator;
 using UnoApp.ApiClient;
+using UnoApp.Mediator.Requests.Authentication;
 
 namespace UnoApp.Services.Authentication;
 
