@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnoApp.Constants;
 using UnoApp.Navigation;
 using UnoApp.Presentation.Common;
@@ -15,8 +13,8 @@ namespace UnoApp.Presentation.Pages.WixContacts;
 
 internal partial class WixContactsPageViewModel : BasePageViewModel
 {
-    private readonly INavigator navigator;
-    private readonly IWixContactsRepository wixContactsRepository;
+    private readonly INavigator _navigator;
+    private readonly IWixContactsRepository _wixContactsRepository;
 
     public WixContactsPageViewModel(
         BaseServices baseServices,
@@ -25,8 +23,8 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
     )
         : base(baseServices)
     {
-        this.navigator = navigator;
-        this.wixContactsRepository = wixContactsRepository;
+        _navigator = navigator;
+        _wixContactsRepository = wixContactsRepository;
     }
 
     public override IEnumerable<RegionModel> GetRegions(NavigationEventArgs e)
@@ -37,7 +35,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
     public IFeed<IEnumerable<WixContactsListModel>> WixContacts =>
         Feed.Async(async ct =>
         {
-            var wixContacts = await wixContactsRepository.GetContactsAsync();
+            var wixContacts = await _wixContactsRepository.GetContactsAsync();
             return wixContacts.Select(x => new WixContactsListModel(
                 x.id,
                 x.info.name?.first + " " + x.info.name?.last,
