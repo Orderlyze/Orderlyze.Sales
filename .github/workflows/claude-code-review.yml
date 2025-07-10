@@ -104,9 +104,19 @@ jobs:
         # Determine trigger type and set context
         if [ "${{ github.event_name }}" = "issue_comment" ]; then
           TRIGGER_TYPE="comment"
-          COMMENT_BODY="${{ github.event.comment.body }}"
-          TITLE="${{ github.event.issue.title }}"
-          DESCRIPTION="${{ github.event.issue.body }}"
+          # Escape special characters using heredocs
+          COMMENT_BODY=$(cat << 'COMMENT_EOF'
+${{ github.event.comment.body }}
+COMMENT_EOF
+)
+          TITLE=$(cat << 'TITLE_EOF'
+${{ github.event.issue.title }}
+TITLE_EOF
+)
+          DESCRIPTION=$(cat << 'DESC_EOF'
+${{ github.event.issue.body }}
+DESC_EOF
+)
           
           # Check if auto-fix is requested
           if [[ "$COMMENT_BODY" == *"--fix"* ]] || [[ "$COMMENT_BODY" == *"and fix"* ]] || [[ "$COMMENT_BODY" == *"auto-fix"* ]] || [[ "$COMMENT_BODY" == *"--auto-fix"* ]]; then
@@ -117,8 +127,15 @@ jobs:
         else
           TRIGGER_TYPE="pr"
           COMMENT_BODY=""
-          TITLE="${{ github.event.pull_request.title }}"
-          DESCRIPTION="${{ github.event.pull_request.body }}"
+          # Escape backticks and dollar signs to prevent shell interpretation
+          TITLE=$(cat << 'TITLE_EOF'
+${{ github.event.pull_request.title }}
+TITLE_EOF
+)
+          DESCRIPTION=$(cat << 'DESC_EOF'
+${{ github.event.pull_request.body }}
+DESC_EOF
+)
           AUTO_FIX="false"
         fi
         
