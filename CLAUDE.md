@@ -26,6 +26,11 @@ This file provides context for Claude Code when working on the Orderlyze.Sales p
 
 @.claude/code-generation.md
 
+## Development Modes & Tools
+
+@.claude/expert-dotnet-software-engineer.chatmode.md
+@.claude/create-architectural-decision-record.prompt.md
+
 ## Development Notes
 
 ### Environment Specifics
