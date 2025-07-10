@@ -28,7 +28,7 @@ public class AuthenticationService : IAuthenticationService
         {
             try
             {
-                await RestoreTokensAsync();
+                await RestoreTokensAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -53,11 +53,11 @@ public class AuthenticationService : IAuthenticationService
                     Email = email,
                     Password = password
                 }
-            });
+            }).ConfigureAwait(false);
 
             if (result.Result != null)
             {
-                await StoreTokens(result.Result);
+                await StoreTokens(result.Result).ConfigureAwait(false);
                 return true;
             }
 
@@ -87,11 +87,11 @@ public class AuthenticationService : IAuthenticationService
                 {
                     RefreshToken = _refreshToken
                 }
-            });
+            }).ConfigureAwait(false);
 
             if (result.Result != null)
             {
-                await StoreTokens(result.Result);
+                await StoreTokens(result.Result).ConfigureAwait(false);
                 return true;
             }
 
@@ -112,7 +112,7 @@ public class AuthenticationService : IAuthenticationService
         _tokenExpiresAt = null;
         
         // Clear persistent storage
-        await _mediator.Send(new ClearTokenCommand());
+        await _mediator.Send(new ClearTokenCommand()).ConfigureAwait(false);
     }
 
     public async Task<string?> GetValidTokenAsync()
@@ -126,7 +126,7 @@ public class AuthenticationService : IAuthenticationService
         // Try to refresh the token
         if (!string.IsNullOrEmpty(_refreshToken))
         {
-            var refreshed = await RefreshTokenAsync();
+            var refreshed = await RefreshTokenAsync().ConfigureAwait(false);
             if (refreshed)
             {
                 return _accessToken;
@@ -155,7 +155,7 @@ public class AuthenticationService : IAuthenticationService
                 AccessToken = _accessToken,
                 RefreshToken = _refreshToken,
                 ExpiresAt = _tokenExpiresAt.GetValueOrDefault(DateTime.UtcNow.AddHours(1))
-            });
+            }).ConfigureAwait(false);
             _logger.LogDebug("Tokens persisted successfully");
         }
         catch (Exception ex)
@@ -168,7 +168,7 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
-            var result = await _mediator.Request(new GetStoredTokenRequest());
+            var result = await _mediator.Request(new GetStoredTokenRequest()).ConfigureAwait(false);
             if (result.Result != null)
             {
                 _accessToken = result.Result.AccessToken;
