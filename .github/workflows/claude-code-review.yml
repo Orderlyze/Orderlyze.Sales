@@ -37,7 +37,7 @@ jobs:
           echo "Comment trigger detected for PR #$PR_NUMBER"
           
           # Get PR details via GitHub API
-          PR_DATA=$(curl -s -H "Authorization: token ${{ github.token }}" \
+          PR_DATA=$(curl -s -H "Authorization: token ${{ secrets.CLAUDE }}" \
             "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
           
           BASE_SHA=$(echo "$PR_DATA" | jq -r '.base.sha')
@@ -201,7 +201,7 @@ Triggered by: ${COMMIT_AUTHOR}"
           if [ "$EVENT_NAME" = "issue_comment" ]; then
             # For comment triggers, get the branch name from PR data
             PR_NUMBER="${{ github.event.issue.number }}"
-            GH_TOKEN="${{ github.token }}"
+            GH_TOKEN="${{ secrets.CLAUDE }}"
             GH_REPO="${{ github.repository }}"
             BRANCH_NAME=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
               "https://api.github.com/repos/${GH_REPO}/pulls/${PR_NUMBER}" | \
