@@ -34,18 +34,18 @@ jobs:
         if [ "${{ github.event_name }}" = "issue_comment" ]; then
           # For comment triggers, get PR info from the issue
           PR_NUMBER="${{ github.event.issue.number }}"
-          echo "Comment trigger detected for PR #$PR_NUMBER"
+          echo "Comment trigger detected for PR #${PR_NUMBER}"
           
           # Get PR details via GitHub API
           PR_DATA=$(curl -s -H "Authorization: token ${{ secrets.CLAUDE }}" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}")
           
           BASE_SHA=$(echo "$PR_DATA" | jq -r '.base.sha')
           HEAD_SHA=$(echo "$PR_DATA" | jq -r '.head.sha')
           
           # Get the diff between base and head
-          git diff $BASE_SHA..$HEAD_SHA > pr_diff.txt
-          git diff --name-only $BASE_SHA..$HEAD_SHA > changed_files.txt
+          git diff ${BASE_SHA}..${HEAD_SHA} > pr_diff.txt
+          git diff --name-only ${BASE_SHA}..${HEAD_SHA} > changed_files.txt
         else
           # Regular PR trigger
           git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > pr_diff.txt
@@ -206,11 +206,11 @@ Triggered by: ${COMMIT_AUTHOR}"
             BRANCH_NAME=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
               "https://api.github.com/repos/${GH_REPO}/pulls/${PR_NUMBER}" | \
               jq -r '.head.ref')
-            git push origin HEAD:$BRANCH_NAME
+            git push origin "HEAD:${BRANCH_NAME}"
           else
             # For PR triggers, push to the current branch
             PR_HEAD_REF="${{ github.event.pull_request.head.ref }}"
-            git push origin HEAD:$PR_HEAD_REF
+            git push origin "HEAD:${PR_HEAD_REF}"
           fi
           
           echo "Auto-fixes committed and pushed!"
