@@ -124,13 +124,9 @@ jobs:
         
         echo "AUTO_FIX=$AUTO_FIX" >> $GITHUB_ENV
         
-        # Escape special characters in title and description
-        SAFE_TITLE=$(printf '%s' "$TITLE" | sed 's/[`\\$]/\\&/g')
-        SAFE_DESCRIPTION=$(printf '%s' "$DESCRIPTION" | sed 's/[`\\$]/\\&/g')
-        
         # Create review prompt based on mode
         if [ "$AUTO_FIX" = "true" ]; then
-          cat > review_prompt.txt << 'EOF'
+          cat > review_prompt.txt << EOF
         You are a senior software engineer with access to file editing tools. Analyze this pull request and:
 
         1. First, provide a brief review of the changes
@@ -145,18 +141,16 @@ jobs:
 
         After making fixes, review the changes again and provide a summary of what you fixed.
 
-EOF
-          echo "Trigger: $TRIGGER_TYPE (AUTO-FIX MODE ENABLED)" >> review_prompt.txt
-          if [ "$TRIGGER_TYPE" = "comment" ]; then
-            echo "Comment: $COMMENT_BODY" >> review_prompt.txt
-          fi
-          echo "" >> review_prompt.txt
-          echo "PR Title: $SAFE_TITLE" >> review_prompt.txt
-          echo "PR Description: $SAFE_DESCRIPTION" >> review_prompt.txt
-          echo "" >> review_prompt.txt
-          echo "Changes:" >> review_prompt.txt
+        Trigger: $TRIGGER_TYPE (AUTO-FIX MODE ENABLED)
+        $(if [ "$TRIGGER_TYPE" = "comment" ]; then echo "Comment: $COMMENT_BODY"; fi)
+        
+        PR Title: $TITLE
+        PR Description: $DESCRIPTION
+
+        Changes:
+        EOF
         else
-          cat > review_prompt.txt << 'EOF'
+          cat > review_prompt.txt << EOF
         You are a senior code reviewer. Please review this pull request and provide constructive feedback.
 
         Focus on:
@@ -168,16 +162,14 @@ EOF
 
         Be specific and actionable in your feedback. If the code looks good, say so!
 
-EOF
-          echo "Trigger: $TRIGGER_TYPE" >> review_prompt.txt
-          if [ "$TRIGGER_TYPE" = "comment" ]; then
-            echo "Comment: $COMMENT_BODY" >> review_prompt.txt
-          fi
-          echo "" >> review_prompt.txt
-          echo "PR Title: $SAFE_TITLE" >> review_prompt.txt
-          echo "PR Description: $SAFE_DESCRIPTION" >> review_prompt.txt
-          echo "" >> review_prompt.txt
-          echo "Changes:" >> review_prompt.txt
+        Trigger: $TRIGGER_TYPE
+        $(if [ "$TRIGGER_TYPE" = "comment" ]; then echo "Comment: $COMMENT_BODY"; fi)
+        
+        PR Title: $TITLE
+        PR Description: $DESCRIPTION
+
+        Changes:
+        EOF
         fi
         
         # Append the PR content
