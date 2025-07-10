@@ -197,37 +197,35 @@ jobs:
         
         # Create review prompt based on mode
         if [ "$AUTO_FIX" = "true" ]; then
-          cat > review_prompt.txt << 'EOF'
-You are a senior software engineer with access to file editing tools. Analyze this pull request and:
-
-1. First, provide a brief review of the changes
-2. Then, actively use the Edit or Write tools to fix any issues you find:
-   - Fix code quality issues
-   - Resolve potential bugs
-   - Improve performance
-   - Apply security best practices
-   - Refactor code following best practices
-
-IMPORTANT: You have access to Edit and Write tools. Use them to make the necessary changes directly to the files.
-
-After making fixes, review the changes again and provide a summary of what you fixed.
-
-EOF
+          printf '%s\n' \
+            'You are a senior software engineer with access to file editing tools. Analyze this pull request and:' \
+            '' \
+            '1. First, provide a brief review of the changes' \
+            '2. Then, actively use the Edit or Write tools to fix any issues you find:' \
+            '   - Fix code quality issues' \
+            '   - Resolve potential bugs' \
+            '   - Improve performance' \
+            '   - Apply security best practices' \
+            '   - Refactor code following best practices' \
+            '' \
+            'IMPORTANT: You have access to Edit and Write tools. Use them to make the necessary changes directly to the files.' \
+            '' \
+            'After making fixes, review the changes again and provide a summary of what you fixed.' \
+            '' > review_prompt.txt
           echo "Trigger: $TRIGGER_TYPE (AUTO-FIX MODE ENABLED)" >> review_prompt.txt
         else
-          cat > review_prompt.txt << 'EOF'
-You are a senior code reviewer. Please review this pull request and provide constructive feedback.
-
-Focus on:
-1. Code quality and best practices
-2. Potential bugs or issues  
-3. Security concerns
-4. Performance considerations
-5. Suggestions for improvement
-
-Be specific and actionable in your feedback. If the code looks good, say so!
-
-EOF
+          printf '%s\n' \
+            'You are a senior code reviewer. Please review this pull request and provide constructive feedback.' \
+            '' \
+            'Focus on:' \
+            '1. Code quality and best practices' \
+            '2. Potential bugs or issues' \
+            '3. Security concerns' \
+            '4. Performance considerations' \
+            '5. Suggestions for improvement' \
+            '' \
+            'Be specific and actionable in your feedback. If the code looks good, say so!' \
+            '' > review_prompt.txt
           echo "Trigger: $TRIGGER_TYPE" >> review_prompt.txt
         fi
         
