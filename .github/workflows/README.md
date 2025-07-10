@@ -43,10 +43,25 @@ You can manually trigger a Claude code review by commenting on any PR or issue w
 - `@claude` - Triggers a code review
 - `/claude` - Alternative trigger command
 
+#### Auto-Fix Mode (NEW!)
+
+Add `--fix`, `and fix`, or `auto-fix` to your comment to enable automatic code fixes:
+
+- `@claude review this --fix` - Review and automatically fix issues
+- `/claude please check and fix this code`
+- `@claude auto-fix the security issues`
+
+**Auto-fix mode will:**
+- ✅ Analyze the code and provide a review
+- ✅ Automatically fix detected issues using available tools
+- ✅ Commit changes to the PR branch
+- ✅ Provide a follow-up review of the fixes
+
 Examples:
 - `@claude please review this PR`
 - `/claude can you check the security aspects?`
-- `Hey @claude, what do you think about this approach?`
+- `@claude review and fix this --fix`
+- `Hey @claude, auto-fix any issues you find`
 
 ### Customization
 

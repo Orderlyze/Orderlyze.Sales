@@ -83,15 +83,48 @@ jobs:
           COMMENT_BODY="${{ github.event.comment.body }}"
           TITLE="${{ github.event.issue.title }}"
           DESCRIPTION="${{ github.event.issue.body }}"
+          
+          # Check if auto-fix is requested
+          if [[ "$COMMENT_BODY" == *"--fix"* ]] || [[ "$COMMENT_BODY" == *"and fix"* ]] || [[ "$COMMENT_BODY" == *"auto-fix"* ]]; then
+            AUTO_FIX="true"
+          else
+            AUTO_FIX="false"
+          fi
         else
           TRIGGER_TYPE="pr"
           COMMENT_BODY=""
           TITLE="${{ github.event.pull_request.title }}"
           DESCRIPTION="${{ github.event.pull_request.body }}"
+          AUTO_FIX="false"
         fi
         
-        # Create review prompt
-        cat > review_prompt.txt << EOF
+        echo "AUTO_FIX=$AUTO_FIX" >> $GITHUB_ENV
+        
+        # Create review prompt based on mode
+        if [ "$AUTO_FIX" = "true" ]; then
+          cat > review_prompt.txt << EOF
+        You are a senior software engineer. Analyze this pull request and:
+
+        1. First, provide a brief review of the changes
+        2. Then, if you find any issues that can be automatically fixed, use the available tools to:
+           - Fix code quality issues
+           - Resolve potential bugs
+           - Improve performance
+           - Apply security best practices
+           - Refactor code following best practices
+
+        After making fixes, review the changes again and provide a summary.
+
+        Trigger: $TRIGGER_TYPE (AUTO-FIX MODE ENABLED)
+        $(if [ "$TRIGGER_TYPE" = "comment" ]; then echo "Comment: $COMMENT_BODY"; fi)
+        
+        PR Title: $TITLE
+        PR Description: $DESCRIPTION
+
+        Changes:
+        EOF
+        else
+          cat > review_prompt.txt << EOF
         You are a senior code reviewer. Please review this pull request and provide constructive feedback.
 
         Focus on:
@@ -111,6 +144,7 @@ jobs:
 
         Changes:
         EOF
+        fi
         
         # Append the PR content
         cat pr_summary.txt >> review_prompt.txt
@@ -124,6 +158,49 @@ jobs:
           echo "Failed to get review from Claude Code CLI" > claude_review.md
         fi
     
+    - name: Commit auto-fixes (if any)
+      if: env.AUTO_FIX == 'true'
+      run: |
+        # Configure git for the runner
+        git config user.name "claude-autofix[bot]"
+        git config user.email "claude-autofix[bot]@users.noreply.github.com"
+        
+        # Check if there are any changes to commit
+        if git diff --quiet && git diff --staged --quiet; then
+          echo "No changes made by Claude"
+        else
+          echo "Changes detected, committing auto-fixes..."
+          
+          # Stage all changes
+          git add -A
+          
+          # Commit with descriptive message
+          git commit -m "🤖 Auto-fix: Apply Claude's code improvements
+
+Applied automatic fixes suggested by Claude Code Review:
+- Code quality improvements
+- Bug fixes and security enhancements
+- Performance optimizations
+- Best practice implementations
+
+Triggered by: ${{ github.event.comment.user.login || 'PR update' }}"
+          
+          # Push changes to the PR branch
+          if [ "${{ github.event_name }}" = "issue_comment" ]; then
+            # For comment triggers, get the branch name from PR data
+            PR_NUMBER="${{ github.event.issue.number }}"
+            BRANCH_NAME=$(curl -s -H "Authorization: token ${{ github.token }}" \
+              "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER" | \
+              jq -r '.head.ref')
+            git push origin HEAD:$BRANCH_NAME
+          else
+            # For PR triggers, push to the current branch
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
+          
+          echo "Auto-fixes committed and pushed!"
+        fi
+    
     - name: Post review comment
       uses: actions/github-script@v7
       with:
@@ -131,13 +208,19 @@ jobs:
           const fs = require('fs');
           const review = fs.readFileSync('claude_review.md', 'utf8');
           
-          // Determine if this was triggered by a comment
+          // Determine if this was triggered by a comment and if auto-fix was used
           const isCommentTrigger = context.eventName === 'issue_comment';
+          const autoFix = process.env.AUTO_FIX === 'true';
+          
           const triggerInfo = isCommentTrigger ? 
             `\n\n*Triggered by comment from @${context.payload.comment.user.login}*` : 
             `\n\n*Triggered by PR ${context.payload.action}*`;
           
-          const comment = `## 🤖 Claude Code Review\n\n${review}\n\n---\n*This is an automated code review by Claude AI. Please consider the suggestions but use your judgment.*${triggerInfo}`;
+          const autoFixInfo = autoFix ? 
+            `\n🔧 **Auto-fix mode enabled** - Claude may have made code changes and committed them to this PR.` : 
+            ``;
+          
+          const comment = `## 🤖 Claude Code Review\n\n${review}${autoFixInfo}\n\n---\n*This is an automated code review by Claude AI. Please consider the suggestions but use your judgment.*${triggerInfo}`;
           
           // For comment triggers, use the issue number; for PR triggers, use the PR number
           const issueNumber = isCommentTrigger ? 
