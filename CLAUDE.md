@@ -88,6 +88,7 @@ This project uses a special workflow for generating client-side requests from th
    - This generates strongly-typed request classes like `AddContactRequest`
    - Generated code goes into the `UnoApp.ApiClient` namespace
    - Requests get the `HttpRequest` postfix
+   - **Generated files location**: `/src/UnoApp/UnoApp/obj/generated/Shiny.Mediator.SourceGenerators/Shiny.Mediator.SourceGenerators.MediatorHttpRequestSourceGenerator/UnoApp.ApiClient.g.cs`
 
 4. **Handler Implementation**:
    - Handlers are NOT generated - they must be manually implemented
