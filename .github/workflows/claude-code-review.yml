@@ -185,6 +185,7 @@ jobs:
           git add -A
           
           # Commit with descriptive message
+          COMMIT_AUTHOR="${{ github.event.comment.user.login || 'PR update' }}"
           git commit -m "🤖 Auto-fix: Apply Claude's code improvements
 
 Applied automatic fixes suggested by Claude Code Review:
@@ -193,19 +194,23 @@ Applied automatic fixes suggested by Claude Code Review:
 - Performance optimizations
 - Best practice implementations
 
-Triggered by: ${{ github.event.comment.user.login || 'PR update' }}"
+Triggered by: ${COMMIT_AUTHOR}"
           
           # Push changes to the PR branch
-          if [ "${{ github.event_name }}" = "issue_comment" ]; then
+          EVENT_NAME="${{ github.event_name }}"
+          if [ "$EVENT_NAME" = "issue_comment" ]; then
             # For comment triggers, get the branch name from PR data
             PR_NUMBER="${{ github.event.issue.number }}"
-            BRANCH_NAME=$(curl -s -H "Authorization: token ${{ github.token }}" \
-              "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}" | \
+            GH_TOKEN="${{ github.token }}"
+            GH_REPO="${{ github.repository }}"
+            BRANCH_NAME=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
+              "https://api.github.com/repos/${GH_REPO}/pulls/${PR_NUMBER}" | \
               jq -r '.head.ref')
             git push origin HEAD:$BRANCH_NAME
           else
             # For PR triggers, push to the current branch
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+            PR_HEAD_REF="${{ github.event.pull_request.head.ref }}"
+            git push origin HEAD:$PR_HEAD_REF
           fi
           
           echo "Auto-fixes committed and pushed!"
