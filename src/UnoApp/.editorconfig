@@ -165,3 +165,9 @@ csharp_style_expression_bodied_indexers = true:silent
 csharp_style_expression_bodied_accessors = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
+
+# Prefer "" over string.Empty
+dotnet_style_prefer_simplified_interpolation = true:suggestion
+csharp_prefer_simple_default_expression = true:suggestion
+dotnet_code_quality_unused_parameters = all:suggestion
+dotnet_diagnostic.CA1820.severity = none # CA1820: Test for empty strings using string length
