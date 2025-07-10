@@ -35,7 +35,6 @@ This file provides context for Claude Code when working on the Orderlyze.Sales p
 
 ### Change Tracking
 - All changes are logged to `/claude-changes.json`
-- Hooks are configured and working
 
 ### Testing Approach
 - Always check README or search codebase for test commands

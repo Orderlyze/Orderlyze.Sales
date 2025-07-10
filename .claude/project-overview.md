@@ -11,7 +11,5 @@ Cross-platform sales management application with e-commerce integration.
 - **Authentication**: JWT bearer tokens with automatic refresh
 
 ## Key Features
-- Contact management with CRUD operations
-- Wix e-commerce platform integration
 - Cross-platform client deployment
 - Real-time API documentation via Scalar UI

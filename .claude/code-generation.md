@@ -34,14 +34,8 @@ This project uses automated code generation for API client requests.
    - Request suffix: `HttpRequest`
    - Generated file location: `/src/UnoApp/UnoApp/obj/generated/Shiny.Mediator.SourceGenerators/Shiny.Mediator.SourceGenerators.MediatorHttpRequestSourceGenerator/UnoApp.ApiClient.g.cs`
 
-4. **Handler Implementation**
-   - Handlers are NOT auto-generated
-   - Must be manually implemented in `/src/UnoApp/UnoApp/Mediator/Handlers/`
-   - Always add `[SingletonHandler]` attribute
-
 ### Example Workflow
 1. Add new endpoint to WebApi
 2. Build WebApi project
 3. Copy updated WebApi.json to UnoApp
 4. Build UnoApp (generates request classes)
-5. Implement handler manually with `[SingletonHandler]`
