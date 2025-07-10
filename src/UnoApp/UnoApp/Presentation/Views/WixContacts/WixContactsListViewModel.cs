@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnoApp.Mediator.Requests.Contacts;
+using UnoApp.ApiClient;
 using UnoApp.Presentation.Common.ViewModels;
 using UnoApp.Services.Common;
 using WixApi.Models;
@@ -34,16 +34,19 @@ internal partial class WixContactsListViewModel
     {
         try
         {
-            var request = new AddContactRequest
+            var request = new AddContactHttpRequest
             {
-                WixId = wixContact.Id ?? string.Empty,
-                Name = wixContact.Name ?? string.Empty,
-                Email = wixContact.Email ?? string.Empty,
-                Phone = wixContact.Phone ?? string.Empty,
-                Branche = wixContact.Branche ?? string.Empty
+                Body = new AddContactRequest
+                {
+                    WixId = wixContact.Id ?? string.Empty,
+                    Name = wixContact.Name ?? string.Empty,
+                    Email = wixContact.Email ?? string.Empty,
+                    Phone = wixContact.Phone ?? string.Empty,
+                    Branche = wixContact.Branche ?? string.Empty
+                }
             };
 
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Request(request);
             
             // Show success message
             await ShowMessageAsync($"Kontakt '{wixContact.Name}' wurde erfolgreich hinzugefügt!");

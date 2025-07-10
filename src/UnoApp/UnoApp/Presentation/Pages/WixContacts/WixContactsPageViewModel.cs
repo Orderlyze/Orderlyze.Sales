@@ -45,7 +45,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
                 x.primaryInfo.phone ?? x.info.phones?.items?.FirstOrDefault()?.phone,
                 x.info.addresses?.items?.FirstOrDefault()?.address?.addressLine, // Branche - using first address line as branch
                 x.info.company,
-                x.info.labelKeys?.items ?? Array.Empty<string>()
+                x.info.labelKeys?.items?.ToArray() ?? Array.Empty<string>()
             ));
         });
 }
