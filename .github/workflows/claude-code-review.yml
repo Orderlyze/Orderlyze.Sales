@@ -36,49 +36,54 @@ jobs:
         echo -e "\n\nDiff preview (first 500 lines):" >> pr_summary.txt
         cat pr_diff_limited.txt >> pr_summary.txt
     
-    - name: Review with Claude
-      id: claude_review
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Install Claude Code CLI
+      run: |
+        npm install -g @anthropic-ai/claude-code
+        
+    - name: Login to Claude Code
       env:
         ANTHROPIC_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
       run: |
-        # Escape and prepare content
-        PR_TITLE=$(echo '${{ github.event.pull_request.title }}' | sed 's/"/\\"/g')
-        PR_BODY=$(echo '${{ github.event.pull_request.body }}' | sed 's/"/\\"/g' | tr '\n' ' ')
-        PR_CONTENT=$(cat pr_summary.txt | sed 's/"/\\"/g' | tr '\n' ' ')
+        # Configure Claude Code with API key
+        echo "$ANTHROPIC_API_KEY" | claude auth login --api-key
         
-        # Create JSON payload using jq to properly escape
-        PAYLOAD=$(jq -n \
-          --arg model "claude-3-haiku-20240307" \
-          --arg title "$PR_TITLE" \
-          --arg body "$PR_BODY" \
-          --arg content "$PR_CONTENT" \
-          '{
-            model: $model,
-            max_tokens: 4096,
-            messages: [{
-              role: "user",
-              content: ("You are a code reviewer. Review this pull request and provide feedback. Focus on: 1) Code quality and best practices, 2) Potential bugs or issues, 3) Security concerns, 4) Performance considerations, 5) Suggestions for improvement. Be constructive and specific.\n\nPR Title: " + $title + "\nPR Description: " + $body + "\n\nChanges:\n" + $content)
-            }]
-          }')
+    - name: Review with Claude Code
+      id: claude_review
+      run: |
+        # Create review prompt
+        cat > review_prompt.txt << 'EOF'
+        You are a senior code reviewer. Please review this pull request and provide constructive feedback.
+
+        Focus on:
+        1. Code quality and best practices
+        2. Potential bugs or issues  
+        3. Security concerns
+        4. Performance considerations
+        5. Suggestions for improvement
+
+        Be specific and actionable in your feedback. If the code looks good, say so!
+
+        PR Title: ${{ github.event.pull_request.title }}
+        PR Description: ${{ github.event.pull_request.body }}
+
+        Changes:
+        EOF
         
-        # Make API request
-        RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
-          -H "x-api-key: $ANTHROPIC_API_KEY" \
-          -H "anthropic-version: 2023-06-01" \
-          -H "content-type: application/json" \
-          -d "$PAYLOAD")
+        # Append the PR content
+        cat pr_summary.txt >> review_prompt.txt
         
-        # Extract the review content
-        REVIEW=$(echo "$RESPONSE" | jq -r '.content[0].text // "Error: Could not get review"')
+        # Get review from Claude Code CLI
+        claude --model haiku < review_prompt.txt > claude_review.md 2>&1
         
-        # Save review to file
-        echo "$REVIEW" > claude_review.md
-        
-        # Check for API errors
-        if echo "$RESPONSE" | jq -e '.error' > /dev/null; then
-          echo "Error from Claude API:"
-          echo "$RESPONSE" | jq '.error'
-          exit 1
+        # Check if review was successful
+        if [ $? -ne 0 ]; then
+          echo "Error: Claude Code review failed"
+          echo "Failed to get review from Claude Code CLI" > claude_review.md
         fi
     
     - name: Post review comment
