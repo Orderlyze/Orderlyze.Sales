@@ -39,7 +39,7 @@ namespace WixApi.Repositories
         {
             try
             {
-                return await func.Invoke();
+                return await func.Invoke().ConfigureAwait(false);
             }
             catch (ApiException ex)
             {

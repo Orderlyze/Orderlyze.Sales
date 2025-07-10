@@ -11,7 +11,7 @@ namespace WixApi.Repositories
         public async Task<List<WixContact>> GetContactsAsync(int limit = 20)
         {
             var serverResult = await this.TryRequest(
-                async () => await RepositoryApi.ListContacts(limit)
+                async () => await RepositoryApi.ListContacts(limit).ConfigureAwait(false)
             );
             var result = System.Text.Json.JsonSerializer.Deserialize<ContactResponse>(serverResult);
 
@@ -30,7 +30,7 @@ namespace WixApi.Repositories
                                 Filter = new Filter() { InfoEmailsEmail = email },
                             },
                         }
-                    )
+                    ).ConfigureAwait(false)
             );
 
             return result.contacts.FirstOrDefault();
@@ -41,12 +41,12 @@ namespace WixApi.Repositories
             await this.RepositoryApi.AddLabelContact(
                 contactId,
                 new AddLabelPayload { labelKeys = labelKeys }
-            );
+            ).ConfigureAwait(false);
         }
 
         public async Task UpdateContact(string contactId, WixContact info)
         {
-            await this.RepositoryApi.UpdateContact(contactId, info);
+            await this.RepositoryApi.UpdateContact(contactId, info).ConfigureAwait(false);
         }
 
         public async Task DeleteLabelContactAsync(string contactId, string[] labelKeys)
@@ -54,7 +54,7 @@ namespace WixApi.Repositories
             await this.RepositoryApi.DeleteLabelContact(
                 contactId,
                 new AddLabelPayload { labelKeys = labelKeys }
-            );
+            ).ConfigureAwait(false);
         }
     }
 }
