@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   claude-review:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     
     steps:
     - name: Checkout code
@@ -36,26 +36,21 @@ jobs:
         echo -e "\n\nDiff preview (first 500 lines):" >> pr_summary.txt
         cat pr_diff_limited.txt >> pr_summary.txt
     
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        
-    - name: Install Claude Code CLI
+    - name: Check Claude Code CLI
       run: |
-        npm install -g @anthropic-ai/claude-code
+        # Check if Claude Code CLI is available
+        if ! command -v claude &> /dev/null; then
+          echo "Claude Code CLI not found. Please install it on the self-hosted runner:"
+          echo "See: https://docs.anthropic.com/en/docs/claude-code/quickstart"
+          exit 1
+        fi
         
-    - name: Setup Claude Code Authentication
-      env:
-        ANTHROPIC_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
-      run: |
-        # Claude Code CLI uses environment variable for authentication
-        echo "ANTHROPIC_API_KEY is set and will be used by Claude Code CLI"
+        # Check Claude Code version and authentication
+        claude --version
+        echo "Claude Code CLI is available and ready to use with your subscription"
         
     - name: Review with Claude Code
       id: claude_review
-      env:
-        ANTHROPIC_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
       run: |
         # Create review prompt
         cat > review_prompt.txt << 'EOF'
