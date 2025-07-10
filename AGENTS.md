@@ -1,7 +1,7 @@
 # Codex Instructions
 
 ## General Guidelines
-- Use C# 12 (.NET 9) features.
+- Use the latest C# version features (.NET 9).
 - Indent C# code with four spaces.
 - End every file with a newline.
 - Prefer file-scoped namespaces when practical.
