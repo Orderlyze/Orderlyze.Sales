@@ -3,14 +3,23 @@ name: Claude Code Review
 on:
   pull_request:
     types: [opened, synchronize]
+  issue_comment:
+    types: [created]
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   claude-review:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    # Only run on PRs or when triggered by comment
+    if: |
+      github.event_name == 'pull_request' || 
+      (github.event_name == 'issue_comment' && 
+       (contains(github.event.comment.body, '@claude') || 
+        contains(github.event.comment.body, '/claude')))
     
     steps:
     - name: Checkout code
@@ -21,14 +30,30 @@ jobs:
     - name: Get PR diff
       id: diff
       run: |
-        # Get the diff between base and head
-        git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > pr_diff.txt
+        # Determine if this is a comment trigger or regular PR
+        if [ "${{ github.event_name }}" = "issue_comment" ]; then
+          # For comment triggers, get PR info from the issue
+          PR_NUMBER="${{ github.event.issue.number }}"
+          echo "Comment trigger detected for PR #${PR_NUMBER}"
+          
+          # Get PR details via GitHub API
+          PR_DATA=$(curl -s -H "Authorization: token ${{ secrets.CLAUDE }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}")
+          
+          BASE_SHA=$(echo "$PR_DATA" | jq -r '.base.sha')
+          HEAD_SHA=$(echo "$PR_DATA" | jq -r '.head.sha')
+          
+          # Get the diff between base and head
+          git diff ${BASE_SHA}..${HEAD_SHA} > pr_diff.txt
+          git diff --name-only ${BASE_SHA}..${HEAD_SHA} > changed_files.txt
+        else
+          # Regular PR trigger
+          git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > pr_diff.txt
+          git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > changed_files.txt
+        fi
         
         # Limit diff size to avoid API limits (max ~8000 tokens)
         head -n 500 pr_diff.txt > pr_diff_limited.txt
-        
-        # Get list of changed files
-        git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > changed_files.txt
         
         # Create a summary
         echo "Changed files:" > pr_summary.txt
@@ -36,39 +61,160 @@ jobs:
         echo -e "\n\nDiff preview (first 500 lines):" >> pr_summary.txt
         cat pr_diff_limited.txt >> pr_summary.txt
     
-    - name: Review with Claude
-      id: claude_review
-      env:
-        ANTHROPIC_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+    - name: Check Claude Code CLI
       run: |
-        # Read the PR summary
-        PR_CONTENT=$(cat pr_summary.txt | jq -Rs .)
-        
-        # Create the API request
-        RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
-          -H "x-api-key: $ANTHROPIC_API_KEY" \
-          -H "anthropic-version: 2023-06-01" \
-          -H "content-type: application/json" \
-          -d "{
-            \"model\": \"claude-3-haiku-20240307\",
-            \"max_tokens\": 4096,
-            \"messages\": [{
-              \"role\": \"user\",
-              \"content\": \"You are a code reviewer. Review this pull request and provide feedback. Focus on: 1) Code quality and best practices, 2) Potential bugs or issues, 3) Security concerns, 4) Performance considerations, 5) Suggestions for improvement. Be constructive and specific.\n\nPR Title: ${{ github.event.pull_request.title }}\nPR Description: ${{ github.event.pull_request.body }}\n\nChanges:\n${PR_CONTENT}\"
-            }]
-          }")
-        
-        # Extract the review content
-        REVIEW=$(echo "$RESPONSE" | jq -r '.content[0].text // "Error: Could not get review"')
-        
-        # Save review to file
-        echo "$REVIEW" > claude_review.md
-        
-        # Check for API errors
-        if echo "$RESPONSE" | jq -e '.error' > /dev/null; then
-          echo "Error from Claude API:"
-          echo "$RESPONSE" | jq '.error'
+        # Check if Claude Code CLI is available
+        if ! command -v claude &> /dev/null; then
+          echo "Claude Code CLI not found. Please install it on the self-hosted runner:"
+          echo "See: https://docs.anthropic.com/en/docs/claude-code/quickstart"
           exit 1
+        fi
+        
+        # Check Claude Code version and authentication
+        claude --version
+        echo "Claude Code CLI is available and ready to use with your subscription"
+        
+    - name: Review with Claude Code
+      id: claude_review
+      run: |
+        # Determine trigger type and set context
+        if [ "${{ github.event_name }}" = "issue_comment" ]; then
+          TRIGGER_TYPE="comment"
+          COMMENT_BODY="${{ github.event.comment.body }}"
+          TITLE="${{ github.event.issue.title }}"
+          DESCRIPTION="${{ github.event.issue.body }}"
+          
+          # Check if auto-fix is requested
+          if [[ "$COMMENT_BODY" == *"--fix"* ]] || [[ "$COMMENT_BODY" == *"and fix"* ]] || [[ "$COMMENT_BODY" == *"auto-fix"* ]] || [[ "$COMMENT_BODY" == *"--auto-fix"* ]]; then
+            AUTO_FIX="true"
+          else
+            AUTO_FIX="false"
+          fi
+        else
+          TRIGGER_TYPE="pr"
+          COMMENT_BODY=""
+          TITLE="${{ github.event.pull_request.title }}"
+          DESCRIPTION="${{ github.event.pull_request.body }}"
+          AUTO_FIX="false"
+        fi
+        
+        echo "AUTO_FIX=$AUTO_FIX" >> $GITHUB_ENV
+        
+        # Create review prompt based on mode
+        if [ "$AUTO_FIX" = "true" ]; then
+          cat > review_prompt.txt << EOF
+        You are a senior software engineer with access to file editing tools. Analyze this pull request and:
+
+        1. First, provide a brief review of the changes
+        2. Then, actively use the Edit or Write tools to fix any issues you find:
+           - Fix code quality issues
+           - Resolve potential bugs
+           - Improve performance
+           - Apply security best practices
+           - Refactor code following best practices
+
+        IMPORTANT: You have access to Edit and Write tools. Use them to make the necessary changes directly to the files.
+
+        After making fixes, review the changes again and provide a summary of what you fixed.
+
+        Trigger: $TRIGGER_TYPE (AUTO-FIX MODE ENABLED)
+        $(if [ "$TRIGGER_TYPE" = "comment" ]; then echo "Comment: $COMMENT_BODY"; fi)
+        
+        PR Title: $TITLE
+        PR Description: $DESCRIPTION
+
+        Changes:
+        EOF
+        else
+          cat > review_prompt.txt << EOF
+        You are a senior code reviewer. Please review this pull request and provide constructive feedback.
+
+        Focus on:
+        1. Code quality and best practices
+        2. Potential bugs or issues  
+        3. Security concerns
+        4. Performance considerations
+        5. Suggestions for improvement
+
+        Be specific and actionable in your feedback. If the code looks good, say so!
+
+        Trigger: $TRIGGER_TYPE
+        $(if [ "$TRIGGER_TYPE" = "comment" ]; then echo "Comment: $COMMENT_BODY"; fi)
+        
+        PR Title: $TITLE
+        PR Description: $DESCRIPTION
+
+        Changes:
+        EOF
+        fi
+        
+        # Append the PR content
+        cat pr_summary.txt >> review_prompt.txt
+        
+        # Get review from Claude Code CLI
+        # For auto-fix mode, we need to allow Claude to edit files
+        if [ "$AUTO_FIX" = "true" ]; then
+          # Run Claude without --print to allow file modifications
+          # The output will still be captured for the review comment
+          claude "$(cat review_prompt.txt)" 2>&1 | tee claude_review.md
+        else
+          # For review-only mode, use --print
+          claude --print "$(cat review_prompt.txt)" > claude_review.md 2>&1
+        fi
+        
+        # Check if review was successful
+        if [ $? -ne 0 ]; then
+          echo "Error: Claude Code review failed"
+          echo "Failed to get review from Claude Code CLI" > claude_review.md
+        fi
+    
+    - name: Commit auto-fixes (if any)
+      if: env.AUTO_FIX == 'true'
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        PR_NUMBER: ${{ github.event.issue.number }}
+        GH_TOKEN: ${{ secrets.CLAUDE }}
+        GH_REPO: ${{ github.repository }}
+        PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        COMMIT_AUTHOR: ${{ github.event.comment.user.login || 'PR update' }}
+      run: |
+        # Configure git for the runner
+        git config user.name "claude-autofix[bot]"
+        git config user.email "claude-autofix[bot]@users.noreply.github.com"
+        
+        # Check if there are any changes to commit
+        if git diff --quiet && git diff --staged --quiet; then
+          echo "No changes made by Claude"
+        else
+          echo "Changes detected, committing auto-fixes..."
+          
+          # Stage all changes
+          git add -A
+          
+          # Commit with descriptive message
+          git commit -m "🤖 Auto-fix: Apply Claude's code improvements
+
+Applied automatic fixes suggested by Claude Code Review:
+- Code quality improvements
+- Bug fixes and security enhancements
+- Performance optimizations
+- Best practice implementations
+
+Triggered by: ${COMMIT_AUTHOR}"
+          
+          # Push changes to the PR branch
+          if [ "$EVENT_NAME" = "issue_comment" ]; then
+            # For comment triggers, get the branch name from PR data
+            BRANCH_NAME=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
+              "https://api.github.com/repos/${GH_REPO}/pulls/${PR_NUMBER}" | \
+              jq -r '.head.ref')
+            git push origin "HEAD:${BRANCH_NAME}"
+          else
+            # For PR triggers, push to the current branch
+            git push origin "HEAD:${PR_HEAD_REF}"
+          fi
+          
+          echo "Auto-fixes committed and pushed!"
         fi
     
     - name: Post review comment
@@ -78,11 +224,28 @@ jobs:
           const fs = require('fs');
           const review = fs.readFileSync('claude_review.md', 'utf8');
           
-          const comment = `## 🤖 Claude Code Review\n\n${review}\n\n---\n*This is an automated code review by Claude AI. Please consider the suggestions but use your judgment.*`;
+          // Determine if this was triggered by a comment and if auto-fix was used
+          const isCommentTrigger = context.eventName === 'issue_comment';
+          const autoFix = process.env.AUTO_FIX === 'true';
+          
+          const triggerInfo = isCommentTrigger ? 
+            `\n\n*Triggered by comment from @${context.payload.comment.user.login}*` : 
+            `\n\n*Triggered by PR ${context.payload.action}*`;
+          
+          const autoFixInfo = autoFix ? 
+            `\n🔧 **Auto-fix mode enabled** - Claude may have made code changes and committed them to this PR.` : 
+            ``;
+          
+          const comment = `## 🤖 Claude Code Review\n\n${review}${autoFixInfo}\n\n---\n*This is an automated code review by Claude AI. Please consider the suggestions but use your judgment.*${triggerInfo}`;
+          
+          // For comment triggers, use the issue number; for PR triggers, use the PR number
+          const issueNumber = isCommentTrigger ? 
+            context.payload.issue.number : 
+            context.payload.pull_request.number;
           
           github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: context.issue.number,
+            issue_number: issueNumber,
             body: comment
           });
