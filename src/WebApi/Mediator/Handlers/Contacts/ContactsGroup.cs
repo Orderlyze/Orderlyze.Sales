@@ -37,7 +37,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             };
 
             _db.Contacts.Add(contact);
-            await _db.SaveChangesAsync(ct);
+            await _db.SaveChangesAsync(ct).ConfigureAwait(false);
             return contact;
         }
 
@@ -48,7 +48,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            return await _db.Contacts.FirstOrDefaultAsync(x => x.Id == request.Id, ct);
+            return await _db.Contacts.FirstOrDefaultAsync(x => x.Id == request.Id, ct).ConfigureAwait(false);
         }
 
         [MediatorHttpGet($"{GroupConstants.GetAllPrefix}{GroupConstants.Contact}", GroupConstants.NoTemplate)]
@@ -58,7 +58,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            return await _db.Contacts.ToListAsync(ct);
+            return await _db.Contacts.ToListAsync(ct).ConfigureAwait(false);
         }
 
         [MediatorHttpDelete($"{GroupConstants.DeletePrefix}{GroupConstants.Contact}", GroupConstants.IdTemplate)]
@@ -68,11 +68,11 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            var entity = await _db.Contacts.FirstOrDefaultAsync(x => x.Id == request.Id, ct);
+            var entity = await _db.Contacts.FirstOrDefaultAsync(x => x.Id == request.Id, ct).ConfigureAwait(false);
             if (entity != null)
             {
                 _db.Contacts.Remove(entity);
-                await _db.SaveChangesAsync(ct);
+                await _db.SaveChangesAsync(ct).ConfigureAwait(false);
                 return true!;
             }
             else

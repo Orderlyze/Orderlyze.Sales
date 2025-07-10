@@ -24,7 +24,17 @@ public class AuthenticationService : IAuthenticationService
         _logger = logger;
         
         // Try to restore tokens from persistent storage
-        Task.Run(async () => await RestoreTokensAsync());
+        Task.Run(async () => 
+        {
+            try
+            {
+                await RestoreTokensAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to restore tokens from storage");
+            }
+        });
     }
 
     public string? AccessToken => _accessToken;
@@ -47,7 +57,7 @@ public class AuthenticationService : IAuthenticationService
 
             if (result.Result != null)
             {
-                StoreTokens(result.Result);
+                await StoreTokens(result.Result);
                 return true;
             }
 
@@ -81,7 +91,7 @@ public class AuthenticationService : IAuthenticationService
 
             if (result.Result != null)
             {
-                StoreTokens(result.Result);
+                await StoreTokens(result.Result);
                 return true;
             }
 
@@ -126,7 +136,7 @@ public class AuthenticationService : IAuthenticationService
         return null;
     }
 
-    private async void StoreTokens(AccessTokenResponse tokenResponse)
+    private async Task StoreTokens(AccessTokenResponse tokenResponse)
     {
         _accessToken = tokenResponse.AccessToken;
         _refreshToken = tokenResponse.RefreshToken;

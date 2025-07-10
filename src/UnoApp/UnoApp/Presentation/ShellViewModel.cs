@@ -19,7 +19,18 @@ public class ShellViewModel
         // Add code here to initialize or attach event handlers to singleton services
         
         // Check authentication status and navigate accordingly
-        _ = Task.Run(async () => await InitialNavigationAsync());
+        _ = Task.Run(async () => 
+        {
+            try
+            {
+                await InitialNavigationAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during initial navigation: {ex.Message}");
+                // Consider logging to a proper logging service
+            }
+        });
     }
     
     private async Task InitialNavigationAsync()

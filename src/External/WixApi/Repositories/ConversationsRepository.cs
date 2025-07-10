@@ -10,7 +10,7 @@ namespace WixApi.Repositories
         }
         public async Task<string> GetConversations()
         {
-            return await TryRequest(async () => await this.RepositoryApi.GetConversations("de945875-68e4-33e2-abc9-e71765366049"));
+            return await TryRequest(async () => await this.RepositoryApi.GetConversations("de945875-68e4-33e2-abc9-e71765366049").ConfigureAwait(false));
         }
     }
 }
