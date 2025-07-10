@@ -18,11 +18,12 @@ This workflow automatically reviews pull requests using Claude Code CLI on a sel
    - Ensure `claude --version` works in the terminal
 
 3. **How it works:**
-   - Triggers on pull request creation or updates
+   - **Automatic triggers**: PR creation or updates
+   - **Manual triggers**: Comments with `@claude` or `/claude` in PRs or issues
    - Runs on your self-hosted runner (not GitHub's servers)
    - Uses your locally installed Claude Code CLI with subscription
    - Extracts the PR diff and changed files
-   - Posts the review as a comment on the PR
+   - Posts the review as a comment
 
 4. **Benefits:**
    - ✅ Uses your Claude subscription (no API costs)
@@ -34,6 +35,18 @@ This workflow automatically reviews pull requests using Claude Code CLI on a sel
    - Self-hosted GitHub runner configured
    - Claude Code CLI installed and authenticated on runner
    - Runner must have internet access for GitHub API calls
+
+### Manual Triggers
+
+You can manually trigger a Claude code review by commenting on any PR or issue with:
+
+- `@claude` - Triggers a code review
+- `/claude` - Alternative trigger command
+
+Examples:
+- `@claude please review this PR`
+- `/claude can you check the security aspects?`
+- `Hey @claude, what do you think about this approach?`
 
 ### Customization
 

@@ -3,14 +3,23 @@ name: Claude Code Review
 on:
   pull_request:
     types: [opened, synchronize]
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: read
   pull-requests: write
+  issues: write
 
 jobs:
   claude-review:
     runs-on: self-hosted
+    # Only run on PRs or when triggered by comment
+    if: |
+      github.event_name == 'pull_request' || 
+      (github.event_name == 'issue_comment' && 
+       (contains(github.event.comment.body, '@claude') || 
+        contains(github.event.comment.body, '/claude')))
     
     steps:
     - name: Checkout code
@@ -21,14 +30,30 @@ jobs:
     - name: Get PR diff
       id: diff
       run: |
-        # Get the diff between base and head
-        git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > pr_diff.txt
+        # Determine if this is a comment trigger or regular PR
+        if [ "${{ github.event_name }}" = "issue_comment" ]; then
+          # For comment triggers, get PR info from the issue
+          PR_NUMBER="${{ github.event.issue.number }}"
+          echo "Comment trigger detected for PR #$PR_NUMBER"
+          
+          # Get PR details via GitHub API
+          PR_DATA=$(curl -s -H "Authorization: token ${{ github.token }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
+          
+          BASE_SHA=$(echo "$PR_DATA" | jq -r '.base.sha')
+          HEAD_SHA=$(echo "$PR_DATA" | jq -r '.head.sha')
+          
+          # Get the diff between base and head
+          git diff $BASE_SHA..$HEAD_SHA > pr_diff.txt
+          git diff --name-only $BASE_SHA..$HEAD_SHA > changed_files.txt
+        else
+          # Regular PR trigger
+          git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > pr_diff.txt
+          git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > changed_files.txt
+        fi
         
         # Limit diff size to avoid API limits (max ~8000 tokens)
         head -n 500 pr_diff.txt > pr_diff_limited.txt
-        
-        # Get list of changed files
-        git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > changed_files.txt
         
         # Create a summary
         echo "Changed files:" > pr_summary.txt
@@ -52,8 +77,21 @@ jobs:
     - name: Review with Claude Code
       id: claude_review
       run: |
+        # Determine trigger type and set context
+        if [ "${{ github.event_name }}" = "issue_comment" ]; then
+          TRIGGER_TYPE="comment"
+          COMMENT_BODY="${{ github.event.comment.body }}"
+          TITLE="${{ github.event.issue.title }}"
+          DESCRIPTION="${{ github.event.issue.body }}"
+        else
+          TRIGGER_TYPE="pr"
+          COMMENT_BODY=""
+          TITLE="${{ github.event.pull_request.title }}"
+          DESCRIPTION="${{ github.event.pull_request.body }}"
+        fi
+        
         # Create review prompt
-        cat > review_prompt.txt << 'EOF'
+        cat > review_prompt.txt << EOF
         You are a senior code reviewer. Please review this pull request and provide constructive feedback.
 
         Focus on:
@@ -65,8 +103,11 @@ jobs:
 
         Be specific and actionable in your feedback. If the code looks good, say so!
 
-        PR Title: ${{ github.event.pull_request.title }}
-        PR Description: ${{ github.event.pull_request.body }}
+        Trigger: $TRIGGER_TYPE
+        $(if [ "$TRIGGER_TYPE" = "comment" ]; then echo "Comment: $COMMENT_BODY"; fi)
+        
+        PR Title: $TITLE
+        PR Description: $DESCRIPTION
 
         Changes:
         EOF
@@ -90,11 +131,22 @@ jobs:
           const fs = require('fs');
           const review = fs.readFileSync('claude_review.md', 'utf8');
           
-          const comment = `## 🤖 Claude Code Review\n\n${review}\n\n---\n*This is an automated code review by Claude AI. Please consider the suggestions but use your judgment.*`;
+          // Determine if this was triggered by a comment
+          const isCommentTrigger = context.eventName === 'issue_comment';
+          const triggerInfo = isCommentTrigger ? 
+            `\n\n*Triggered by comment from @${context.payload.comment.user.login}*` : 
+            `\n\n*Triggered by PR ${context.payload.action}*`;
+          
+          const comment = `## 🤖 Claude Code Review\n\n${review}\n\n---\n*This is an automated code review by Claude AI. Please consider the suggestions but use your judgment.*${triggerInfo}`;
+          
+          // For comment triggers, use the issue number; for PR triggers, use the PR number
+          const issueNumber = isCommentTrigger ? 
+            context.payload.issue.number : 
+            context.payload.pull_request.number;
           
           github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: context.issue.number,
+            issue_number: issueNumber,
             body: comment
           });
