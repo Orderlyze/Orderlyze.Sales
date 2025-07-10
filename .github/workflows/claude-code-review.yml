@@ -94,7 +94,8 @@ jobs:
     - name: Check if should skip
       id: check_skip
       run: |
-        if [ -f skip_review.txt ] && [ "$(cat skip_review.txt)" = "true" ]; then
+        SKIP_REVIEW=""; [ -f skip_review.txt ] && read -r SKIP_REVIEW < skip_review.txt
+        if [ "$SKIP_REVIEW" = "true" ]; then
           echo "Skipping review"
           echo "skip=true" >> $GITHUB_OUTPUT
         else
@@ -106,21 +107,21 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.CLAUDE }}
       run: |
-        PR_NUMBER=$(cat pr_number.txt)
+        PR_NUMBER=""; [ -f pr_number.txt ] && read -r PR_NUMBER < pr_number.txt
         echo "Setting up PR #${PR_NUMBER} for comment trigger"
         
         # Use GitHub CLI which handles auth better
         gh pr checkout ${PR_NUMBER}
         
         # Verify we're on the right branch
-        HEAD_BRANCH=$(cat head_branch.txt)
+        HEAD_BRANCH=""; [ -f head_branch.txt ] && read -r HEAD_BRANCH < head_branch.txt
         echo "Checked out branch: ${HEAD_BRANCH}"
     
     - name: Get PR diff
       if: steps.check_skip.outputs.skip != 'true'
       id: diff
       run: |
-        EVENT_NAME=$(cat event_name.txt)
+        EVENT_NAME=""; [ -f event_name.txt ] && read -r EVENT_NAME < event_name.txt
         
         # Determine if this is a comment trigger or regular PR
         if [ "${EVENT_NAME}" = "issue_comment" ]; then
@@ -128,7 +129,7 @@ jobs:
           echo "Getting diff for comment trigger"
           
           # Get base branch from file
-          BASE_BRANCH=$(cat base_branch.txt)
+          BASE_BRANCH=""; [ -f base_branch.txt ] && read -r BASE_BRANCH < base_branch.txt
           
           # Ensure we have the latest base branch
           git fetch origin "${BASE_BRANCH}"
@@ -144,8 +145,8 @@ jobs:
           }
         else
           # Regular PR trigger - use SHAs from files
-          BASE_SHA=$(cat base_sha.txt)
-          HEAD_SHA=$(cat head_sha.txt)
+          BASE_SHA=""; [ -f base_sha.txt ] && read -r BASE_SHA < base_sha.txt
+          HEAD_SHA=""; [ -f head_sha.txt ] && read -r HEAD_SHA < head_sha.txt
           echo "Getting diff for PR trigger"
           git diff "${BASE_SHA}..${HEAD_SHA}" > pr_diff.txt
           git diff --name-only "${BASE_SHA}..${HEAD_SHA}" > changed_files.txt
@@ -179,11 +180,12 @@ jobs:
       id: claude_review
       run: |
         # Read all context from files
-        EVENT_NAME=$(cat event_name.txt)
-        AUTO_FIX=$(cat auto_fix.txt)
-        COMMENT_BODY=$(cat comment_body.txt 2>/dev/null || echo "")
-        TITLE=$(cat pr_title.txt 2>/dev/null || echo "")
-        DESCRIPTION=$(cat pr_body.txt 2>/dev/null || echo "")
+        # Read variables safely without command substitution
+        EVENT_NAME=""; [ -f event_name.txt ] && read -r EVENT_NAME < event_name.txt
+        AUTO_FIX=""; [ -f auto_fix.txt ] && read -r AUTO_FIX < auto_fix.txt
+        COMMENT_BODY=""; [ -f comment_body.txt ] && read -r COMMENT_BODY < comment_body.txt
+        TITLE=""; [ -f pr_title.txt ] && read -r TITLE < pr_title.txt
+        DESCRIPTION=""; [ -f pr_body.txt ] && read -r DESCRIPTION < pr_body.txt
         
         # Determine trigger type
         if [ "${EVENT_NAME}" = "issue_comment" ]; then
@@ -229,18 +231,18 @@ jobs:
           echo "Trigger: $TRIGGER_TYPE" >> review_prompt.txt
         fi
         
-        # Add context from files
+        # Add context from files - use printf to prevent code injection
         if [ "$TRIGGER_TYPE" = "comment" ] && [ -n "$COMMENT_BODY" ]; then
           echo "" >> review_prompt.txt
           echo "Comment: " >> review_prompt.txt
-          echo "$COMMENT_BODY" >> review_prompt.txt
+          printf '%s\n' "$COMMENT_BODY" >> review_prompt.txt
         fi
         
         echo "" >> review_prompt.txt
-        echo "PR Title: $TITLE" >> review_prompt.txt
+        printf 'PR Title: %s\n' "$TITLE" >> review_prompt.txt
         echo "" >> review_prompt.txt
         echo "PR Description: " >> review_prompt.txt
-        echo "$DESCRIPTION" >> review_prompt.txt
+        printf '%s\n' "$DESCRIPTION" >> review_prompt.txt
         echo "" >> review_prompt.txt
         echo "Changes:" >> review_prompt.txt
         cat pr_summary.txt >> review_prompt.txt
@@ -248,10 +250,11 @@ jobs:
         # Get review from Claude Code CLI
         if [ "$AUTO_FIX" = "true" ]; then
           # Run Claude without --print to allow file modifications
-          claude "$(cat review_prompt.txt)" 2>&1 | tee claude_review.md
+          # Use file input to avoid command substitution issues
+          claude < review_prompt.txt 2>&1 | tee claude_review.md
         else
-          # For review-only mode, use --print
-          claude --print "$(cat review_prompt.txt)" > claude_review.md 2>&1
+          # For review-only mode, use --print with file input
+          claude --print < review_prompt.txt > claude_review.md 2>&1
         fi
         
         # Check if review was successful
@@ -279,11 +282,11 @@ jobs:
           git add -A
           
           # Get commit author from file
-          EVENT_NAME=$(cat event_name.txt)
+          EVENT_NAME=""; [ -f event_name.txt ] && read -r EVENT_NAME < event_name.txt
           if [ "${EVENT_NAME}" = "issue_comment" ]; then
-            COMMIT_AUTHOR=$(cat comment_author.txt 2>/dev/null || echo "unknown")
+            COMMIT_AUTHOR="unknown"; [ -f comment_author.txt ] && read -r COMMIT_AUTHOR < comment_author.txt
           else
-            COMMIT_AUTHOR=$(cat pr_author.txt 2>/dev/null || echo "unknown")
+            COMMIT_AUTHOR="unknown"; [ -f pr_author.txt ] && read -r COMMIT_AUTHOR < pr_author.txt
           fi
           
           # Commit with descriptive message
@@ -291,7 +294,7 @@ jobs:
           git commit -m "${COMMIT_MSG}"
           
           # Push changes to the PR branch
-          HEAD_BRANCH=$(cat head_branch.txt)
+          HEAD_BRANCH=""; [ -f head_branch.txt ] && read -r HEAD_BRANCH < head_branch.txt
           git push origin "HEAD:${HEAD_BRANCH}"
           
           echo "Auto-fixes committed and pushed!"
