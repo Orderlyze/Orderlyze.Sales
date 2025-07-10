@@ -45,15 +45,17 @@ jobs:
       run: |
         npm install -g @anthropic-ai/claude-code
         
-    - name: Login to Claude Code
+    - name: Setup Claude Code Authentication
       env:
         ANTHROPIC_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
       run: |
-        # Configure Claude Code with API key
-        echo "$ANTHROPIC_API_KEY" | claude auth login --api-key
+        # Claude Code CLI uses environment variable for authentication
+        echo "ANTHROPIC_API_KEY is set and will be used by Claude Code CLI"
         
     - name: Review with Claude Code
       id: claude_review
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
       run: |
         # Create review prompt
         cat > review_prompt.txt << 'EOF'
