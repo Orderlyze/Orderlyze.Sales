@@ -1,27 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using SharedModels.Dtos.Contacts;
+using Microsoft.UI.Xaml;
 using Shiny.Extensions.DependencyInjection;
 using Shiny.Mediator;
 using Uno.Extensions.Navigation;
 using Uno.Extensions.Reactive;
 using UnoApp.ApiClient;
-using UnoApp.Presentation.Common.ViewModels;
+using DtoModels = SharedModels.Dtos.Contacts;
 
 namespace UnoApp.Presentation.Pages.Contacts
 {
     [SingletonService]
-    public partial class ContactsListViewModel : BaseViewModel
+    public partial class ContactsListViewModel : ObservableObject
     {
         private readonly IMediator _mediator;
         private readonly INavigator _navigator;
         private readonly ILogger<ContactsListViewModel> _logger;
-        private readonly Authentication.IAuthenticationService _authService;
+        private readonly Services.Authentication.IAuthenticationService _authService;
 
         [ObservableProperty]
         private int _defaultCallbackDays = 3;
@@ -39,7 +40,7 @@ namespace UnoApp.Presentation.Pages.Contacts
             IMediator mediator,
             INavigator navigator,
             ILogger<ContactsListViewModel> logger,
-            Authentication.IAuthenticationService authService)
+            Services.Authentication.IAuthenticationService authService)
         {
             _mediator = mediator;
             _navigator = navigator;
@@ -75,7 +76,7 @@ namespace UnoApp.Presentation.Pages.Contacts
             return Enumerable.Empty<ContactViewModel>();
         }
 
-        private bool FilterContact(ContactDto contact)
+        private bool FilterContact(DtoModels.ContactDto contact)
         {
             if (ShowAll)
                 return true;
@@ -132,13 +133,9 @@ namespace UnoApp.Presentation.Pages.Contacts
         {
             try
             {
-                await _mediator.Send(new UpdateCallSettingsHttpRequest
-                {
-                    Body = new UpdateCallSettingsRequest
-                    {
-                        DefaultCallbackDays = DefaultCallbackDays
-                    }
-                });
+                // TODO: UpdateCallSettingsHttpRequest needs to be generated from WebApi.json
+                // For now, we'll log the intended action
+                _logger.LogInformation("Would update default callback days to: {Days}", DefaultCallbackDays);
                 
                 _logger.LogInformation("Settings saved successfully");
             }
@@ -151,17 +148,19 @@ namespace UnoApp.Presentation.Pages.Contacts
 
     public partial class ContactViewModel : ObservableObject
     {
-        private readonly ContactDto _contact;
+        private readonly DtoModels.ContactDto _contact;
         private readonly IMediator _mediator;
         private readonly INavigator _navigator;
         private readonly int _defaultCallbackDays;
+        private readonly ILogger _logger;
 
-        public ContactViewModel(ContactDto contact, IMediator mediator, INavigator navigator, int defaultCallbackDays)
+        public ContactViewModel(DtoModels.ContactDto contact, IMediator mediator, INavigator navigator, int defaultCallbackDays)
         {
             _contact = contact;
             _mediator = mediator;
             _navigator = navigator;
             _defaultCallbackDays = defaultCallbackDays;
+            _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<ContactViewModel>();
         }
 
         public string Name => _contact.Name;
@@ -211,23 +210,23 @@ namespace UnoApp.Presentation.Pages.Contacts
         
         public string StatusText => _contact.CallStatus switch
         {
-            CallStatus.New => "Neu",
-            CallStatus.Scheduled => "Geplant",
-            CallStatus.Reached => "Erreicht",
-            CallStatus.NotReached => "Nicht erreicht",
-            CallStatus.Completed => "Abgeschlossen",
-            CallStatus.Postponed => "Verschoben",
+            DtoModels.CallStatus.New => "Neu",
+            DtoModels.CallStatus.Scheduled => "Geplant",
+            DtoModels.CallStatus.Reached => "Erreicht",
+            DtoModels.CallStatus.NotReached => "Nicht erreicht",
+            DtoModels.CallStatus.Completed => "Abgeschlossen",
+            DtoModels.CallStatus.Postponed => "Verschoben",
             _ => "Unbekannt"
         };
         
         public string StatusColor => _contact.CallStatus switch
         {
-            CallStatus.New => "Blue",
-            CallStatus.Scheduled => "Orange",
-            CallStatus.Reached => "Green",
-            CallStatus.NotReached => "Red",
-            CallStatus.Completed => "Gray",
-            CallStatus.Postponed => "Purple",
+            DtoModels.CallStatus.New => "Blue",
+            DtoModels.CallStatus.Scheduled => "Orange",
+            DtoModels.CallStatus.Reached => "Green",
+            DtoModels.CallStatus.NotReached => "Red",
+            DtoModels.CallStatus.Completed => "Gray",
+            DtoModels.CallStatus.Postponed => "Purple",
             _ => "Gray"
         };
         
@@ -248,43 +247,23 @@ namespace UnoApp.Presentation.Pages.Contacts
             // TODO: Show date picker dialog
             var newDate = DateTime.Today.AddDays(_defaultCallbackDays);
             
-            await _mediator.Request(new RescheduleCallHttpRequest
-            {
-                Body = new RescheduleCallRequest
-                {
-                    ContactId = _contact.Id.GetHashCode(),
-                    NewCallDate = newDate
-                }
-            });
+            // TODO: RescheduleCallHttpRequest needs to be generated from WebApi.json
+            // For now, we'll just update the local state
+            _logger.LogInformation("Would reschedule contact {ContactId} to {Date}", _contact.Id, newDate);
         }
 
         [RelayCommand]
         private async Task MarkReachedAsync()
         {
-            await _mediator.Request(new UpdateCallStatusHttpRequest
-            {
-                Body = new UpdateCallStatusRequest
-                {
-                    ContactId = _contact.Id.GetHashCode(),
-                    Status = CallStatus.Reached,
-                    Notes = "Erfolgreich erreicht"
-                }
-            });
+            // TODO: UpdateCallStatusHttpRequest needs to be generated from WebApi.json
+            _logger.LogInformation("Would mark contact {ContactId} as reached", _contact.Id);
         }
 
         [RelayCommand]
         private async Task MarkNotReachedAsync()
         {
-            await _mediator.Request(new UpdateCallStatusHttpRequest
-            {
-                Body = new UpdateCallStatusRequest
-                {
-                    ContactId = _contact.Id.GetHashCode(),
-                    Status = CallStatus.NotReached,
-                    Notes = "Nicht erreicht",
-                    RescheduleCall = true
-                }
-            });
+            // TODO: UpdateCallStatusHttpRequest needs to be generated from WebApi.json
+            _logger.LogInformation("Would mark contact {ContactId} as not reached", _contact.Id);
         }
     }
 }

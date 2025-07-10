@@ -358,17 +358,40 @@
         }
       }
     },
+    "/": {
+      "post": {
+        "tags": [
+          "WebApi"
+        ],
+        "operationId": "settings/updateCallSettings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCallSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Contact": {
       "post": {
         "tags": [
           "WebApi"
         ],
-        "operationId": "AddContact",
+        "operationId": "rescheduleCall",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddContactRequest"
+                "$ref": "#/components/schemas/RescheduleCallRequest"
               }
             }
           },
@@ -513,8 +536,44 @@
           },
           "branche": {
             "type": "string"
+          },
+          "setInitialCallDate": {
+            "type": "boolean"
           }
         }
+      },
+      "CallLogEntry": {
+        "required": [
+          "callDate",
+          "notes",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "callDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CallStatus2"
+          },
+          "nextCallDate": {
+            "type": "string",
+            "format": "date-time",
+            "default": null,
+            "nullable": true
+          }
+        }
+      },
+      "CallStatus": {
+        "type": "integer",
+        "default": 0
+      },
+      "CallStatus2": {
+        "type": "integer"
       },
       "ContactDto": {
         "required": [
@@ -541,9 +600,45 @@
           "branche": {
             "type": "string"
           },
+          "nextCallDate": {
+            "type": "string",
+            "format": "date-time",
+            "default": null,
+            "nullable": true
+          },
+          "callNotes": {
+            "type": "string",
+            "default": null,
+            "nullable": true
+          },
+          "callStatus": {
+            "$ref": "#/components/schemas/CallStatus"
+          },
+          "lastCallDate": {
+            "type": "string",
+            "format": "date-time",
+            "default": null,
+            "nullable": true
+          },
+          "callHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CallLogEntry"
+            },
+            "default": null,
+            "nullable": true
+          },
           "id": {
             "type": "string",
             "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -674,6 +769,24 @@
           }
         }
       },
+      "RescheduleCallRequest": {
+        "type": "object",
+        "properties": {
+          "contactId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "newCallDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "ResendConfirmationEmailRequest": {
         "required": [
           "email"
@@ -754,6 +867,38 @@
           },
           "isMachineRemembered": {
             "type": "boolean"
+          }
+        }
+      },
+      "UpdateCallSettingsRequest": {
+        "type": "object",
+        "properties": {
+          "defaultCallbackDays": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateCallStatusRequest": {
+        "type": "object",
+        "properties": {
+          "contactId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CallStatus2"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "rescheduleCall": {
+            "type": "boolean"
+          },
+          "nextCallDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         }
       }

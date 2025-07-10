@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.Dtos.Contacts;
@@ -10,7 +11,7 @@ using DbModels = WebApi.Data.Models;
 namespace WebApi.Mediator.Handlers.Contacts
 {
     [MediatorHttpGroup(GroupConstants.Contact, RequiresAuthorization = true)]
-    internal class ContactsGroup
+    internal class ContactsGroup(AppDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager)
         : IRequestHandler<AddContactRequest, ContactDto>,
             IRequestHandler<GetContactRequest, ContactDto?>,
             IRequestHandler<GetAllContactsRequest, IEnumerable<ContactDto>>,
@@ -18,15 +19,6 @@ namespace WebApi.Mediator.Handlers.Contacts
             IRequestHandler<UpdateCallStatusRequest, ContactDto>,
             IRequestHandler<RescheduleCallRequest, ContactDto>
     {
-        private readonly AppDbContext _db;
-        private readonly UserManager<AppUser> _userManager;
-
-        public ContactsGroup(AppDbContext db, UserManager<AppUser> userManager)
-        {
-            _db = db;
-            _userManager = userManager;
-        }
-
         [MediatorHttpPost($"{GroupConstants.AddPrefix}{GroupConstants.Contact}", GroupConstants.NoTemplate)]
         public async Task<ContactDto> Handle(
             AddContactRequest request,
@@ -34,10 +26,10 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            var userId = context.HttpContext?.User?.Identity?.Name;
-            var user = userId != null ? await _userManager.FindByNameAsync(userId) : null;
+            var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            var user = userId != null ? await userManager.FindByNameAsync(userId) : null;
             
-            var contact = new Contact
+            var contact = new DbModels.Contact
             {
                 WixId = request.WixId,
                 Name = request.Name,
@@ -47,12 +39,12 @@ namespace WebApi.Mediator.Handlers.Contacts
                 UserId = user?.Id,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
-                CallStatus = CallStatus.New,
+                CallStatus = DbModels.CallStatus.New,
                 NextCallDate = request.SetInitialCallDate ? DateTime.Today : null
             };
 
-            _db.Contacts.Add(contact);
-            await _db.SaveChangesAsync(ct).ConfigureAwait(false);
+            db.Contacts.Add(contact);
+            await db.SaveChangesAsync(ct).ConfigureAwait(false);
             return MapToDto(contact);
         }
 
@@ -63,11 +55,13 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            var contact = await _db.Contacts
+            // For now, use a simple ID mapping until we fix the ID type issue
+            var contacts = await db.Contacts
                 .Include(c => c.CallHistory)
-                .FirstOrDefaultAsync(x => x.Id == request.Id, ct)
+                .ToListAsync(ct)
                 .ConfigureAwait(false);
             
+            var contact = contacts.FirstOrDefault(c => c.Id.ToString() == request.Id.ToString());
             return contact != null ? MapToDto(contact) : null;
         }
 
@@ -78,10 +72,10 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            var userId = context.HttpContext?.User?.Identity?.Name;
-            var user = userId != null ? await _userManager.FindByNameAsync(userId) : null;
+            var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            var user = userId != null ? await userManager.FindByNameAsync(userId) : null;
             
-            var contacts = await _db.Contacts
+            var contacts = await db.Contacts
                 .Where(c => c.UserId == user!.Id)
                 .Include(c => c.CallHistory)
                 .OrderBy(c => c.NextCallDate)
@@ -99,14 +93,13 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            var entity = await _db.Contacts
-                .FirstOrDefaultAsync(x => x.Id == request.Id, ct)
-                .ConfigureAwait(false);
+            var contacts = await db.Contacts.ToListAsync(ct).ConfigureAwait(false);
+            var entity = contacts.FirstOrDefault(c => c.Id.ToString() == request.Id.ToString());
                 
             if (entity != null)
             {
-                _db.Contacts.Remove(entity);
-                await _db.SaveChangesAsync(ct).ConfigureAwait(false);
+                db.Contacts.Remove(entity);
+                await db.SaveChangesAsync(ct).ConfigureAwait(false);
                 return true;
             }
             
@@ -120,10 +113,10 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            var userId = context.HttpContext?.User?.Identity?.Name;
-            var user = userId != null ? await _userManager.FindByNameAsync(userId) : null;
+            var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            var user = userId != null ? await userManager.FindByNameAsync(userId) : null;
             
-            var contact = await _db.Contacts
+            var contact = await db.Contacts
                 .Include(c => c.CallHistory)
                 .FirstOrDefaultAsync(x => x.Id == request.ContactId, ct)
                 .ConfigureAwait(false);
@@ -134,19 +127,19 @@ namespace WebApi.Mediator.Handlers.Contacts
             }
 
             // Create call log entry
-            var callLog = new CallLog
+            var callLog = new DbModels.CallLog
             {
                 ContactId = contact.Id,
                 CallDate = DateTime.UtcNow,
                 Notes = request.Notes,
-                Status = request.Status,
+                Status = (DbModels.CallStatus)request.Status,
                 NextCallDate = request.NextCallDate,
                 CreatedAt = DateTime.UtcNow
             };
             
             contact.CallHistory.Add(callLog);
             contact.LastCallDate = DateTime.UtcNow;
-            contact.CallStatus = request.Status;
+            contact.CallStatus = (DbModels.CallStatus)request.Status;
             contact.CallNotes = request.Notes;
             
             if (request.RescheduleCall && request.NextCallDate.HasValue)
@@ -164,7 +157,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             }
             
             contact.UpdatedAt = DateTime.UtcNow;
-            await _db.SaveChangesAsync(ct).ConfigureAwait(false);
+            await db.SaveChangesAsync(ct).ConfigureAwait(false);
             
             return MapToDto(contact);
         }
@@ -176,10 +169,10 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            var userId = context.HttpContext?.User?.Identity?.Name;
-            var user = userId != null ? await _userManager.FindByNameAsync(userId) : null;
+            var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            var user = userId != null ? await userManager.FindByNameAsync(userId) : null;
             
-            var contact = await _db.Contacts
+            var contact = await db.Contacts
                 .Include(c => c.CallHistory)
                 .FirstOrDefaultAsync(x => x.Id == request.ContactId, ct)
                 .ConfigureAwait(false);
@@ -200,27 +193,27 @@ namespace WebApi.Mediator.Handlers.Contacts
                 contact.NextCallDate = DateTime.Today.AddDays(user?.DefaultCallbackDays ?? 3);
             }
             
-            contact.CallStatus = CallStatus.Postponed;
+            contact.CallStatus = DbModels.CallStatus.Postponed;
             contact.UpdatedAt = DateTime.UtcNow;
             
             // Add to call history
-            var callLog = new CallLog
+            var callLog = new DbModels.CallLog
             {
                 ContactId = contact.Id,
                 CallDate = DateTime.UtcNow,
                 Notes = $"Verschoben: {request.Reason ?? "Kein Grund angegeben"}",
-                Status = CallStatus.Postponed,
+                Status = DbModels.CallStatus.Postponed,
                 NextCallDate = contact.NextCallDate,
                 CreatedAt = DateTime.UtcNow
             };
             
             contact.CallHistory.Add(callLog);
-            await _db.SaveChangesAsync(ct).ConfigureAwait(false);
+            await db.SaveChangesAsync(ct).ConfigureAwait(false);
             
             return MapToDto(contact);
         }
 
-        private ContactDto MapToDto(Contact contact)
+        private ContactDto MapToDto(DbModels.Contact contact)
         {
             return new ContactDto(
                 contact.WixId,
@@ -230,12 +223,12 @@ namespace WebApi.Mediator.Handlers.Contacts
                 contact.Branche,
                 contact.NextCallDate,
                 contact.CallNotes,
-                (SharedModels.Dtos.Contacts.CallStatus)contact.CallStatus,
+                (CallStatus)contact.CallStatus,
                 contact.LastCallDate,
                 contact.CallHistory?.Select(h => new CallLogEntry(
                     h.CallDate,
                     h.Notes,
-                    (SharedModels.Dtos.Contacts.CallStatus)h.Status,
+                    (CallStatus)h.Status,
                     h.NextCallDate
                 )).ToList()
             )
