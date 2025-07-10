@@ -170,6 +170,13 @@ jobs:
     
     - name: Commit auto-fixes (if any)
       if: env.AUTO_FIX == 'true'
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        PR_NUMBER: ${{ github.event.issue.number }}
+        GH_TOKEN: ${{ secrets.CLAUDE }}
+        GH_REPO: ${{ github.repository }}
+        PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        COMMIT_AUTHOR: ${{ github.event.comment.user.login || 'PR update' }}
       run: |
         # Configure git for the runner
         git config user.name "claude-autofix[bot]"
@@ -185,7 +192,6 @@ jobs:
           git add -A
           
           # Commit with descriptive message
-          COMMIT_AUTHOR="${{ github.event.comment.user.login || 'PR update' }}"
           git commit -m "🤖 Auto-fix: Apply Claude's code improvements
 
 Applied automatic fixes suggested by Claude Code Review:
@@ -197,19 +203,14 @@ Applied automatic fixes suggested by Claude Code Review:
 Triggered by: ${COMMIT_AUTHOR}"
           
           # Push changes to the PR branch
-          EVENT_NAME="${{ github.event_name }}"
           if [ "$EVENT_NAME" = "issue_comment" ]; then
             # For comment triggers, get the branch name from PR data
-            PR_NUMBER="${{ github.event.issue.number }}"
-            GH_TOKEN="${{ secrets.CLAUDE }}"
-            GH_REPO="${{ github.repository }}"
             BRANCH_NAME=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
               "https://api.github.com/repos/${GH_REPO}/pulls/${PR_NUMBER}" | \
               jq -r '.head.ref')
             git push origin "HEAD:${BRANCH_NAME}"
           else
             # For PR triggers, push to the current branch
-            PR_HEAD_REF="${{ github.event.pull_request.head.ref }}"
             git push origin "HEAD:${PR_HEAD_REF}"
           fi
           
