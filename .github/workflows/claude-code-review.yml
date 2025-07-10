@@ -7,7 +7,7 @@ on:
     types: [created]
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
   issues: write
 
@@ -85,7 +85,7 @@ jobs:
           DESCRIPTION="${{ github.event.issue.body }}"
           
           # Check if auto-fix is requested
-          if [[ "$COMMENT_BODY" == *"--fix"* ]] || [[ "$COMMENT_BODY" == *"and fix"* ]] || [[ "$COMMENT_BODY" == *"auto-fix"* ]]; then
+          if [[ "$COMMENT_BODY" == *"--fix"* ]] || [[ "$COMMENT_BODY" == *"and fix"* ]] || [[ "$COMMENT_BODY" == *"auto-fix"* ]] || [[ "$COMMENT_BODY" == *"--auto-fix"* ]]; then
             AUTO_FIX="true"
           else
             AUTO_FIX="false"
@@ -103,17 +103,19 @@ jobs:
         # Create review prompt based on mode
         if [ "$AUTO_FIX" = "true" ]; then
           cat > review_prompt.txt << EOF
-        You are a senior software engineer. Analyze this pull request and:
+        You are a senior software engineer with access to file editing tools. Analyze this pull request and:
 
         1. First, provide a brief review of the changes
-        2. Then, if you find any issues that can be automatically fixed, use the available tools to:
+        2. Then, actively use the Edit or Write tools to fix any issues you find:
            - Fix code quality issues
            - Resolve potential bugs
            - Improve performance
            - Apply security best practices
            - Refactor code following best practices
 
-        After making fixes, review the changes again and provide a summary.
+        IMPORTANT: You have access to Edit and Write tools. Use them to make the necessary changes directly to the files.
+
+        After making fixes, review the changes again and provide a summary of what you fixed.
 
         Trigger: $TRIGGER_TYPE (AUTO-FIX MODE ENABLED)
         $(if [ "$TRIGGER_TYPE" = "comment" ]; then echo "Comment: $COMMENT_BODY"; fi)
@@ -149,8 +151,16 @@ jobs:
         # Append the PR content
         cat pr_summary.txt >> review_prompt.txt
         
-        # Get review from Claude Code CLI using --print for non-interactive mode
-        claude --print "$(cat review_prompt.txt)" > claude_review.md 2>&1
+        # Get review from Claude Code CLI
+        # For auto-fix mode, we need to allow Claude to edit files
+        if [ "$AUTO_FIX" = "true" ]; then
+          # Run Claude without --print to allow file modifications
+          # The output will still be captured for the review comment
+          claude "$(cat review_prompt.txt)" 2>&1 | tee claude_review.md
+        else
+          # For review-only mode, use --print
+          claude --print "$(cat review_prompt.txt)" > claude_review.md 2>&1
+        fi
         
         # Check if review was successful
         if [ $? -ne 0 ]; then
