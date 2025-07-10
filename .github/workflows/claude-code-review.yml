@@ -26,7 +26,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        token: ${{ secrets.CLAUDE }}
     
     - name: Checkout PR branch for comment triggers
       if: github.event_name == 'issue_comment'
