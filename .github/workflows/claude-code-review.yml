@@ -203,7 +203,7 @@ Applied automatic fixes suggested by Claude Code Review:
 Triggered by: ${COMMIT_AUTHOR}"
           
           # Push changes to the PR branch
-          if [ "$EVENT_NAME" = "issue_comment" ]; then
+          if [[ "${EVENT_NAME}" == "issue_comment" ]]; then
             # For comment triggers, get the branch name from PR data
             BRANCH_NAME=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
               "https://api.github.com/repos/${GH_REPO}/pulls/${PR_NUMBER}" | \
