@@ -43,7 +43,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
                 x.info.name?.first + " " + x.info.name?.last,
                 x.primaryInfo.email,
                 x.primaryInfo.phone ?? x.info.phones?.items?.FirstOrDefault()?.phone,
-                null, // Branche - not available in WixContact
+                x.info.addresses?.items?.FirstOrDefault()?.address?.addressLine, // Branche - using first address line as branch
                 x.info.company,
                 x.info.labelKeys?.items ?? Array.Empty<string>()
             ));
