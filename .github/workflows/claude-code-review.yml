@@ -31,21 +31,44 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.CLAUDE }}
       run: |
+        set -euo pipefail  # Exit on error, undefined vars, pipe failures
+        
         PR_NUMBER="${{ github.event.issue.number }}"
         echo "Setting up PR #${PR_NUMBER} for comment trigger"
         
         # Use GitHub CLI which handles auth better
         gh pr checkout ${PR_NUMBER}
         
-        # Get PR info using gh CLI - output to files to avoid shell interpretation
-        gh pr view ${PR_NUMBER} --json baseRefName -q .baseRefName > base_branch.txt
-        gh pr view ${PR_NUMBER} --json headRefName -q .headRefName > head_branch.txt
+        # Get PR info using gh CLI - use JSON output for safety
+        echo "Getting PR information..."
+        gh pr view ${PR_NUMBER} --json baseRefName,headRefName > pr_info.json || {
+          echo "Failed to get PR information"
+          exit 1
+        }
         
-        BASE_BRANCH=$(cat base_branch.txt)
-        HEAD_BRANCH=$(cat head_branch.txt)
+        # Debug: Show what we got
+        echo "PR info JSON:"
+        cat pr_info.json
         
-        echo "PR Branch: $(cat head_branch.txt)"
-        echo "Base Branch: $(cat base_branch.txt)"
+        # Extract branch names using jq or python for safety
+        if command -v jq &> /dev/null; then
+          BASE_BRANCH=$(jq -r '.baseRefName' pr_info.json)
+          HEAD_BRANCH=$(jq -r '.headRefName' pr_info.json)
+        else
+          # Fallback to python if jq not available
+          BASE_BRANCH=$(python3 -c "import json; print(json.load(open('pr_info.json'))['baseRefName'])")
+          HEAD_BRANCH=$(python3 -c "import json; print(json.load(open('pr_info.json'))['headRefName'])")
+        fi
+        
+        # Ensure we have valid branch names
+        if [ -z "$BASE_BRANCH" ] || [ -z "$HEAD_BRANCH" ]; then
+          echo "Error: Invalid branch names retrieved"
+          echo "Check pr_info.json for details"
+          exit 1
+        fi
+        
+        echo "PR Branch: ${HEAD_BRANCH}"
+        echo "Base Branch: ${BASE_BRANCH}"
         
         # Save for later use
         echo "BASE_BRANCH=$BASE_BRANCH" >> $GITHUB_ENV
@@ -53,9 +76,13 @@ jobs:
     
     - name: Get PR diff
       id: diff
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       run: |
         # Determine if this is a comment trigger or regular PR
-        if [ "${{ github.event_name }}" = "issue_comment" ]; then
+        if [ "${EVENT_NAME}" = "issue_comment" ]; then
           # For comment triggers, we already checked out the PR branch
           echo "Getting diff for comment trigger"
           
@@ -74,8 +101,8 @@ jobs:
         else
           # Regular PR trigger
           echo "Getting diff for PR trigger"
-          git diff "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}" > pr_diff.txt
-          git diff --name-only "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}" > changed_files.txt
+          git diff "${BASE_SHA}..${HEAD_SHA}" > pr_diff.txt
+          git diff --name-only "${BASE_SHA}..${HEAD_SHA}" > changed_files.txt
         fi
         
         # Limit diff size to avoid API limits (max ~8000 tokens)
@@ -111,16 +138,22 @@ jobs:
             fs.writeFileSync('comment_body.txt', context.payload.comment.body || '');
             fs.writeFileSync('issue_title.txt', context.payload.issue.title || '');
             fs.writeFileSync('issue_body.txt', context.payload.issue.body || '');
+            fs.writeFileSync('comment_author.txt', context.payload.comment.user.login || 'unknown');
+            fs.writeFileSync('pr_number.txt', String(context.payload.issue.number || ''));
           } else if (context.eventName === 'pull_request') {
             fs.writeFileSync('pr_title.txt', context.payload.pull_request.title || '');
             fs.writeFileSync('pr_body.txt', context.payload.pull_request.body || '');
+            fs.writeFileSync('pr_author.txt', context.payload.pull_request.user.login || 'unknown');
+            fs.writeFileSync('pr_number.txt', String(context.payload.pull_request.number || ''));
           }
     
     - name: Review with Claude Code
       id: claude_review
+      env:
+        EVENT_NAME: ${{ github.event_name }}
       run: |
         # Determine trigger type and set context
-        if [ "${{ github.event_name }}" = "issue_comment" ]; then
+        if [ "${EVENT_NAME}" = "issue_comment" ]; then
           TRIGGER_TYPE="comment"
           # Read content from files to avoid shell interpretation issues
           COMMENT_BODY=$(cat comment_body.txt 2>/dev/null || echo "")
@@ -134,11 +167,14 @@ jobs:
           fi
           
           # Check if auto-fix is requested
-          if [[ "$COMMENT_BODY" == *"--fix"* ]] || [[ "$COMMENT_BODY" == *"and fix"* ]] || [[ "$COMMENT_BODY" == *"auto-fix"* ]] || [[ "$COMMENT_BODY" == *"--auto-fix"* ]]; then
-            AUTO_FIX="true"
-          else
-            AUTO_FIX="false"
-          fi
+          case "$COMMENT_BODY" in
+            *"--fix"*|*"and fix"*|*"auto-fix"*|*"--auto-fix"*)
+              AUTO_FIX="true"
+              ;;
+            *)
+              AUTO_FIX="false"
+              ;;
+          esac
         else
           TRIGGER_TYPE="pr"
           COMMENT_BODY=""
@@ -150,9 +186,14 @@ jobs:
         
         echo "AUTO_FIX=$AUTO_FIX" >> $GITHUB_ENV
         
+        # Create temporary files for user content to prevent injection
+        echo "$TITLE" > title_safe.txt
+        echo "$DESCRIPTION" > description_safe.txt
+        echo "$COMMENT_BODY" > comment_safe.txt
+        
         # Create review prompt based on mode
         if [ "$AUTO_FIX" = "true" ]; then
-          cat > review_prompt.txt << EOF
+          cat > review_prompt.txt << 'EOF'
         You are a senior software engineer with access to file editing tools. Analyze this pull request and:
 
         1. First, provide a brief review of the changes
@@ -167,16 +208,22 @@ jobs:
 
         After making fixes, review the changes again and provide a summary of what you fixed.
 
-        Trigger: $TRIGGER_TYPE (AUTO-FIX MODE ENABLED)
-        $(if [ "$TRIGGER_TYPE" = "comment" ]; then echo "Comment: $COMMENT_BODY"; fi)
-        
-        PR Title: $TITLE
-        PR Description: $DESCRIPTION
-
-        Changes:
         EOF
+          echo "Trigger: $TRIGGER_TYPE (AUTO-FIX MODE ENABLED)" >> review_prompt.txt
+          if [ "$TRIGGER_TYPE" = "comment" ]; then
+            echo "Comment: " >> review_prompt.txt
+            cat comment_safe.txt >> review_prompt.txt
+          fi
+          echo "" >> review_prompt.txt
+          echo "PR Title: " >> review_prompt.txt
+          cat title_safe.txt >> review_prompt.txt
+          echo "" >> review_prompt.txt
+          echo "PR Description: " >> review_prompt.txt
+          cat description_safe.txt >> review_prompt.txt
+          echo "" >> review_prompt.txt
+          echo "Changes:" >> review_prompt.txt
         else
-          cat > review_prompt.txt << EOF
+          cat > review_prompt.txt << 'EOF'
         You are a senior code reviewer. Please review this pull request and provide constructive feedback.
 
         Focus on:
@@ -188,14 +235,20 @@ jobs:
 
         Be specific and actionable in your feedback. If the code looks good, say so!
 
-        Trigger: $TRIGGER_TYPE
-        $(if [ "$TRIGGER_TYPE" = "comment" ]; then echo "Comment: $COMMENT_BODY"; fi)
-        
-        PR Title: $TITLE
-        PR Description: $DESCRIPTION
-
-        Changes:
         EOF
+          echo "Trigger: $TRIGGER_TYPE" >> review_prompt.txt
+          if [ "$TRIGGER_TYPE" = "comment" ]; then
+            echo "Comment: " >> review_prompt.txt
+            cat comment_safe.txt >> review_prompt.txt
+          fi
+          echo "" >> review_prompt.txt
+          echo "PR Title: " >> review_prompt.txt
+          cat title_safe.txt >> review_prompt.txt
+          echo "" >> review_prompt.txt
+          echo "PR Description: " >> review_prompt.txt
+          cat description_safe.txt >> review_prompt.txt
+          echo "" >> review_prompt.txt
+          echo "Changes:" >> review_prompt.txt
         fi
         
         # Append the PR content
@@ -225,8 +278,6 @@ jobs:
         PR_NUMBER: ${{ github.event.issue.number }}
         GH_TOKEN: ${{ secrets.CLAUDE }}
         GH_REPO: ${{ github.repository }}
-        PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
-        COMMIT_AUTHOR: ${{ github.event.comment.user.login || 'PR update' }}
       run: |
         # Configure git for the runner
         git config user.name "claude-autofix[bot]"
@@ -241,20 +292,44 @@ jobs:
           # Stage all changes
           git add -A
           
+          # Get commit author from file
+          if [ "${EVENT_NAME}" = "issue_comment" ]; then
+            COMMIT_AUTHOR=$(cat comment_author.txt 2>/dev/null || echo "unknown")
+          else
+            COMMIT_AUTHOR=$(cat pr_author.txt 2>/dev/null || echo "unknown")
+          fi
+          
           # Commit with descriptive message
           COMMIT_MSG="🤖 Auto-fix: Apply Claude's code improvements"$'\n\n'"Applied automatic fixes suggested by Claude Code Review:"$'\n'"- Code quality improvements"$'\n'"- Bug fixes and security enhancements"$'\n'"- Performance optimizations"$'\n'"- Best practice implementations"$'\n\n'"Triggered by: ${COMMIT_AUTHOR}"
           git commit -m "${COMMIT_MSG}"
           
           # Push changes to the PR branch
           if [[ "${EVENT_NAME}" == "issue_comment" ]]; then
-            # For comment triggers, get the branch name from PR data
-            BRANCH_NAME=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
-              "https://api.github.com/repos/${GH_REPO}/pulls/${PR_NUMBER}" | \
-              jq -r '.head.ref')
-            git push origin "HEAD:${BRANCH_NAME}"
+            # For comment triggers, use the HEAD_BRANCH we already have
+            if [ -n "${HEAD_BRANCH}" ]; then
+              git push origin "HEAD:${HEAD_BRANCH}"
+            else
+              # Fallback: get the branch name from PR data
+              PR_NUM=$(cat pr_number.txt 2>/dev/null || echo "${PR_NUMBER}")
+              BRANCH_NAME=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
+                "https://api.github.com/repos/${GH_REPO}/pulls/${PR_NUM}" | \
+                jq -r '.head.ref')
+              git push origin "HEAD:${BRANCH_NAME}"
+            fi
           else
-            # For PR triggers, push to the current branch
-            git push origin "HEAD:${PR_HEAD_REF}"
+            # For PR triggers, get the branch name safely
+            PR_NUM="${PR_NUMBER}"
+            if [ -z "${PR_NUM}" ]; then
+              # Try to get from GitHub context
+              PR_NUM=$(gh pr view --json number -q .number 2>/dev/null || echo "")
+            fi
+            if [ -n "${PR_NUM}" ]; then
+              BRANCH_NAME=$(gh pr view ${PR_NUM} --json headRefName -q .headRefName)
+              git push origin "HEAD:${BRANCH_NAME}"
+            else
+              echo "Error: Could not determine PR number or branch name"
+              exit 1
+            fi
           fi
           
           echo "Auto-fixes committed and pushed!"
