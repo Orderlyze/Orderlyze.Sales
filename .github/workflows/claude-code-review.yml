@@ -29,33 +29,25 @@ jobs:
     
     - name: Checkout PR branch for comment triggers
       if: github.event_name == 'issue_comment'
+      env:
+        GH_TOKEN: ${{ secrets.CLAUDE }}
       run: |
         PR_NUMBER="${{ github.event.issue.number }}"
-        # Get PR details
-        PR_DATA=$(curl -s -H "Authorization: token ${{ secrets.CLAUDE }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}")
+        echo "Setting up PR #${PR_NUMBER} for comment trigger"
         
-        # Get the PR branch and base branch
-        PR_BRANCH=$(echo "$PR_DATA" | jq -r '.head.ref')
-        PR_REPO=$(echo "$PR_DATA" | jq -r '.head.repo.full_name')
-        BASE_BRANCH=$(echo "$PR_DATA" | jq -r '.base.ref')
+        # Use GitHub CLI which handles auth better
+        gh pr checkout ${PR_NUMBER}
         
-        echo "PR Branch: $PR_BRANCH from repo: $PR_REPO"
+        # Get PR info using gh CLI
+        BASE_BRANCH=$(gh pr view ${PR_NUMBER} --json baseRefName -q .baseRefName)
+        HEAD_BRANCH=$(gh pr view ${PR_NUMBER} --json headRefName -q .headRefName)
+        
+        echo "PR Branch: $HEAD_BRANCH"
         echo "Base Branch: $BASE_BRANCH"
         
-        # Save base branch for later use
+        # Save for later use
         echo "BASE_BRANCH=$BASE_BRANCH" >> $GITHUB_ENV
-        
-        # Fetch and checkout the PR branch
-        if [ "$PR_REPO" = "${{ github.repository }}" ]; then
-          git fetch origin "$PR_BRANCH"
-          git checkout "$PR_BRANCH"
-        else
-          # Handle forks
-          git fetch origin "pull/${PR_NUMBER}/head:pr-${PR_NUMBER}"
-          git checkout "pr-${PR_NUMBER}"
-        fi
+        echo "HEAD_BRANCH=$HEAD_BRANCH" >> $GITHUB_ENV
     
     - name: Get PR diff
       id: diff
@@ -63,25 +55,25 @@ jobs:
         # Determine if this is a comment trigger or regular PR
         if [ "${{ github.event_name }}" = "issue_comment" ]; then
           # For comment triggers, we already checked out the PR branch
-          PR_NUMBER="${{ github.event.issue.number }}"
-          echo "Comment trigger detected for PR #${PR_NUMBER}"
+          echo "Getting diff for comment trigger"
           
-          # Use the base branch from the PR data
-          if [ -z "$BASE_BRANCH" ]; then
-            BASE_BRANCH="master"
-            echo "Using default base branch: $BASE_BRANCH"
-          else
-            echo "Using PR base branch: $BASE_BRANCH"
-          fi
+          # Ensure we have the latest base branch
+          git fetch origin "${BASE_BRANCH}"
           
           # Get the diff between base and current HEAD
-          git fetch origin $BASE_BRANCH
-          git diff origin/$BASE_BRANCH...HEAD > pr_diff.txt
-          git diff --name-only origin/$BASE_BRANCH...HEAD > changed_files.txt
+          echo "Comparing origin/${BASE_BRANCH}...HEAD"
+          git diff "origin/${BASE_BRANCH}...HEAD" > pr_diff.txt || {
+            echo "Failed to get diff, trying alternative method"
+            git diff "origin/${BASE_BRANCH}" HEAD > pr_diff.txt
+          }
+          git diff --name-only "origin/${BASE_BRANCH}...HEAD" > changed_files.txt || {
+            git diff --name-only "origin/${BASE_BRANCH}" HEAD > changed_files.txt
+          }
         else
           # Regular PR trigger
-          git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > pr_diff.txt
-          git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > changed_files.txt
+          echo "Getting diff for PR trigger"
+          git diff "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}" > pr_diff.txt
+          git diff --name-only "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}" > changed_files.txt
         fi
         
         # Limit diff size to avoid API limits (max ~8000 tokens)
