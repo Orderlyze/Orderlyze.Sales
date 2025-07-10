@@ -100,23 +100,20 @@ jobs:
         
     - name: Review with Claude Code
       id: claude_review
+      env:
+        PR_TITLE: ${{ github.event.pull_request.title }}
+        PR_BODY: ${{ github.event.pull_request.body }}
+        ISSUE_TITLE: ${{ github.event.issue.title }}
+        ISSUE_BODY: ${{ github.event.issue.body }}
+        COMMENT_BODY_TEXT: ${{ github.event.comment.body }}
       run: |
         # Determine trigger type and set context
         if [ "${{ github.event_name }}" = "issue_comment" ]; then
           TRIGGER_TYPE="comment"
-          # Escape special characters using heredocs
-          COMMENT_BODY=$(cat << 'COMMENT_EOF'
-${{ github.event.comment.body }}
-COMMENT_EOF
-)
-          TITLE=$(cat << 'TITLE_EOF'
-${{ github.event.issue.title }}
-TITLE_EOF
-)
-          DESCRIPTION=$(cat << 'DESC_EOF'
-${{ github.event.issue.body }}
-DESC_EOF
-)
+          # Use environment variables to safely pass content
+          COMMENT_BODY="$COMMENT_BODY_TEXT"
+          TITLE="$ISSUE_TITLE"
+          DESCRIPTION="$ISSUE_BODY"
           
           # Check if auto-fix is requested
           if [[ "$COMMENT_BODY" == *"--fix"* ]] || [[ "$COMMENT_BODY" == *"and fix"* ]] || [[ "$COMMENT_BODY" == *"auto-fix"* ]] || [[ "$COMMENT_BODY" == *"--auto-fix"* ]]; then
@@ -127,15 +124,9 @@ DESC_EOF
         else
           TRIGGER_TYPE="pr"
           COMMENT_BODY=""
-          # Escape backticks and dollar signs to prevent shell interpretation
-          TITLE=$(cat << 'TITLE_EOF'
-${{ github.event.pull_request.title }}
-TITLE_EOF
-)
-          DESCRIPTION=$(cat << 'DESC_EOF'
-${{ github.event.pull_request.body }}
-DESC_EOF
-)
+          # Use environment variables to safely pass content
+          TITLE="$PR_TITLE"
+          DESCRIPTION="$PR_BODY"
           AUTO_FIX="false"
         fi
         
