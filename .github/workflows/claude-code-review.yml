@@ -18,8 +18,7 @@ jobs:
     if: |
       github.event_name == 'pull_request' || 
       (github.event_name == 'issue_comment' && 
-       (contains(github.event.comment.body, '@claude') || 
-        contains(github.event.comment.body, '/claude')))
+       github.event.issue.pull_request != null)
     
     steps:
     - name: Checkout code
@@ -38,12 +37,15 @@ jobs:
         # Use GitHub CLI which handles auth better
         gh pr checkout ${PR_NUMBER}
         
-        # Get PR info using gh CLI
-        BASE_BRANCH=$(gh pr view ${PR_NUMBER} --json baseRefName -q .baseRefName)
-        HEAD_BRANCH=$(gh pr view ${PR_NUMBER} --json headRefName -q .headRefName)
+        # Get PR info using gh CLI - output to files to avoid shell interpretation
+        gh pr view ${PR_NUMBER} --json baseRefName -q .baseRefName > base_branch.txt
+        gh pr view ${PR_NUMBER} --json headRefName -q .headRefName > head_branch.txt
         
-        echo "PR Branch: $HEAD_BRANCH"
-        echo "Base Branch: $BASE_BRANCH"
+        BASE_BRANCH=$(cat base_branch.txt)
+        HEAD_BRANCH=$(cat head_branch.txt)
+        
+        echo "PR Branch: $(cat head_branch.txt)"
+        echo "Base Branch: $(cat base_branch.txt)"
         
         # Save for later use
         echo "BASE_BRANCH=$BASE_BRANCH" >> $GITHUB_ENV
@@ -98,22 +100,38 @@ jobs:
         claude --version
         echo "Claude Code CLI is available and ready to use with your subscription"
         
+    - name: Prepare content files
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          
+          // Safely write PR/issue content to files to avoid shell interpretation issues
+          if (context.eventName === 'issue_comment') {
+            fs.writeFileSync('comment_body.txt', context.payload.comment.body || '');
+            fs.writeFileSync('issue_title.txt', context.payload.issue.title || '');
+            fs.writeFileSync('issue_body.txt', context.payload.issue.body || '');
+          } else if (context.eventName === 'pull_request') {
+            fs.writeFileSync('pr_title.txt', context.payload.pull_request.title || '');
+            fs.writeFileSync('pr_body.txt', context.payload.pull_request.body || '');
+          }
+    
     - name: Review with Claude Code
       id: claude_review
-      env:
-        PR_TITLE: ${{ github.event.pull_request.title }}
-        PR_BODY: ${{ github.event.pull_request.body }}
-        ISSUE_TITLE: ${{ github.event.issue.title }}
-        ISSUE_BODY: ${{ github.event.issue.body }}
-        COMMENT_BODY_TEXT: ${{ github.event.comment.body }}
       run: |
         # Determine trigger type and set context
         if [ "${{ github.event_name }}" = "issue_comment" ]; then
           TRIGGER_TYPE="comment"
-          # Use environment variables to safely pass content
-          COMMENT_BODY="${COMMENT_BODY_TEXT}"
-          TITLE="${ISSUE_TITLE}"
-          DESCRIPTION="${ISSUE_BODY}"
+          # Read content from files to avoid shell interpretation issues
+          COMMENT_BODY=$(cat comment_body.txt 2>/dev/null || echo "")
+          TITLE=$(cat issue_title.txt 2>/dev/null || echo "")
+          DESCRIPTION=$(cat issue_body.txt 2>/dev/null || echo "")
+          
+          # Check if comment mentions Claude
+          if ! echo "$COMMENT_BODY" | grep -qE '@claude|/claude'; then
+            echo "Comment does not mention @claude or /claude, skipping review"
+            exit 0
+          fi
           
           # Check if auto-fix is requested
           if [[ "$COMMENT_BODY" == *"--fix"* ]] || [[ "$COMMENT_BODY" == *"and fix"* ]] || [[ "$COMMENT_BODY" == *"auto-fix"* ]] || [[ "$COMMENT_BODY" == *"--auto-fix"* ]]; then
@@ -124,9 +142,9 @@ jobs:
         else
           TRIGGER_TYPE="pr"
           COMMENT_BODY=""
-          # Use environment variables to safely pass content
-          TITLE="${PR_TITLE}"
-          DESCRIPTION="${PR_BODY}"
+          # Read content from files to avoid shell interpretation issues
+          TITLE=$(cat pr_title.txt 2>/dev/null || echo "")
+          DESCRIPTION=$(cat pr_body.txt 2>/dev/null || echo "")
           AUTO_FIX="false"
         fi
         
