@@ -36,11 +36,16 @@ jobs:
           -H "Accept: application/vnd.github.v3+json" \
           "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}")
         
-        # Get the PR branch
+        # Get the PR branch and base branch
         PR_BRANCH=$(echo "$PR_DATA" | jq -r '.head.ref')
         PR_REPO=$(echo "$PR_DATA" | jq -r '.head.repo.full_name')
+        BASE_BRANCH=$(echo "$PR_DATA" | jq -r '.base.ref')
         
         echo "PR Branch: $PR_BRANCH from repo: $PR_REPO"
+        echo "Base Branch: $BASE_BRANCH"
+        
+        # Save base branch for later use
+        echo "BASE_BRANCH=$BASE_BRANCH" >> $GITHUB_ENV
         
         # Fetch and checkout the PR branch
         if [ "$PR_REPO" = "${{ github.repository }}" ]; then
@@ -57,43 +62,22 @@ jobs:
       run: |
         # Determine if this is a comment trigger or regular PR
         if [ "${{ github.event_name }}" = "issue_comment" ]; then
-          # For comment triggers, get PR info from the issue
+          # For comment triggers, we already checked out the PR branch
           PR_NUMBER="${{ github.event.issue.number }}"
           echo "Comment trigger detected for PR #${PR_NUMBER}"
           
-          # Get PR details via GitHub API
-          PR_DATA=$(curl -s -H "Authorization: token ${{ secrets.CLAUDE }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}")
-          
-          # Debug: Print API response
-          echo "API Response: $PR_DATA"
-          
-          BASE_SHA=$(echo "$PR_DATA" | jq -r '.base.sha // empty')
-          HEAD_SHA=$(echo "$PR_DATA" | jq -r '.head.sha // empty')
-          
-          # Check if we got valid SHAs
-          if [ -z "$BASE_SHA" ] || [ -z "$HEAD_SHA" ] || [ "$BASE_SHA" = "null" ] || [ "$HEAD_SHA" = "null" ]; then
-            echo "Error: Could not get PR base/head SHAs"
-            echo "BASE_SHA: $BASE_SHA, HEAD_SHA: $HEAD_SHA"
-            
-            # Try alternative approach - fetch and checkout PR branch
-            PR_BRANCH=$(echo "$PR_DATA" | jq -r '.head.ref // empty')
-            if [ -n "$PR_BRANCH" ] && [ "$PR_BRANCH" != "null" ]; then
-              echo "Fetching PR branch: $PR_BRANCH"
-              git fetch origin "$PR_BRANCH"
-              HEAD_SHA=$(git rev-parse "origin/$PR_BRANCH")
-              BASE_SHA=$(git merge-base HEAD "origin/$PR_BRANCH")
-              echo "Using alternative SHAs - BASE: $BASE_SHA, HEAD: $HEAD_SHA"
-            else
-              echo "Error: Could not determine PR branch"
-              exit 1
-            fi
+          # Use the base branch from the PR data
+          if [ -z "$BASE_BRANCH" ]; then
+            BASE_BRANCH="master"
+            echo "Using default base branch: $BASE_BRANCH"
+          else
+            echo "Using PR base branch: $BASE_BRANCH"
           fi
           
-          # Get the diff between base and head
-          git diff ${BASE_SHA}..${HEAD_SHA} > pr_diff.txt
-          git diff --name-only ${BASE_SHA}..${HEAD_SHA} > changed_files.txt
+          # Get the diff between base and current HEAD
+          git fetch origin $BASE_BRANCH
+          git diff origin/$BASE_BRANCH...HEAD > pr_diff.txt
+          git diff --name-only origin/$BASE_BRANCH...HEAD > changed_files.txt
         else
           # Regular PR trigger
           git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > pr_diff.txt
