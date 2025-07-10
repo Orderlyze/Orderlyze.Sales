@@ -36,11 +36,11 @@ internal partial class WixContactsListViewModel
             {
                 Body = new AddContactRequest
                 {
-                    WixId = wixContact.Id ?? string.Empty,
-                    Name = wixContact.Name ?? string.Empty,
-                    Email = wixContact.Email ?? string.Empty,
-                    Phone = wixContact.Phone ?? string.Empty,
-                    Branche = wixContact.Branche ?? string.Empty
+                    WixId = wixContact.Id ?? "",
+                    Name = wixContact.Name ?? "",
+                    Email = wixContact.Email ?? "",
+                    Phone = wixContact.Phone ?? "",
+                    Branche = wixContact.Branche ?? ""
                 }
             };
 

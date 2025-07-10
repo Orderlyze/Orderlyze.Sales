@@ -19,19 +19,19 @@ public partial class RegisterPageViewModel : ObservableObject
     private readonly ILogger<RegisterPageViewModel> _logger;
 
     [ObservableProperty]
-    private string _email = string.Empty;
+    private string _email = "";
 
     [ObservableProperty]
-    private string _password = string.Empty;
+    private string _password = "";
 
     [ObservableProperty]
-    private string _confirmPassword = string.Empty;
+    private string _confirmPassword = "";
 
     [ObservableProperty]
     private bool _isLoading;
 
     [ObservableProperty]
-    private string _errorMessage = string.Empty;
+    private string _errorMessage = "";
 
     [ObservableProperty]
     private bool _hasError;
@@ -60,7 +60,7 @@ public partial class RegisterPageViewModel : ObservableObject
     [RelayCommand]
     private async Task RegisterAsync()
     {
-        ErrorMessage = string.Empty;
+        ErrorMessage = "";
         HasError = false;
 
         // Validate inputs

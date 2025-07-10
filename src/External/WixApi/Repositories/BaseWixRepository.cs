@@ -32,7 +32,7 @@ namespace WixApi.Repositories
         /// <returns>Current access token</returns>
         protected virtual Task<string> GetAuthorizationHeaderValueAsync(HttpRequestMessage message, CancellationToken token)
         {
-            return Task.FromResult(string.Empty);
+            return Task.FromResult("");
         }
 
         protected virtual async Task<T> TryRequest<T>(Func<Task<T>> func, T defaultValue = default(T))

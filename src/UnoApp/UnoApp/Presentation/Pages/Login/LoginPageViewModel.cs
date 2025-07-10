@@ -18,10 +18,10 @@ internal partial class LoginPageViewModel : BasePageViewModel
     private readonly ILogger<LoginPageViewModel> _logger;
 
     [ObservableProperty]
-    private string _email = string.Empty;
+    private string _email = "";
 
     [ObservableProperty]
-    private string _password = string.Empty;
+    private string _password = "";
 
     [ObservableProperty]
     private bool _isLoading;
