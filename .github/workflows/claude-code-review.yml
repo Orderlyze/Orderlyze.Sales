@@ -111,9 +111,9 @@ jobs:
         if [ "${{ github.event_name }}" = "issue_comment" ]; then
           TRIGGER_TYPE="comment"
           # Use environment variables to safely pass content
-          COMMENT_BODY="$COMMENT_BODY_TEXT"
-          TITLE="$ISSUE_TITLE"
-          DESCRIPTION="$ISSUE_BODY"
+          COMMENT_BODY="${COMMENT_BODY_TEXT}"
+          TITLE="${ISSUE_TITLE}"
+          DESCRIPTION="${ISSUE_BODY}"
           
           # Check if auto-fix is requested
           if [[ "$COMMENT_BODY" == *"--fix"* ]] || [[ "$COMMENT_BODY" == *"and fix"* ]] || [[ "$COMMENT_BODY" == *"auto-fix"* ]] || [[ "$COMMENT_BODY" == *"--auto-fix"* ]]; then
@@ -125,8 +125,8 @@ jobs:
           TRIGGER_TYPE="pr"
           COMMENT_BODY=""
           # Use environment variables to safely pass content
-          TITLE="$PR_TITLE"
-          DESCRIPTION="$PR_BODY"
+          TITLE="${PR_TITLE}"
+          DESCRIPTION="${PR_BODY}"
           AUTO_FIX="false"
         fi
         
