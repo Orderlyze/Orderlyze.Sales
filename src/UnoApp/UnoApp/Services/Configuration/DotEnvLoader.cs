@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -58,9 +59,10 @@ public static class DotEnvLoader
                 }
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Silently fail - environment variables might be set elsewhere
+            // Log the exception but don't throw - environment variables might be set elsewhere
+            Debug.WriteLine($"Warning: Failed to load .env file from {filePath}: {ex.Message}");
         }
     }
 }

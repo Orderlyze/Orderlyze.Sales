@@ -13,8 +13,8 @@ namespace UnoApp.Presentation.Pages.Contacts;
 
 internal partial class ContactsPageViewModel : BasePageViewModel
 {
-    private readonly INavigator navigator;
-    private readonly IMediator mediator;
+    private readonly INavigator _navigator;
+    private readonly IMediator _mediator;
 
     public ContactsPageViewModel(
         BaseServices baseServices,
@@ -23,8 +23,8 @@ internal partial class ContactsPageViewModel : BasePageViewModel
     )
         : base(baseServices)
     {
-        this.navigator = navigator;
-        this.mediator = mediator;
+        _navigator = navigator;
+        _mediator = mediator;
     }
 
     public override IEnumerable<RegionModel> GetRegions(NavigationEventArgs e)
@@ -35,7 +35,7 @@ internal partial class ContactsPageViewModel : BasePageViewModel
     public IFeed<IEnumerable<ContactsListModel>> Contacts =>
         Feed.Async(async ct =>
         {
-            var contacts = await mediator.Request(new UnoApp.ApiClient.GetAllContactHttpRequest(), ct);
+            var contacts = await _mediator.Request(new UnoApp.ApiClient.GetAllContactHttpRequest(), ct);
             return contacts.Result.Select(x => new ContactsListModel(
                 x.Id,
                 x.Name,

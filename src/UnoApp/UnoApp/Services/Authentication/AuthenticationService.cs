@@ -9,6 +9,8 @@ namespace UnoApp.Services.Authentication;
 
 public class AuthenticationService : IAuthenticationService
 {
+    private const int TokenExpirationBufferSeconds = 60;
+    
     private readonly IMediator _mediator;
     private readonly ILogger<AuthenticationService> _logger;
     
@@ -130,8 +132,8 @@ public class AuthenticationService : IAuthenticationService
         _refreshToken = tokenResponse.RefreshToken;
         
         // Calculate expiration time from ExpiresIn
-        // Subtract 60 seconds as a buffer to refresh before actual expiration
-        _tokenExpiresAt = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn - 60);
+        // Subtract buffer seconds to refresh before actual expiration
+        _tokenExpiresAt = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn - TokenExpirationBufferSeconds);
         
         _logger.LogInformation("Tokens stored, expires at: {ExpiresAt}", _tokenExpiresAt);
         
@@ -142,7 +144,7 @@ public class AuthenticationService : IAuthenticationService
             {
                 AccessToken = _accessToken,
                 RefreshToken = _refreshToken,
-                ExpiresAt = _tokenExpiresAt.Value
+                ExpiresAt = _tokenExpiresAt.GetValueOrDefault(DateTime.UtcNow.AddHours(1))
             });
             _logger.LogDebug("Tokens persisted successfully");
         }
