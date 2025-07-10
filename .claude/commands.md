@@ -14,6 +14,12 @@
 - Run tests: Check README or search for test commands
 - Lint: Check for `npm run lint` or similar commands
 - Type check: Check for `npm run typecheck` or similar commands
+- Clean build: `dotnet clean && dotnet build`
+
+## Git Commands
+- `git status` - Check working directory status
+- `gh pr list` - List open pull requests
+- `gh issue list` - List open issues
 
 ## API Documentation
 - Scalar UI: http://localhost:5062/scalar/v1 (when API is running)
