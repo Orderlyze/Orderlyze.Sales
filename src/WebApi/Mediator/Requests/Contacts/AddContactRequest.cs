@@ -4,10 +4,11 @@ namespace WebApi.Mediator.Requests.Contacts
 {
     internal class AddContactRequest : IRequest<ContactDto>
     {
-        public string WixId { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public string Branche { get; set; } = string.Empty;
+        public string WixId { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Branche { get; set; } = "";
+        public bool SetInitialCallDate { get; set; } = true; // Set NextCallDate to today by default
     }
 }
