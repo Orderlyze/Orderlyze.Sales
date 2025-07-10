@@ -192,7 +192,8 @@ jobs:
           git add -A
           
           # Commit with descriptive message
-          git commit -m "🤖 Auto-fix: Apply Claude's code improvements
+          cat > commit_message.txt << EOF
+🤖 Auto-fix: Apply Claude's code improvements
 
 Applied automatic fixes suggested by Claude Code Review:
 - Code quality improvements
@@ -200,7 +201,9 @@ Applied automatic fixes suggested by Claude Code Review:
 - Performance optimizations
 - Best practice implementations
 
-Triggered by: ${COMMIT_AUTHOR}"
+Triggered by: ${COMMIT_AUTHOR}
+EOF
+          git commit -F commit_message.txt
           
           # Push changes to the PR branch
           if [[ "${EVENT_NAME}" == "issue_comment" ]]; then
