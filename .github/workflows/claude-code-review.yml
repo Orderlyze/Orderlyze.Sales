@@ -74,8 +74,8 @@ jobs:
         # Append the PR content
         cat pr_summary.txt >> review_prompt.txt
         
-        # Get review from Claude Code CLI
-        claude --model haiku < review_prompt.txt > claude_review.md 2>&1
+        # Get review from Claude Code CLI using --print for non-interactive mode
+        claude --print --model haiku "$(cat review_prompt.txt)" > claude_review.md 2>&1
         
         # Check if review was successful
         if [ $? -ne 0 ]; then
