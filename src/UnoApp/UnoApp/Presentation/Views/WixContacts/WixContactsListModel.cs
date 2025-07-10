@@ -10,6 +10,7 @@ internal partial record WixContactsListModel(
     string Id,
     string Name,
     string Email,
+    string? Phone,
     string? Branche,
     string? Company,
     IReadOnlyCollection<string> Labels

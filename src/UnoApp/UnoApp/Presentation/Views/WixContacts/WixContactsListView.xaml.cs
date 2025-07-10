@@ -23,4 +23,12 @@ public partial class WixContactsListView
     {
         this.InitializeComponent();
     }
+
+    private async void ListView_ItemClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is WixContactsListModel contact && DataContext is WixContactsListViewModel viewModel)
+        {
+            await viewModel.AddContactAsync(contact);
+        }
+    }
 }

@@ -62,9 +62,50 @@ All changes made by Claude are automatically logged to:
 - `/claude-changes.json` - Structured JSON format for learning
 - `/claude-changes.log` - Human-readable log (deprecated)
 
+## Code Generation Workflow (IMPORTANT)
+### WebApi.json to Client Requests Generation
+This project uses a special workflow for generating client-side requests from the WebApi:
+
+1. **Build WebApi Project**: 
+   ```bash
+   dotnet build src/WebApi/WebApi.csproj
+   ```
+   - This triggers the `Microsoft.Extensions.ApiDescription.Server` package
+   - Generates `WebApi.json` in the WebApi project root (configured via `<OpenApiDocumentsDirectory>.</OpenApiDocumentsDirectory>`)
+
+2. **Copy WebApi.json to UnoApp**:
+   - Manually copy `/src/WebApi/WebApi.json` to `/src/UnoApp/UnoApp/WebApi.json`
+   - This file is consumed by Shiny.Mediator's source generators
+
+3. **Shiny Mediator Code Generation**:
+   - The UnoApp.csproj contains:
+   ```xml
+   <MediatorHttp Include="WebApi.json" 
+                 Namespace="UnoApp.ApiClient" 
+                 ContractPostfix="HttpRequest" 
+                 Visible="true" />
+   ```
+   - This generates strongly-typed request classes like `AddContactRequest`
+   - Generated code goes into the `UnoApp.ApiClient` namespace
+   - Requests get the `HttpRequest` postfix
+   - **Generated files location**: `/src/UnoApp/UnoApp/obj/generated/Shiny.Mediator.SourceGenerators/Shiny.Mediator.SourceGenerators.MediatorHttpRequestSourceGenerator/UnoApp.ApiClient.g.cs`
+
+4. **Handler Implementation**:
+   - Handlers are NOT generated - they must be manually implemented
+   - Follow the existing pattern in `/src/UnoApp/UnoApp/Mediator/Handlers/`
+   - Always add `[SingletonHandler]` attribute to handlers
+
+**Example**: When adding a new API endpoint:
+1. Add the endpoint to WebApi
+2. Build WebApi project
+3. Copy the updated WebApi.json to UnoApp
+4. Build UnoApp - this generates the request class
+5. Implement the handler manually
+
 ## Notes for Future Sessions
 - The project uses .NET 9
 - WebAssembly builds require special handling for environment variables
 - Git submodules are used (especially for mediator)
 - Scalar is used for API documentation
 - **IMPORTANT**: Always add `[SingletonHandler]` attribute to all Mediator handlers (Request/Command handlers)
+- Hooks are working and logging changes to claude-changes.json
