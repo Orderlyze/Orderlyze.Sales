@@ -14,7 +14,7 @@ permissions:
 jobs:
   claude-review:
     runs-on: self-hosted
-    # Only run on PRs or when triggered by comment
+    # Only run on PRs or when triggered by comment on PR
     if: |
       github.event_name == 'pull_request' || 
       (github.event_name == 'issue_comment' && 
@@ -26,65 +26,109 @@ jobs:
       with:
         fetch-depth: 0
     
+    - name: Setup PR context
+      id: setup
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          
+          // Initialize all required files with safe defaults
+          fs.writeFileSync('event_name.txt', context.eventName);
+          fs.writeFileSync('repo.txt', context.repo.owner + '/' + context.repo.repo);
+          
+          if (context.eventName === 'issue_comment') {
+            // For comment triggers
+            const prNumber = context.payload.issue.number;
+            fs.writeFileSync('pr_number.txt', String(prNumber));
+            fs.writeFileSync('comment_body.txt', context.payload.comment.body || '');
+            fs.writeFileSync('comment_author.txt', context.payload.comment.user.login || 'unknown');
+            
+            // Check if comment mentions Claude
+            const commentBody = context.payload.comment.body || '';
+            if (!commentBody.match(/@claude|\/claude/)) {
+              console.log('Comment does not mention @claude or /claude, skipping');
+              fs.writeFileSync('skip_review.txt', 'true');
+              return;
+            }
+            fs.writeFileSync('skip_review.txt', 'false');
+            
+            // Check for auto-fix mode
+            const autoFix = !!(commentBody.match(/--fix|and fix|auto-fix|--auto-fix/));
+            fs.writeFileSync('auto_fix.txt', String(autoFix));
+            
+            // Get PR details
+            try {
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber
+              });
+              
+              fs.writeFileSync('base_branch.txt', pr.base.ref);
+              fs.writeFileSync('head_branch.txt', pr.head.ref);
+              fs.writeFileSync('base_sha.txt', pr.base.sha);
+              fs.writeFileSync('head_sha.txt', pr.head.sha);
+              fs.writeFileSync('pr_title.txt', pr.title || '');
+              fs.writeFileSync('pr_body.txt', pr.body || '');
+            } catch (e) {
+              console.error('Failed to get PR details:', e);
+              fs.writeFileSync('skip_review.txt', 'true');
+            }
+          } else {
+            // For PR triggers
+            const pr = context.payload.pull_request;
+            fs.writeFileSync('pr_number.txt', String(pr.number));
+            fs.writeFileSync('base_branch.txt', pr.base.ref);
+            fs.writeFileSync('head_branch.txt', pr.head.ref);
+            fs.writeFileSync('base_sha.txt', pr.base.sha);
+            fs.writeFileSync('head_sha.txt', pr.head.sha);
+            fs.writeFileSync('pr_title.txt', pr.title || '');
+            fs.writeFileSync('pr_body.txt', pr.body || '');
+            fs.writeFileSync('pr_author.txt', pr.user.login || 'unknown');
+            fs.writeFileSync('auto_fix.txt', 'false');
+            fs.writeFileSync('skip_review.txt', 'false');
+            fs.writeFileSync('comment_body.txt', '');
+          }
+
+    - name: Check if should skip
+      id: check_skip
+      run: |
+        if [ -f skip_review.txt ] && [ "$(cat skip_review.txt)" = "true" ]; then
+          echo "Skipping review"
+          echo "skip=true" >> $GITHUB_OUTPUT
+        else
+          echo "skip=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Checkout PR branch for comment triggers
-      if: github.event_name == 'issue_comment'
+      if: steps.check_skip.outputs.skip != 'true' && github.event_name == 'issue_comment'
       env:
         GH_TOKEN: ${{ secrets.CLAUDE }}
       run: |
-        set -euo pipefail  # Exit on error, undefined vars, pipe failures
-        
-        PR_NUMBER="${{ github.event.issue.number }}"
+        PR_NUMBER=$(cat pr_number.txt)
         echo "Setting up PR #${PR_NUMBER} for comment trigger"
         
         # Use GitHub CLI which handles auth better
         gh pr checkout ${PR_NUMBER}
         
-        # Get PR info using gh CLI - use JSON output for safety
-        echo "Getting PR information..."
-        gh pr view ${PR_NUMBER} --json baseRefName,headRefName > pr_info.json || {
-          echo "Failed to get PR information"
-          exit 1
-        }
-        
-        # Debug: Show what we got
-        echo "PR info JSON:"
-        cat pr_info.json
-        
-        # Extract branch names using jq or python for safety
-        if command -v jq &> /dev/null; then
-          BASE_BRANCH=$(jq -r '.baseRefName' pr_info.json)
-          HEAD_BRANCH=$(jq -r '.headRefName' pr_info.json)
-        else
-          # Fallback to python if jq not available
-          BASE_BRANCH=$(python3 -c "import json; print(json.load(open('pr_info.json'))['baseRefName'])")
-          HEAD_BRANCH=$(python3 -c "import json; print(json.load(open('pr_info.json'))['headRefName'])")
-        fi
-        
-        # Ensure we have valid branch names
-        if [ -z "$BASE_BRANCH" ] || [ -z "$HEAD_BRANCH" ]; then
-          echo "Error: Invalid branch names retrieved"
-          echo "Check pr_info.json for details"
-          exit 1
-        fi
-        
-        echo "PR Branch: ${HEAD_BRANCH}"
-        echo "Base Branch: ${BASE_BRANCH}"
-        
-        # Save for later use
-        echo "BASE_BRANCH=$BASE_BRANCH" >> $GITHUB_ENV
-        echo "HEAD_BRANCH=$HEAD_BRANCH" >> $GITHUB_ENV
+        # Verify we're on the right branch
+        HEAD_BRANCH=$(cat head_branch.txt)
+        echo "Checked out branch: ${HEAD_BRANCH}"
     
     - name: Get PR diff
+      if: steps.check_skip.outputs.skip != 'true'
       id: diff
-      env:
-        EVENT_NAME: ${{ github.event_name }}
-        BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       run: |
+        EVENT_NAME=$(cat event_name.txt)
+        
         # Determine if this is a comment trigger or regular PR
         if [ "${EVENT_NAME}" = "issue_comment" ]; then
           # For comment triggers, we already checked out the PR branch
           echo "Getting diff for comment trigger"
+          
+          # Get base branch from file
+          BASE_BRANCH=$(cat base_branch.txt)
           
           # Ensure we have the latest base branch
           git fetch origin "${BASE_BRANCH}"
@@ -99,7 +143,9 @@ jobs:
             git diff --name-only "origin/${BASE_BRANCH}" HEAD > changed_files.txt
           }
         else
-          # Regular PR trigger
+          # Regular PR trigger - use SHAs from files
+          BASE_SHA=$(cat base_sha.txt)
+          HEAD_SHA=$(cat head_sha.txt)
           echo "Getting diff for PR trigger"
           git diff "${BASE_SHA}..${HEAD_SHA}" > pr_diff.txt
           git diff --name-only "${BASE_SHA}..${HEAD_SHA}" > changed_files.txt
@@ -115,6 +161,7 @@ jobs:
         cat pr_diff_limited.txt >> pr_summary.txt
     
     - name: Check Claude Code CLI
+      if: steps.check_skip.outputs.skip != 'true'
       run: |
         # Check if Claude Code CLI is available
         if ! command -v claude &> /dev/null; then
@@ -126,139 +173,83 @@ jobs:
         # Check Claude Code version and authentication
         claude --version
         echo "Claude Code CLI is available and ready to use with your subscription"
-        
-    - name: Prepare content files
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const fs = require('fs');
-          
-          // Safely write PR/issue content to files to avoid shell interpretation issues
-          if (context.eventName === 'issue_comment') {
-            fs.writeFileSync('comment_body.txt', context.payload.comment.body || '');
-            fs.writeFileSync('issue_title.txt', context.payload.issue.title || '');
-            fs.writeFileSync('issue_body.txt', context.payload.issue.body || '');
-            fs.writeFileSync('comment_author.txt', context.payload.comment.user.login || 'unknown');
-            fs.writeFileSync('pr_number.txt', String(context.payload.issue.number || ''));
-          } else if (context.eventName === 'pull_request') {
-            fs.writeFileSync('pr_title.txt', context.payload.pull_request.title || '');
-            fs.writeFileSync('pr_body.txt', context.payload.pull_request.body || '');
-            fs.writeFileSync('pr_author.txt', context.payload.pull_request.user.login || 'unknown');
-            fs.writeFileSync('pr_number.txt', String(context.payload.pull_request.number || ''));
-          }
     
     - name: Review with Claude Code
+      if: steps.check_skip.outputs.skip != 'true'
       id: claude_review
-      env:
-        EVENT_NAME: ${{ github.event_name }}
       run: |
-        # Determine trigger type and set context
+        # Read all context from files
+        EVENT_NAME=$(cat event_name.txt)
+        AUTO_FIX=$(cat auto_fix.txt)
+        COMMENT_BODY=$(cat comment_body.txt 2>/dev/null || echo "")
+        TITLE=$(cat pr_title.txt 2>/dev/null || echo "")
+        DESCRIPTION=$(cat pr_body.txt 2>/dev/null || echo "")
+        
+        # Determine trigger type
         if [ "${EVENT_NAME}" = "issue_comment" ]; then
           TRIGGER_TYPE="comment"
-          # Read content from files to avoid shell interpretation issues
-          COMMENT_BODY=$(cat comment_body.txt 2>/dev/null || echo "")
-          TITLE=$(cat issue_title.txt 2>/dev/null || echo "")
-          DESCRIPTION=$(cat issue_body.txt 2>/dev/null || echo "")
-          
-          # Check if comment mentions Claude
-          if ! echo "$COMMENT_BODY" | grep -qE '@claude|/claude'; then
-            echo "Comment does not mention @claude or /claude, skipping review"
-            exit 0
-          fi
-          
-          # Check if auto-fix is requested
-          case "$COMMENT_BODY" in
-            *"--fix"*|*"and fix"*|*"auto-fix"*|*"--auto-fix"*)
-              AUTO_FIX="true"
-              ;;
-            *)
-              AUTO_FIX="false"
-              ;;
-          esac
         else
           TRIGGER_TYPE="pr"
-          COMMENT_BODY=""
-          # Read content from files to avoid shell interpretation issues
-          TITLE=$(cat pr_title.txt 2>/dev/null || echo "")
-          DESCRIPTION=$(cat pr_body.txt 2>/dev/null || echo "")
-          AUTO_FIX="false"
         fi
         
+        # Save AUTO_FIX for later steps
         echo "AUTO_FIX=$AUTO_FIX" >> $GITHUB_ENV
-        
-        # Create temporary files for user content to prevent injection
-        echo "$TITLE" > title_safe.txt
-        echo "$DESCRIPTION" > description_safe.txt
-        echo "$COMMENT_BODY" > comment_safe.txt
         
         # Create review prompt based on mode
         if [ "$AUTO_FIX" = "true" ]; then
           cat > review_prompt.txt << 'EOF'
-        You are a senior software engineer with access to file editing tools. Analyze this pull request and:
+You are a senior software engineer with access to file editing tools. Analyze this pull request and:
 
-        1. First, provide a brief review of the changes
-        2. Then, actively use the Edit or Write tools to fix any issues you find:
-           - Fix code quality issues
-           - Resolve potential bugs
-           - Improve performance
-           - Apply security best practices
-           - Refactor code following best practices
+1. First, provide a brief review of the changes
+2. Then, actively use the Edit or Write tools to fix any issues you find:
+   - Fix code quality issues
+   - Resolve potential bugs
+   - Improve performance
+   - Apply security best practices
+   - Refactor code following best practices
 
-        IMPORTANT: You have access to Edit and Write tools. Use them to make the necessary changes directly to the files.
+IMPORTANT: You have access to Edit and Write tools. Use them to make the necessary changes directly to the files.
 
-        After making fixes, review the changes again and provide a summary of what you fixed.
+After making fixes, review the changes again and provide a summary of what you fixed.
 
-        EOF
+EOF
           echo "Trigger: $TRIGGER_TYPE (AUTO-FIX MODE ENABLED)" >> review_prompt.txt
-          if [ "$TRIGGER_TYPE" = "comment" ]; then
-            echo "Comment: " >> review_prompt.txt
-            cat comment_safe.txt >> review_prompt.txt
-          fi
-          echo "" >> review_prompt.txt
-          echo "PR Title: " >> review_prompt.txt
-          cat title_safe.txt >> review_prompt.txt
-          echo "" >> review_prompt.txt
-          echo "PR Description: " >> review_prompt.txt
-          cat description_safe.txt >> review_prompt.txt
-          echo "" >> review_prompt.txt
-          echo "Changes:" >> review_prompt.txt
         else
           cat > review_prompt.txt << 'EOF'
-        You are a senior code reviewer. Please review this pull request and provide constructive feedback.
+You are a senior code reviewer. Please review this pull request and provide constructive feedback.
 
-        Focus on:
-        1. Code quality and best practices
-        2. Potential bugs or issues  
-        3. Security concerns
-        4. Performance considerations
-        5. Suggestions for improvement
+Focus on:
+1. Code quality and best practices
+2. Potential bugs or issues  
+3. Security concerns
+4. Performance considerations
+5. Suggestions for improvement
 
-        Be specific and actionable in your feedback. If the code looks good, say so!
+Be specific and actionable in your feedback. If the code looks good, say so!
 
-        EOF
+EOF
           echo "Trigger: $TRIGGER_TYPE" >> review_prompt.txt
-          if [ "$TRIGGER_TYPE" = "comment" ]; then
-            echo "Comment: " >> review_prompt.txt
-            cat comment_safe.txt >> review_prompt.txt
-          fi
-          echo "" >> review_prompt.txt
-          echo "PR Title: " >> review_prompt.txt
-          cat title_safe.txt >> review_prompt.txt
-          echo "" >> review_prompt.txt
-          echo "PR Description: " >> review_prompt.txt
-          cat description_safe.txt >> review_prompt.txt
-          echo "" >> review_prompt.txt
-          echo "Changes:" >> review_prompt.txt
         fi
         
-        # Append the PR content
+        # Add context from files
+        if [ "$TRIGGER_TYPE" = "comment" ] && [ -n "$COMMENT_BODY" ]; then
+          echo "" >> review_prompt.txt
+          echo "Comment: " >> review_prompt.txt
+          echo "$COMMENT_BODY" >> review_prompt.txt
+        fi
+        
+        echo "" >> review_prompt.txt
+        echo "PR Title: $TITLE" >> review_prompt.txt
+        echo "" >> review_prompt.txt
+        echo "PR Description: " >> review_prompt.txt
+        echo "$DESCRIPTION" >> review_prompt.txt
+        echo "" >> review_prompt.txt
+        echo "Changes:" >> review_prompt.txt
         cat pr_summary.txt >> review_prompt.txt
         
         # Get review from Claude Code CLI
-        # For auto-fix mode, we need to allow Claude to edit files
         if [ "$AUTO_FIX" = "true" ]; then
           # Run Claude without --print to allow file modifications
-          # The output will still be captured for the review comment
           claude "$(cat review_prompt.txt)" 2>&1 | tee claude_review.md
         else
           # For review-only mode, use --print
@@ -272,12 +263,9 @@ jobs:
         fi
     
     - name: Commit auto-fixes (if any)
-      if: env.AUTO_FIX == 'true'
+      if: steps.check_skip.outputs.skip != 'true' && env.AUTO_FIX == 'true'
       env:
-        EVENT_NAME: ${{ github.event_name }}
-        PR_NUMBER: ${{ github.event.issue.number }}
         GH_TOKEN: ${{ secrets.CLAUDE }}
-        GH_REPO: ${{ github.repository }}
       run: |
         # Configure git for the runner
         git config user.name "claude-autofix[bot]"
@@ -293,6 +281,7 @@ jobs:
           git add -A
           
           # Get commit author from file
+          EVENT_NAME=$(cat event_name.txt)
           if [ "${EVENT_NAME}" = "issue_comment" ]; then
             COMMIT_AUTHOR=$(cat comment_author.txt 2>/dev/null || echo "unknown")
           else
@@ -304,66 +293,32 @@ jobs:
           git commit -m "${COMMIT_MSG}"
           
           # Push changes to the PR branch
-          if [[ "${EVENT_NAME}" == "issue_comment" ]]; then
-            # For comment triggers, use the HEAD_BRANCH we already have
-            if [ -n "${HEAD_BRANCH}" ]; then
-              git push origin "HEAD:${HEAD_BRANCH}"
-            else
-              # Fallback: get the branch name from PR data
-              PR_NUM=$(cat pr_number.txt 2>/dev/null || echo "${PR_NUMBER}")
-              BRANCH_NAME=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
-                "https://api.github.com/repos/${GH_REPO}/pulls/${PR_NUM}" | \
-                jq -r '.head.ref')
-              git push origin "HEAD:${BRANCH_NAME}"
-            fi
-          else
-            # For PR triggers, get the branch name safely
-            PR_NUM="${PR_NUMBER}"
-            if [ -z "${PR_NUM}" ]; then
-              # Try to get from GitHub context
-              PR_NUM=$(gh pr view --json number -q .number 2>/dev/null || echo "")
-            fi
-            if [ -n "${PR_NUM}" ]; then
-              BRANCH_NAME=$(gh pr view ${PR_NUM} --json headRefName -q .headRefName)
-              git push origin "HEAD:${BRANCH_NAME}"
-            else
-              echo "Error: Could not determine PR number or branch name"
-              exit 1
-            fi
-          fi
+          HEAD_BRANCH=$(cat head_branch.txt)
+          git push origin "HEAD:${HEAD_BRANCH}"
           
           echo "Auto-fixes committed and pushed!"
         fi
     
     - name: Post review comment
+      if: steps.check_skip.outputs.skip != 'true'
       uses: actions/github-script@v7
       with:
         script: |
           const fs = require('fs');
           const review = fs.readFileSync('claude_review.md', 'utf8');
+          const autoFix = fs.readFileSync('auto_fix.txt', 'utf8').trim() === 'true';
+          const eventName = fs.readFileSync('event_name.txt', 'utf8').trim();
+          const prNumber = parseInt(fs.readFileSync('pr_number.txt', 'utf8').trim());
           
-          // Determine if this was triggered by a comment and if auto-fix was used
-          const isCommentTrigger = context.eventName === 'issue_comment';
-          const autoFix = process.env.AUTO_FIX === 'true';
+          const triggerInfo = eventName === 'issue_comment' ? 
+            '\n\n---\n*Triggered by comment' + (autoFix ? ' (auto-fix mode)' : '') + '*' :
+            '\n\n---\n*Automated review on PR update*';
           
-          const triggerInfo = isCommentTrigger ? 
-            `\n\n*Triggered by comment from @${context.payload.comment.user.login}*` : 
-            `\n\n*Triggered by PR ${context.payload.action}*`;
+          const commentBody = '## 🤖 Claude Code Review\n\n' + review + triggerInfo;
           
-          const autoFixInfo = autoFix ? 
-            `\n🔧 **Auto-fix mode enabled** - Claude may have made code changes and committed them to this PR.` : 
-            ``;
-          
-          const comment = `## 🤖 Claude Code Review\n\n${review}${autoFixInfo}\n\n---\n*This is an automated code review by Claude AI. Please consider the suggestions but use your judgment.*${triggerInfo}`;
-          
-          // For comment triggers, use the issue number; for PR triggers, use the PR number
-          const issueNumber = isCommentTrigger ? 
-            context.payload.issue.number : 
-            context.payload.pull_request.number;
-          
-          github.rest.issues.createComment({
+          await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: issueNumber,
-            body: comment
+            issue_number: prNumber,
+            body: commentBody
           });
