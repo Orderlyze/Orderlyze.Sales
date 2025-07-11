@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SharedModels.Dtos.Contacts;
 
 namespace WebApi.Data.Models
 {
@@ -26,29 +27,5 @@ namespace WebApi.Data.Models
         public DateTime UpdatedAt { get; set; }
         public string? UserId { get; set; }
         public AppUser? User { get; set; }
-    }
-
-    public enum CallStatus
-    {
-        New,
-        Scheduled,
-        Reached,
-        NotReached,
-        Completed,
-        Postponed
-    }
-
-    public class CallLog
-    {
-        public int Id { get; set; }
-        public int ContactId { get; set; }
-        public Contact Contact { get; set; } = null!;
-        
-        public DateTime CallDate { get; set; }
-        public string Notes { get; set; } = "";
-        public CallStatus Status { get; set; }
-        public DateTime? NextCallDate { get; set; }
-        
-        public DateTime CreatedAt { get; set; }
     }
 }

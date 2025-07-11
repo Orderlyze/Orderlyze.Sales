@@ -39,7 +39,7 @@ namespace WebApi.Mediator.Handlers.Contacts
                 UserId = user?.Id,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
-                CallStatus = DbModels.CallStatus.New,
+                CallStatus = SharedModels.Dtos.Contacts.CallStatus.New,
                 NextCallDate = request.SetInitialCallDate ? DateTime.Today : null
             };
 
@@ -132,14 +132,14 @@ namespace WebApi.Mediator.Handlers.Contacts
                 ContactId = contact.Id,
                 CallDate = DateTime.UtcNow,
                 Notes = request.Notes,
-                Status = (DbModels.CallStatus)request.Status,
+                Status = (SharedModels.Dtos.Contacts.CallStatus)request.Status,
                 NextCallDate = request.NextCallDate,
                 CreatedAt = DateTime.UtcNow
             };
             
             contact.CallHistory.Add(callLog);
             contact.LastCallDate = DateTime.UtcNow;
-            contact.CallStatus = (DbModels.CallStatus)request.Status;
+            contact.CallStatus = (SharedModels.Dtos.Contacts.CallStatus)request.Status;
             contact.CallNotes = request.Notes;
             
             if (request.RescheduleCall && request.NextCallDate.HasValue)
@@ -193,7 +193,7 @@ namespace WebApi.Mediator.Handlers.Contacts
                 contact.NextCallDate = DateTime.Today.AddDays(user?.DefaultCallbackDays ?? 3);
             }
             
-            contact.CallStatus = DbModels.CallStatus.Postponed;
+            contact.CallStatus = SharedModels.Dtos.Contacts.CallStatus.Postponed;
             contact.UpdatedAt = DateTime.UtcNow;
             
             // Add to call history
@@ -202,7 +202,7 @@ namespace WebApi.Mediator.Handlers.Contacts
                 ContactId = contact.Id,
                 CallDate = DateTime.UtcNow,
                 Notes = $"Verschoben: {request.Reason ?? "Kein Grund angegeben"}",
-                Status = DbModels.CallStatus.Postponed,
+                Status = SharedModels.Dtos.Contacts.CallStatus.Postponed,
                 NextCallDate = contact.NextCallDate,
                 CreatedAt = DateTime.UtcNow
             };
