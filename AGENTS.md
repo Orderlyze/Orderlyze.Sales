@@ -1,5 +1,11 @@
 # Codex Instructions
 
+## Post-Request Actions
+After completing any user request, automatically:
+1. Run `dotnet build` to verify code compiles
+2. Check for any build warnings or errors
+3. Report build status to user
+
 ## General Guidelines
 - Use the latest C# version features (.NET 9).
 - Indent C# code with four spaces.
