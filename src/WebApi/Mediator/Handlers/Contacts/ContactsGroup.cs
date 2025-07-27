@@ -10,8 +10,11 @@ using DbModels = WebApi.Data.Models;
 
 namespace WebApi.Mediator.Handlers.Contacts
 {
+    /// <summary>
+    /// Handles all contact-related operations including CRUD and call management.
+    /// </summary>
     [MediatorHttpGroup(GroupConstants.Contact, RequiresAuthorization = true)]
-    internal class ContactsGroup(AppDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager)
+    internal sealed class ContactsGroup(AppDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager)
         : IRequestHandler<AddContactRequest, ContactDto>,
             IRequestHandler<GetContactRequest, ContactDto?>,
             IRequestHandler<GetAllContactsRequest, IEnumerable<ContactDto>>,
@@ -19,6 +22,13 @@ namespace WebApi.Mediator.Handlers.Contacts
             IRequestHandler<UpdateCallStatusRequest, ContactDto>,
             IRequestHandler<RescheduleCallRequest, ContactDto>
     {
+        /// <summary>
+        /// Adds a new contact to the system.
+        /// </summary>
+        /// <param name="request">The contact creation request.</param>
+        /// <param name="context">The mediator context.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>The created contact DTO.</returns>
         [MediatorHttpPost($"{GroupConstants.AddPrefix}{GroupConstants.Contact}", GroupConstants.NoTemplate)]
         public async Task<ContactDto> Handle(
             AddContactRequest request,
@@ -27,7 +37,13 @@ namespace WebApi.Mediator.Handlers.Contacts
         )
         {
             var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
-            var user = userId != null ? await userManager.FindByNameAsync(userId) : null;
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+            
+            var user = await userManager.FindByNameAsync(userId)
+                ?? throw new InvalidOperationException($"User '{userId}' not found.");
             
             var contact = new DbModels.Contact
             {
@@ -35,7 +51,7 @@ namespace WebApi.Mediator.Handlers.Contacts
                 Name = request.Name,
                 Email = request.Email,
                 Phone = request.Phone,
-                Branche = request.Branche,
+                Industry = request.Industry,
                 UserId = user?.Id,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
@@ -48,6 +64,13 @@ namespace WebApi.Mediator.Handlers.Contacts
             return MapToDto(contact);
         }
 
+        /// <summary>
+        /// Retrieves a single contact by ID.
+        /// </summary>
+        /// <param name="request">The contact retrieval request.</param>
+        /// <param name="context">The mediator context.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>The contact DTO if found; otherwise, null.</returns>
         [MediatorHttpGet($"{GroupConstants.GetPrefix}{GroupConstants.Contact}", GroupConstants.IdTemplate)]
         public async Task<ContactDto?> Handle(
             GetContactRequest request,
@@ -55,16 +78,24 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            // For now, use a simple ID mapping until we fix the ID type issue
-            var contacts = await db.Contacts
+            // TODO: Refactor to use proper ID type conversion
+            var contactId = int.TryParse(request.Id.ToString(), out var id) ? id : 0;
+            
+            var contact = await db.Contacts
                 .Include(c => c.CallHistory)
-                .ToListAsync(ct)
+                .FirstOrDefaultAsync(c => c.Id == contactId, ct)
                 .ConfigureAwait(false);
             
-            var contact = contacts.FirstOrDefault(c => c.Id.ToString() == request.Id.ToString());
             return contact != null ? MapToDto(contact) : null;
         }
 
+        /// <summary>
+        /// Retrieves all contacts for the authenticated user.
+        /// </summary>
+        /// <param name="request">The request to get all contacts.</param>
+        /// <param name="context">The mediator context.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>A collection of contact DTOs.</returns>
         [MediatorHttpGet($"{GroupConstants.GetAllPrefix}{GroupConstants.Contact}", GroupConstants.NoTemplate)]
         public async Task<IEnumerable<ContactDto>> Handle(
             GetAllContactsRequest request,
@@ -73,10 +104,16 @@ namespace WebApi.Mediator.Handlers.Contacts
         )
         {
             var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
-            var user = userId != null ? await userManager.FindByNameAsync(userId) : null;
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+            
+            var user = await userManager.FindByNameAsync(userId)
+                ?? throw new InvalidOperationException($"User '{userId}' not found.");
             
             var contacts = await db.Contacts
-                .Where(c => c.UserId == user!.Id)
+                .Where(c => c.UserId == user.Id)
                 .Include(c => c.CallHistory)
                 .OrderBy(c => c.NextCallDate)
                 .ThenBy(c => c.Name)
@@ -86,6 +123,13 @@ namespace WebApi.Mediator.Handlers.Contacts
             return contacts.Select(MapToDto);
         }
 
+        /// <summary>
+        /// Deletes a contact from the system.
+        /// </summary>
+        /// <param name="request">The contact deletion request.</param>
+        /// <param name="context">The mediator context.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>True if the contact was deleted; otherwise, false.</returns>
         [MediatorHttpDelete($"{GroupConstants.DeletePrefix}{GroupConstants.Contact}", GroupConstants.IdTemplate)]
         public async Task<bool> Handle(
             DeleteContactRequest request,
@@ -93,8 +137,12 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            var contacts = await db.Contacts.ToListAsync(ct).ConfigureAwait(false);
-            var entity = contacts.FirstOrDefault(c => c.Id.ToString() == request.Id.ToString());
+            // TODO: Refactor to use proper ID type conversion
+            var contactId = int.TryParse(request.Id.ToString(), out var id) ? id : 0;
+            
+            var entity = await db.Contacts
+                .FirstOrDefaultAsync(c => c.Id == contactId, ct)
+                .ConfigureAwait(false);
                 
             if (entity != null)
             {
@@ -106,6 +154,13 @@ namespace WebApi.Mediator.Handlers.Contacts
             return false;
         }
 
+        /// <summary>
+        /// Updates the call status for a contact and creates a call log entry.
+        /// </summary>
+        /// <param name="request">The call status update request.</param>
+        /// <param name="context">The mediator context.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>The updated contact DTO.</returns>
         [MediatorHttpPost("updateCallStatus", GroupConstants.NoTemplate)]
         public async Task<ContactDto> Handle(
             UpdateCallStatusRequest request,
@@ -114,7 +169,13 @@ namespace WebApi.Mediator.Handlers.Contacts
         )
         {
             var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
-            var user = userId != null ? await userManager.FindByNameAsync(userId) : null;
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+            
+            var user = await userManager.FindByNameAsync(userId)
+                ?? throw new InvalidOperationException($"User '{userId}' not found.");
             
             var contact = await db.Contacts
                 .Include(c => c.CallHistory)
@@ -123,7 +184,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             
             if (contact == null)
             {
-                throw new InvalidOperationException("Contact not found");
+                throw new InvalidOperationException($"Contact with ID {request.ContactId} was not found.");
             }
 
             // Create call log entry
@@ -162,6 +223,13 @@ namespace WebApi.Mediator.Handlers.Contacts
             return MapToDto(contact);
         }
 
+        /// <summary>
+        /// Reschedules a call for a contact.
+        /// </summary>
+        /// <param name="request">The call rescheduling request.</param>
+        /// <param name="context">The mediator context.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>The updated contact DTO.</returns>
         [MediatorHttpPost("rescheduleCall", GroupConstants.NoTemplate)]
         public async Task<ContactDto> Handle(
             RescheduleCallRequest request,
@@ -170,7 +238,13 @@ namespace WebApi.Mediator.Handlers.Contacts
         )
         {
             var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
-            var user = userId != null ? await userManager.FindByNameAsync(userId) : null;
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+            
+            var user = await userManager.FindByNameAsync(userId)
+                ?? throw new InvalidOperationException($"User '{userId}' not found.");
             
             var contact = await db.Contacts
                 .Include(c => c.CallHistory)
@@ -179,7 +253,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             
             if (contact == null)
             {
-                throw new InvalidOperationException("Contact not found");
+                throw new InvalidOperationException($"Contact with ID {request.ContactId} was not found.");
             }
 
             // Set new call date
@@ -201,7 +275,7 @@ namespace WebApi.Mediator.Handlers.Contacts
             {
                 ContactId = contact.Id,
                 CallDate = DateTime.UtcNow,
-                Notes = $"Verschoben: {request.Reason ?? "Kein Grund angegeben"}",
+                Notes = $"Postponed: {request.Reason ?? "No reason provided"}",
                 Status = SharedModels.Dtos.Contacts.CallStatus.Postponed,
                 NextCallDate = contact.NextCallDate,
                 CreatedAt = DateTime.UtcNow
@@ -213,14 +287,19 @@ namespace WebApi.Mediator.Handlers.Contacts
             return MapToDto(contact);
         }
 
-        private ContactDto MapToDto(DbModels.Contact contact)
+        /// <summary>
+        /// Maps a Contact entity to a ContactDto.
+        /// </summary>
+        /// <param name="contact">The contact entity to map.</param>
+        /// <returns>The mapped contact DTO.</returns>
+        private static ContactDto MapToDto(DbModels.Contact contact)
         {
             return new ContactDto(
                 contact.WixId,
                 contact.Name,
                 contact.Email,
                 contact.Phone,
-                contact.Branche,
+                contact.Industry,
                 contact.NextCallDate,
                 contact.CallNotes,
                 (CallStatus)contact.CallStatus,
