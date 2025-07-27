@@ -78,12 +78,9 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            // TODO: Refactor to use proper ID type conversion
-            var contactId = int.TryParse(request.Id.ToString(), out var id) ? id : 0;
-            
             var contact = await db.Contacts
                 .Include(c => c.CallHistory)
-                .FirstOrDefaultAsync(c => c.Id == contactId, ct)
+                .FirstOrDefaultAsync(c => c.Id == request.Id, ct)
                 .ConfigureAwait(false);
             
             return contact != null ? MapToDto(contact) : null;
@@ -137,11 +134,8 @@ namespace WebApi.Mediator.Handlers.Contacts
             CancellationToken ct
         )
         {
-            // TODO: Refactor to use proper ID type conversion
-            var contactId = int.TryParse(request.Id.ToString(), out var id) ? id : 0;
-            
             var entity = await db.Contacts
-                .FirstOrDefaultAsync(c => c.Id == contactId, ct)
+                .FirstOrDefaultAsync(c => c.Id == request.Id, ct)
                 .ConfigureAwait(false);
                 
             if (entity != null)
@@ -312,7 +306,7 @@ namespace WebApi.Mediator.Handlers.Contacts
                 )).ToList()
             )
             {
-                Id = Guid.NewGuid(),
+                Id = contact.Id,
                 CreatedAt = contact.CreatedAt,
                 UpdatedAt = contact.UpdatedAt
             };
