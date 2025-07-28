@@ -520,21 +520,38 @@
         }
       },
       "AddContactRequest": {
+        "required": [
+          "wixId",
+          "name",
+          "email",
+          "phone",
+          "industry"
+        ],
         "type": "object",
         "properties": {
           "wixId": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string"
           },
           "name": {
+            "maxLength": 200,
+            "minLength": 0,
             "type": "string"
           },
           "email": {
+            "maxLength": 254,
+            "minLength": 0,
             "type": "string"
           },
           "phone": {
+            "maxLength": 50,
+            "minLength": 0,
             "type": "string"
           },
-          "branche": {
+          "industry": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string"
           },
           "setInitialCallDate": {
@@ -581,7 +598,7 @@
           "name",
           "email",
           "phone",
-          "branche"
+          "industry"
         ],
         "type": "object",
         "properties": {
@@ -597,7 +614,7 @@
           "phone": {
             "type": "string"
           },
-          "branche": {
+          "industry": {
             "type": "string"
           },
           "nextCallDate": {
@@ -773,8 +790,8 @@
         "type": "object",
         "properties": {
           "contactId": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "uuid"
           },
           "newCallDate": {
             "type": "string",
@@ -883,8 +900,8 @@
         "type": "object",
         "properties": {
           "contactId": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "uuid"
           },
           "status": {
             "$ref": "#/components/schemas/CallStatus2"

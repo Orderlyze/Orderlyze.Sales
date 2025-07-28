@@ -15,7 +15,7 @@ namespace WebApi.Data.Models
         /// Gets or sets the primary key identifier.
         /// </summary>
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         
         /// <summary>
         /// Gets or sets the unique Wix identifier for the contact.

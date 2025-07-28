@@ -17,14 +17,14 @@ namespace WebApi.Data.Models
         /// Gets or sets the primary key identifier.
         /// </summary>
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         
         /// <summary>
         /// Gets or sets the foreign key to the associated contact.
         /// </summary>
         [Required]
         [ForeignKey(nameof(Contact))]
-        public int ContactId { get; set; }
+        public Guid ContactId { get; set; }
         
         /// <summary>
         /// Gets or sets the navigation property to the contact.

@@ -51,3 +51,4 @@ namespace SharedModels.Dtos.Contacts
         
         List<CallLogEntry>? CallHistory = null
     ) : BaseDto;
+}
