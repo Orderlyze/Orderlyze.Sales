@@ -20,32 +20,23 @@
                               IsItemClickEnabled="True"
                               ItemClick="ListView_ItemClick">
                         <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Padding" Value="0"/>
-                            </Style>
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource StretchedListViewItemStyle}" />
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="local:WixContactsListModel">
-                                <Border Margin="8"
-                                            Padding="8"
-                                            CornerRadius="4"
-                                            BorderBrush="LightGray"
-                                            BorderThickness="1">
-                                    <StackPanel Spacing="4">
+                                <Border Style="{StaticResource CompactCardBorderStyle}">
+                                    <StackPanel Spacing="{StaticResource SpacingXSmall}">
                                         <TextBlock Text="{Binding Name}"
-                                                       FontWeight="SemiBold" />
-                                        <TextBlock Text="{Binding Email}" />
-                                        <TextBlock Text="{Binding Branche}" />
-                                        <TextBlock Text="{Binding Company}" />
-                                        <ItemsControl ItemsSource="{Binding Labels}" Margin="0,4,0,0">
+                                                       Style="{StaticResource BodyTextStyle}"
+                                                       FontWeight="{StaticResource FontWeightSemiBold}" />
+                                        <TextBlock Text="{Binding Email}" Style="{StaticResource BodySmallTextStyle}" />
+                                        <TextBlock Text="{Binding Branche}" Style="{StaticResource BodySmallTextStyle}" />
+                                        <TextBlock Text="{Binding Company}" Style="{StaticResource BodySmallTextStyle}" />
+                                        <ItemsControl ItemsSource="{Binding Labels}" Margin="0,4,0,0" Style="{StaticResource HorizontalWrapItemsPanelStyle}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border Background="LightGray"
-                                                                Margin="0,0,4,4"
-                                                                Padding="4,2"
-                                                                CornerRadius="4">
-                                                        <TextBlock Text="{Binding}" />
+                                                    <Border Style="{StaticResource TagBorderStyle}">
+                                                        <TextBlock Text="{Binding}" Style="{StaticResource CaptionTextStyle}" />
                                                     </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>

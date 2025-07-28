@@ -12,74 +12,76 @@
 
     <Grid>
         <ScrollViewer>
-            <StackPanel Padding="20" 
-                        MaxWidth="400" 
-                        HorizontalAlignment="Center" 
-                        VerticalAlignment="Center">
+            <StackPanel Style="{StaticResource FormStackPanelStyle}"
+                        MaxWidth="{StaticResource FormMaxWidth}">
                 
                 <!-- Logo or App Title -->
                 <TextBlock Text="Orderlyze"
-                          FontSize="32"
-                          FontWeight="Bold"
+                          Style="{StaticResource TitleTextStyle}"
                           HorizontalAlignment="Center"
                           Margin="0,0,0,40" />
 
                 <TextBlock Text="Registrieren"
-                          FontSize="24"
-                          FontWeight="SemiBold"
+                          Style="{StaticResource HeadingTextStyle}"
                           HorizontalAlignment="Center"
                           Margin="0,0,0,30" />
 
                 <!-- Email Input -->
                 <TextBlock Text="E-Mail"
-                          Margin="0,0,0,8" />
+                          Style="{StaticResource LabelTextStyle}"
+                          Margin="{StaticResource LabelMargin}" />
                 <TextBox x:Name="EmailTextBox"
                          Text="{Binding Email, Mode=TwoWay}"
                          PlaceholderText="ihre.email@beispiel.de"
-                         Margin="0,0,0,16" />
+                         Style="{StaticResource DefaultTextBoxStyle}"
+                         Margin="{StaticResource ElementMargin}" />
 
                 <!-- Password Input -->
                 <TextBlock Text="Passwort"
-                          Margin="0,0,0,8" />
+                          Style="{StaticResource LabelTextStyle}"
+                          Margin="{StaticResource LabelMargin}" />
                 <PasswordBox x:Name="PasswordBox"
                              Password="{Binding Password, Mode=TwoWay}"
                              PlaceholderText="Passwort eingeben"
-                             Margin="0,0,0,16" />
+                             Style="{StaticResource DefaultPasswordBoxStyle}"
+                             Margin="{StaticResource ElementMargin}" />
 
                 <!-- Confirm Password Input -->
                 <TextBlock Text="Passwort bestätigen"
-                          Margin="0,0,0,8" />
+                          Style="{StaticResource LabelTextStyle}"
+                          Margin="{StaticResource LabelMargin}" />
                 <PasswordBox x:Name="ConfirmPasswordBox"
                              Password="{Binding ConfirmPassword, Mode=TwoWay}"
                              PlaceholderText="Passwort wiederholen"
+                             Style="{StaticResource DefaultPasswordBoxStyle}"
                              Margin="0,0,0,24" />
 
                 <!-- Error Message -->
                 <TextBlock Text="{Binding ErrorMessage}"
-                          Foreground="Red"
-                          TextWrapping="Wrap"
+                          Style="{StaticResource ErrorTextStyle}"
                           Visibility="{Binding HasError, Converter={StaticResource BoolToVisibilityConverter}}"
-                          Margin="0,0,0,16" />
+                          Margin="{StaticResource ElementMargin}" />
 
                 <!-- Register Button -->
                 <Button Content="Registrieren"
                         Command="{Binding RegisterCommand}"
                         IsEnabled="{Binding CanRegister}"
-                        HorizontalAlignment="Stretch"
-                        Margin="0,0,0,16" />
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Margin="{StaticResource ElementMargin}" />
 
                 <!-- Progress Ring -->
                 <ProgressRing IsActive="{Binding IsLoading}"
-                             HorizontalAlignment="Center"
-                             Margin="0,0,0,16" />
+                             Style="{StaticResource CenteredProgressRingStyle}"
+                             Margin="{StaticResource ElementMargin}" />
 
                 <!-- Login Link -->
                 <StackPanel Orientation="Horizontal"
-                           HorizontalAlignment="Center">
-                    <TextBlock Text="Bereits registriert?" />
+                           HorizontalAlignment="Center"
+                           Spacing="4">
+                    <TextBlock Text="Bereits registriert?" Style="{StaticResource BodyTextStyle}" />
                     <HyperlinkButton Content="Zur Anmeldung"
                                    Command="{Binding NavigateToLoginCommand}"
-                                   Margin="5,0,0,0" />
+                                   Style="{StaticResource InlineHyperlinkButtonStyle}" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

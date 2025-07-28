@@ -19,19 +19,19 @@
         </Grid.RowDefinitions>
 
         <!-- Settings Bar -->
-        <Border Grid.Row="0" Background="LightBlue" Padding="12">
-            <StackPanel Orientation="Horizontal" Spacing="16">
-                <TextBlock Text="Standard Rückruf in:" VerticalAlignment="Center"/>
+        <Border Grid.Row="0" Style="{StaticResource SettingsBarStyle}">
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingLarge}">
+                <TextBlock Text="Standard Rückruf in:" VerticalAlignment="Center" Style="{StaticResource BodyTextStyle}"/>
                 <NumberBox Value="{Binding DefaultCallbackDays, Mode=TwoWay}" 
                           Minimum="1" Maximum="30" SpinButtonPlacementMode="Inline"/>
-                <TextBlock Text="Tagen" VerticalAlignment="Center"/>
-                <Button Content="Speichern" Command="{Binding SaveSettingsCommand}"/>
+                <TextBlock Text="Tagen" VerticalAlignment="Center" Style="{StaticResource BodyTextStyle}"/>
+                <Button Content="Speichern" Command="{Binding SaveSettingsCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
             </StackPanel>
         </Border>
 
         <!-- Filter Bar -->
-        <Border Grid.Row="1" Background="WhiteSmoke" Padding="12">
-            <StackPanel Orientation="Horizontal" Spacing="16">
+        <Border Grid.Row="1" Style="{StaticResource FilterBarStyle}">
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingLarge}">
                 <RadioButton Content="Heute anrufen" IsChecked="{Binding ShowTodayOnly, Mode=TwoWay}"/>
                 <RadioButton Content="Diese Woche" IsChecked="{Binding ShowThisWeek, Mode=TwoWay}"/>
                 <RadioButton Content="Alle" IsChecked="{Binding ShowAll, Mode=TwoWay}"/>
@@ -46,11 +46,7 @@
                         <ItemsControl ItemsSource="{Binding}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="local:ContactViewModel">
-                                    <Border Margin="8" Padding="12" 
-                                            CornerRadius="8" 
-                                            Background="White"
-                                            BorderBrush="LightGray" 
-                                            BorderThickness="1">
+                                    <Border Style="{StaticResource ContactCardStyle}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -58,26 +54,25 @@
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Contact Info -->
-                                            <StackPanel Grid.Column="0" Spacing="4">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <StackPanel Grid.Column="0" Spacing="{StaticResource SpacingXSmall}">
+                                                <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
                                                     <TextBlock Text="{Binding Name}" 
-                                                              FontWeight="Bold" 
-                                                              FontSize="16"/>
+                                                              Style="{StaticResource BodyTextStyle}"
+                                                              FontWeight="{StaticResource FontWeightBold}"/>
                                                     <Border Background="{Binding StatusColor}" 
-                                                            CornerRadius="4" 
-                                                            Padding="8,2">
+                                                            Style="{StaticResource StatusBadgeStyle}">
                                                         <TextBlock Text="{Binding StatusText}" 
                                                                   Foreground="White" 
-                                                                  FontSize="12"/>
+                                                                  Style="{StaticResource CaptionTextStyle}"/>
                                                     </Border>
                                                 </StackPanel>
                                                 
-                                                <TextBlock Text="{Binding Email}" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding Phone}" Foreground="Gray"/>
-                                                <TextBlock Text="{Binding Branche}" Foreground="Gray"/>
+                                                <TextBlock Text="{Binding Email}" Style="{StaticResource BodySmallTextStyle}"/>
+                                                <TextBlock Text="{Binding Phone}" Style="{StaticResource BodySmallTextStyle}"/>
+                                                <TextBlock Text="{Binding Branche}" Style="{StaticResource BodySmallTextStyle}"/>
                                                 
-                                                <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,8,0,0">
-                                                    <TextBlock Text="Nächster Anruf:" FontWeight="SemiBold"/>
+                                                <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingXSmall}" Margin="0,8,0,0">
+                                                    <TextBlock Text="Nächster Anruf:" Style="{StaticResource LabelTextStyle}"/>
                                                     <TextBlock Text="{Binding NextCallDateDisplay}" 
                                                               Foreground="{Binding NextCallDateColor}"/>
                                                 </StackPanel>
@@ -85,26 +80,27 @@
                                                 <TextBlock Text="{Binding CallNotes}" 
                                                           Visibility="{Binding HasNotes}"
                                                           TextWrapping="Wrap"
-                                                          Margin="0,4,0,0"/>
+                                                          Margin="0,4,0,0"
+                                                          Style="{StaticResource BodySmallTextStyle}"/>
                                             </StackPanel>
 
                                             <!-- Action Buttons -->
                                             <StackPanel Grid.Column="1" 
                                                        Orientation="Vertical" 
-                                                       Spacing="8" 
+                                                       Spacing="{StaticResource SpacingSmall}" 
                                                        Margin="8,0,0,0">
                                                 <Button Content="📞 Anrufen" 
                                                        Command="{Binding CallCommand}"
-                                                       Background="Green"
-                                                       Foreground="White"/>
+                                                       Style="{StaticResource CallButtonStyle}"/>
                                                 <Button Content="📅 Verschieben" 
-                                                       Command="{Binding RescheduleCommand}"/>
+                                                       Command="{Binding RescheduleCommand}"
+                                                       Style="{StaticResource SecondaryButtonStyle}"/>
                                                 <Button Content="✓ Erreicht" 
                                                        Command="{Binding MarkReachedCommand}"
-                                                       Background="LightGreen"/>
+                                                       Style="{StaticResource SuccessButtonStyle}"/>
                                                 <Button Content="✗ Nicht erreicht" 
                                                        Command="{Binding MarkNotReachedCommand}"
-                                                       Background="LightPink"/>
+                                                       Style="{StaticResource WarningButtonStyle}"/>
                                             </StackPanel>
                                         </Grid>
                                     </Border>

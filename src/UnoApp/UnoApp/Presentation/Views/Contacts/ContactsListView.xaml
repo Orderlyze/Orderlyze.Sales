@@ -22,34 +22,27 @@
                                   IsItemClickEnabled="False"
                                   x:Name="ContactsList">
                             <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="Padding" Value="0"/>
-                                </Style>
+                                <Style TargetType="ListViewItem" BasedOn="{StaticResource StretchedListViewItemStyle}" />
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local:ContactsListModel">
-                                    <Border Margin="8"
-                                                Padding="12"
-                                                CornerRadius="8"
-                                                BorderBrush="#E0E0E0"
-                                                BorderThickness="1"
-                                                Background="#FAFAFA">
-                                        <StackPanel Spacing="6">
+                                    <Border Style="{StaticResource CardBorderStyle}"
+                                                Margin="{StaticResource ListItemMargin}">
+                                        <StackPanel Spacing="{StaticResource SpacingSmall}">
                                             <TextBlock Text="{Binding Name}"
-                                                           FontWeight="SemiBold"
-                                                           FontSize="16" />
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <TextBlock Text="Email:" FontWeight="SemiBold" />
-                                                <TextBlock Text="{Binding Email}" />
+                                                           Style="{StaticResource BodyTextStyle}"
+                                                           FontWeight="{StaticResource FontWeightSemiBold}" />
+                                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
+                                                <TextBlock Text="Email:" Style="{StaticResource LabelTextStyle}" />
+                                                <TextBlock Text="{Binding Email}" Style="{StaticResource BodyTextStyle}" />
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <TextBlock Text="Phone:" FontWeight="SemiBold" />
-                                                <TextBlock Text="{Binding Phone}" />
+                                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
+                                                <TextBlock Text="Phone:" Style="{StaticResource LabelTextStyle}" />
+                                                <TextBlock Text="{Binding Phone}" Style="{StaticResource BodyTextStyle}" />
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <TextBlock Text="Branch:" FontWeight="SemiBold" />
-                                                <TextBlock Text="{Binding Branche}" />
+                                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
+                                                <TextBlock Text="Branch:" Style="{StaticResource LabelTextStyle}" />
+                                                <TextBlock Text="{Binding Branche}" Style="{StaticResource BodyTextStyle}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Border>

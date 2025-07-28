@@ -17,11 +17,9 @@
         </Grid.RowDefinitions>
         
         <Border Grid.Row="0" 
-                Background="LightGray"
-                Padding="16,8">
+                Style="{StaticResource PageHeaderBorderStyle}">
             <TextBlock Text="Kontakte" 
-                       FontSize="24" 
-                       FontWeight="SemiBold"/>
+                       Style="{StaticResource HeadingTextStyle}"/>
         </Border>
         
         <ContentControl Grid.Row="1" 
