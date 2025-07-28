@@ -7,38 +7,36 @@
       mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel Margin="20" 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center"
-                    Width="300">
+        <StackPanel Style="{StaticResource FormStackPanelStyle}"
+                    Width="{StaticResource NarrowFormWidth}">
             
             <TextBlock Text="Login" 
-                       FontSize="24" 
+                       Style="{StaticResource HeadingTextStyle}"
                        HorizontalAlignment="Center" 
-                       Margin="0,0,0,20"/>
+                       Margin="{StaticResource SectionMargin}"/>
             
             <TextBox x:Name="EmailTextBox"
                      Text="{Binding Email, Mode=TwoWay}"
                      PlaceholderText="Email"
-                     Margin="0,5"/>
+                     Style="{StaticResource DefaultTextBoxStyle}"/>
             
             <PasswordBox x:Name="PasswordBox"
                          Password="{Binding Password, Mode=TwoWay}"
                          PlaceholderText="Password"
+                         Style="{StaticResource DefaultPasswordBoxStyle}"
                          Margin="0,5,0,20"/>
             
             <Button Content="Login"
                     Command="{Binding LoginCommand}"
-                    HorizontalAlignment="Stretch"
-                    Margin="0,5"/>
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Margin="{StaticResource InputMargin}"/>
             
             <ProgressRing IsActive="{Binding IsLoading}"
                           HorizontalAlignment="Center"
-                          Margin="0,10"/>
+                          Style="{StaticResource CenteredProgressRingStyle}"/>
             
             <TextBlock Text="{Binding ErrorMessage}"
-                       Foreground="Red"
-                       TextWrapping="Wrap"
+                       Style="{StaticResource ErrorTextStyle}"
                        HorizontalAlignment="Center"
                        Margin="0,10"
                        Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
@@ -46,11 +44,12 @@
             <!-- Register Link -->
             <StackPanel Orientation="Horizontal"
                        HorizontalAlignment="Center"
-                       Margin="0,20,0,0">
-                <TextBlock Text="Noch kein Konto?" />
+                       Margin="20,0,0,0"
+                       Spacing="4">
+                <TextBlock Text="Noch kein Konto?" Style="{StaticResource BodyTextStyle}" />
                 <HyperlinkButton Content="Registrieren"
                                Command="{Binding NavigateToRegisterCommand}"
-                               Margin="5,0,0,0" />
+                               Style="{StaticResource InlineHyperlinkButtonStyle}" />
             </StackPanel>
         </StackPanel>
     </Grid>
