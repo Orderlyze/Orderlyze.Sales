@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+name: 'pr-creator'
 description: 'Create pull requests for implemented features with proper branch management and PR structure'
 tools: ['githubRepo', 'runCommands', 'codebase', 'editFiles', 'search']
 ---
