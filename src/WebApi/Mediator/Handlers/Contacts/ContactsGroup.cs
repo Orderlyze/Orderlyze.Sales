@@ -29,7 +29,7 @@ namespace WebApi.Mediator.Handlers.Contacts
         /// <param name="context">The mediator context.</param>
         /// <param name="ct">Cancellation token.</param>
         /// <returns>The created contact DTO.</returns>
-        [MediatorHttpPost($"{GroupConstants.AddPrefix}{GroupConstants.Contact}", GroupConstants.NoTemplate)]
+        [MediatorHttpPost("add", "")]
         public async Task<ContactDto> Handle(
             AddContactRequest request,
             IMediatorContext context,

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnoApp.ApiClient;
 using UnoApp.Presentation.Common.ViewModels;
 using UnoApp.Services.Common;
 using WixApi.Models;
@@ -32,6 +31,11 @@ internal partial class WixContactsListViewModel
     {
         try
         {
+            // TODO: AddContactHttpRequest is not being generated from WebApi.json
+            // The /Contact/add endpoint needs to be properly exposed in the WebApi
+            // For now, this functionality is disabled
+            
+            /*
             var request = new AddContactHttpRequest
             {
                 Body = new AddContactRequest
@@ -40,14 +44,15 @@ internal partial class WixContactsListViewModel
                     Name = wixContact.Name ?? string.Empty,
                     Email = wixContact.Email ?? string.Empty,
                     Phone = wixContact.Phone ?? string.Empty,
-                    Branche = wixContact.Branche ?? string.Empty
+                    Industry = wixContact.Branche ?? string.Empty
                 }
             };
 
             var result = await _mediator.Request(request);
+            */
             
-            // Show success message
-            await ShowMessageAsync($"Kontakt '{wixContact.Name}' wurde erfolgreich hinzugefügt!");
+            // Show message
+            await ShowMessageAsync($"Kontakt hinzufügen ist momentan deaktiviert - AddContactHttpRequest fehlt");
         }
         catch (Exception ex)
         {

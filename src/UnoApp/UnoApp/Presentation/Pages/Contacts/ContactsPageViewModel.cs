@@ -41,7 +41,7 @@ internal partial class ContactsPageViewModel : BasePageViewModel
                 x.Name,
                 x.Email,
                 x.Phone,
-                x.Branche
+                x.Industry
             ));
         });
 }

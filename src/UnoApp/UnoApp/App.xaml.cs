@@ -75,8 +75,8 @@ public partial class App : Application
                 IFeed<IEnumerable<WixContactsListModel>>
             >(),
             new DataViewMap<
-                ContactsListView,
-                ContactsListViewModel,
+                UnoApp.Presentation.Views.Contacts.ContactsListView,
+                UnoApp.Presentation.Views.Contacts.ContactsListViewModel,
                 IFeed<IEnumerable<ContactsListModel>>
             >()
         );
@@ -118,7 +118,7 @@ public partial class App : Application
                                 [
                                     new(
                                         RegionViewsNames.ContactList,
-                                        View: views.FindByViewModel<ContactsListViewModel>()
+                                        View: views.FindByViewModel<UnoApp.Presentation.Views.Contacts.ContactsListViewModel>()
                                     ),
                                 ]
                             )
