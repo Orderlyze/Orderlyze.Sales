@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+name: 'issue-analyzer'
 description: 'Analyze if GitHub issues already exist for a given feature request and provide detailed analysis'
 tools: ['githubRepo', 'search', 'searchResults']
 ---

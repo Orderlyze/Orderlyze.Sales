@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+name: 'feature-analyzer'
 description: 'Analyze feature requests to break them down into implementable components and technical requirements'
 tools: ['codebase', 'search', 'searchResults']
 ---

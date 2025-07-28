@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+name: 'automated-workflow'
 description: 'Automated workflow to analyze feature requests, create issues, and prepare pull requests'
 tools: ['*']
 ---

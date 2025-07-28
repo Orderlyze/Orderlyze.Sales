@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+name: 'product-owner'
 description: 'Act as a Product Owner to analyze feature requests and coordinate issue/PR creation workflow'
 tools: ['changes', 'codebase', 'extensions', 'vscodeAPI']
 ---

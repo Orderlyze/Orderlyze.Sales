@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+name: 'issue-creator'
 description: 'Create GitHub issues based on feature requests with proper labeling and structure'
 tools: ['githubRepo', 'runCommands']
 ---
