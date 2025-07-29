@@ -10,7 +10,7 @@ public interface IAuthenticationService
     DateTime? TokenExpiresAt { get; }
     bool IsAuthenticated { get; }
     
-    Task<bool> LoginAsync(string email, string password);
+    Task<bool> LoginAsync(string email, string password, bool rememberMe = false);
     Task<bool> RefreshTokenAsync();
     Task LogoutAsync();
     Task<string?> GetValidTokenAsync();

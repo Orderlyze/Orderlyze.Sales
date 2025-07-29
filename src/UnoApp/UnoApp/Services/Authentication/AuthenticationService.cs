@@ -42,7 +42,7 @@ public class AuthenticationService : IAuthenticationService
     public DateTime? TokenExpiresAt => _tokenExpiresAt;
     public bool IsAuthenticated => !string.IsNullOrEmpty(_accessToken) && _tokenExpiresAt > DateTime.UtcNow;
 
-    public async Task<bool> LoginAsync(string email, string password)
+    public async Task<bool> LoginAsync(string email, string password, bool rememberMe = false)
     {
         try
         {
@@ -57,7 +57,7 @@ public class AuthenticationService : IAuthenticationService
 
             if (result.Result != null)
             {
-                await StoreTokens(result.Result).ConfigureAwait(false);
+                await StoreTokens(result.Result, rememberMe).ConfigureAwait(false);
                 return true;
             }
 
@@ -91,7 +91,7 @@ public class AuthenticationService : IAuthenticationService
 
             if (result.Result != null)
             {
-                await StoreTokens(result.Result).ConfigureAwait(false);
+                await StoreTokens(result.Result, true).ConfigureAwait(false);
                 return true;
             }
 
@@ -136,7 +136,7 @@ public class AuthenticationService : IAuthenticationService
         return null;
     }
 
-    private async Task StoreTokens(AccessTokenResponse tokenResponse)
+    private async Task StoreTokens(AccessTokenResponse tokenResponse, bool rememberMe = false)
     {
         _accessToken = tokenResponse.AccessToken;
         _refreshToken = tokenResponse.RefreshToken;
@@ -147,20 +147,27 @@ public class AuthenticationService : IAuthenticationService
         
         _logger.LogInformation("Tokens stored, expires at: {ExpiresAt}", _tokenExpiresAt);
         
-        // Persist tokens
-        try
+        // Persist tokens only if rememberMe is true
+        if (rememberMe)
         {
-            await _mediator.Send(new SaveTokenCommand
+            try
             {
-                AccessToken = _accessToken,
-                RefreshToken = _refreshToken,
-                ExpiresAt = _tokenExpiresAt.GetValueOrDefault(DateTime.UtcNow.AddHours(1))
-            }).ConfigureAwait(false);
-            _logger.LogDebug("Tokens persisted successfully");
+                await _mediator.Send(new SaveTokenCommand
+                {
+                    AccessToken = _accessToken,
+                    RefreshToken = _refreshToken,
+                    ExpiresAt = _tokenExpiresAt.GetValueOrDefault(DateTime.UtcNow.AddHours(1))
+                }).ConfigureAwait(false);
+                _logger.LogDebug("Tokens persisted successfully (Remember Me enabled)");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to persist tokens");
+            }
         }
-        catch (Exception ex)
+        else
         {
-            _logger.LogError(ex, "Failed to persist tokens");
+            _logger.LogDebug("Tokens not persisted (Remember Me disabled)");
         }
     }
     

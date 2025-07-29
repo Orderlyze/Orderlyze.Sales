@@ -29,6 +29,9 @@ internal partial class LoginPageViewModel : BasePageViewModel
     [ObservableProperty]
     private string? _errorMessage;
 
+    [ObservableProperty]
+    private bool _rememberMe = true;
+
     public LoginPageViewModel(
         BaseServices baseServices,
         Authentication.IAuthenticationService authService,
@@ -59,7 +62,7 @@ internal partial class LoginPageViewModel : BasePageViewModel
             IsLoading = true;
             ErrorMessage = null;
 
-            var success = await _authService.LoginAsync(Email, Password);
+            var success = await _authService.LoginAsync(Email, Password, RememberMe);
             
             if (success)
             {
