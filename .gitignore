@@ -424,3 +424,16 @@ FodyWeavers.xsd
 # Claude Code tracking
 claude-changes.json
 claude-changes.log
+
+# Claude temporary files
+test-*.py
+test-*.html
+test-*.json
+debug-*.md
+monitor-*.py
+*-test.md
+claude-flow-*.md
+*-plan.md
+
+# Claude-Flow installation (should be separate)
+claude-flow/

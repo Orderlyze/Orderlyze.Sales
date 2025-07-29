@@ -1,10 +1,31 @@
-# Orderlyze.Sales - Claude Memory
+# Orderlyze.Sales - Claude Configuration
 
-This file provides context for Claude Code when working on the Orderlyze.Sales project.
+Quick access to project context and commands for efficient AI-assisted development.
 
-## Quick Reference
+## Project Context
 
-### Most Used Commands
+@.claude/project-overview.md
+@.claude/architecture.md
+@.claude/project-structure.md
+
+## Development
+
+@.claude/commands.md
+@.claude/code-generation.md
+
+## Specialized Modes
+
+@.claude/development-modes/expert-dotnet.md
+@.claude/development-modes/create-adr.md
+
+## Standard Workflows
+
+### Feature Implementation
+
+Use workflow automation for consistent GitHub workflow:
+@.claude/templates/workflow-automation-scripts/implement-feature.py
+
+### Quick Commands
 - Build: `dotnet build`
 - Run API: `dotnet run --project src/WebApi/WebApi.csproj`
 - Run App: `dotnet run --project src/UnoApp/UnoApp/UnoApp.csproj`
@@ -14,37 +35,6 @@ This file provides context for Claude Code when working on the Orderlyze.Sales p
 - **Always** add `[SingletonHandler]` attribute to Mediator handlers
 - Follow the WebApi.json code generation workflow for new endpoints
 - Check existing patterns in neighboring files before creating new code
-
-## Project Context
-
-@.claude/project-overview.md
-@.claude/commands.md
-@.claude/architecture.md
-@.claude/project-structure.md
-
-## Special Workflows
-
-@.claude/code-generation.md
-
-## Development Modes & Tools
-
-@.claude/expert-dotnet-software-engineer.chatmode.md
-@.claude/create-architectural-decision-record.prompt.md
-
-## Development Notes
-
-### Environment Specifics
-- .NET 9 is used throughout the project
-- WebAssembly builds require special environment variable handling
-- Git submodules are used (especially for mediator)
-
-### Change Tracking
-- All changes are logged to `/claude-changes.json`
-
-### Testing Approach
-- Always check README or search codebase for test commands
-- Run lint and typecheck commands if found
-- Verify builds before committing
 
 ## Standard Feature Implementation Workflow
 
