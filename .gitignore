@@ -424,3 +424,12 @@ FodyWeavers.xsd
 # Claude Code tracking
 claude-changes.json
 claude-changes.log
+
+# Claude temporary files
+test-*.py
+test-*.html
+test-*.json
+debug-*.md
+monitor-*.py
+*-test.md
+unoapp-home.html
