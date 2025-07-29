@@ -1,10 +1,32 @@
-# Orderlyze.Sales - Claude Memory
+# Orderlyze.Sales - Claude Configuration
 
-This file provides context for Claude Code when working on the Orderlyze.Sales project.
+Quick access to project context and commands for efficient AI-assisted development.
 
-## Quick Reference
+## Project Context
+@.claude/project-overview.md
+@.claude/architecture.md
+@.claude/project-structure.md
 
-### Most Used Commands
+## Development
+@.claude/commands.md
+@.claude/code-generation.md
+
+## Specialized Modes
+@.claude/development-modes/expert-dotnet.md
+@.claude/development-modes/create-adr.md
+
+## Standard Workflows
+
+### Feature Implementation
+When requests begin with "WORKFLOW:", "Implementiere:", or "Feature:", follow these steps:
+1. **GitHub Issue** (`gh issue create`)
+2. **Feature Branch** (`git checkout -b feature/issue-XXX-name`)
+3. **Implementation**
+4. **Build** (`dotnet build`) - fix errors before proceeding
+5. **Commit & Push** with issue reference
+6. **Pull Request** (`gh pr create`) with "Closes #XXX"
+
+### Quick Commands
 - Build: `dotnet build`
 - Run API: `dotnet run --project src/WebApi/WebApi.csproj`
 - Run App: `dotnet run --project src/UnoApp/UnoApp/UnoApp.csproj`
@@ -14,49 +36,3 @@ This file provides context for Claude Code when working on the Orderlyze.Sales p
 - **Always** add `[SingletonHandler]` attribute to Mediator handlers
 - Follow the WebApi.json code generation workflow for new endpoints
 - Check existing patterns in neighboring files before creating new code
-
-## Project Context
-
-@.claude/project-overview.md
-@.claude/commands.md
-@.claude/architecture.md
-@.claude/project-structure.md
-
-## Special Workflows
-
-@.claude/code-generation.md
-
-## Development Modes & Tools
-
-@.claude/expert-dotnet-software-engineer.chatmode.md
-@.claude/create-architectural-decision-record.prompt.md
-
-## Development Notes
-
-### Environment Specifics
-- .NET 9 is used throughout the project
-- WebAssembly builds require special environment variable handling
-- Git submodules are used (especially for mediator)
-
-### Change Tracking
-- All changes are logged to `/claude-changes.json`
-
-### Testing Approach
-- Always check README or search codebase for test commands
-- Run lint and typecheck commands if found
-- Verify builds before committing
-
-## Standard Feature Implementation Workflow
-
-**WICHTIG**: Bei Anfragen die mit "WORKFLOW:", "Implementiere:" oder "Feature:" beginnen, 
-MUSS ich IMMER diese Schritte ausführen:
-
-1. **GitHub Issue erstellen** (`gh issue create`)
-2. **Feature Branch** (`git checkout -b feature/issue-XXX-name`)
-3. **Implementierung** durchführen
-4. **Build** (`dotnet build`) - bei Fehlern sofort fixen
-5. **Commit & Push** mit Issue-Referenz
-6. **Pull Request** (`gh pr create`) mit "Closes #XXX"
-
-**NIEMALS** Code ohne Issue/PR!
-**IMMER** Build grün vor PR!
