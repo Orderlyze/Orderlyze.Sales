@@ -28,7 +28,7 @@ namespace WebApi
                 {
                     policy.AllowAnyOrigin()
                           .AllowAnyMethod()
-                          .AllowAnyHeader();
+                          .WithHeaders("wix-account-id", "wix-site-id", "Authorization", "Content-Type", "Accept", "X-Requested-With");
                 });
             });
             
