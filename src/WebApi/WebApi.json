@@ -363,7 +363,7 @@
         "tags": [
           "WebApi"
         ],
-        "operationId": "UpdateCallSettings",
+        "operationId": "api/settings/updateCallSettings",
         "requestBody": {
           "content": {
             "application/json": {

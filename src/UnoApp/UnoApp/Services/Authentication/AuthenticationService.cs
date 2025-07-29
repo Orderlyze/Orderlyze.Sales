@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Shiny.Mediator;
+using Shiny.Mediator.Http;
 using UnoApp.ApiClient;
 using UnoApp.Mediator.Requests.Authentication;
 
@@ -46,27 +47,37 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
-            var result = await _mediator.Request(new LoginHttpRequest
+            _logger.LogInformation("Starting login attempt for {Email}", email);
+            
+            var loginRequest = new LoginHttpRequest
             {
                 Body = new LoginRequest
                 {
                     Email = email,
                     Password = password
                 }
-            }).ConfigureAwait(false);
+            };
+            
+            _logger.LogDebug("Sending login request to API");
+            
+            var (context, result) = await _mediator.Request(loginRequest).ConfigureAwait(false);
+            
+            _logger.LogInformation("API response received, Has result: {HasResult}", 
+                result != null);
 
-            if (result.Result != null)
+            if (result != null)
             {
-                await StoreTokens(result.Result).ConfigureAwait(false);
+                _logger.LogInformation("Login successful, received tokens");
+                await StoreTokens(result).ConfigureAwait(false);
                 return true;
             }
 
-            _logger.LogWarning("Login failed");
+            _logger.LogWarning("Login failed - no result returned from API");
             return false;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Login error");
+            _logger.LogError(ex, "Login error for {Email}", email);
             return false;
         }
     }
@@ -81,7 +92,7 @@ public class AuthenticationService : IAuthenticationService
 
         try
         {
-            var result = await _mediator.Request(new RefreshHttpRequest
+            var (context, result) = await _mediator.Request(new RefreshHttpRequest
             {
                 Body = new RefreshRequest
                 {
@@ -89,9 +100,9 @@ public class AuthenticationService : IAuthenticationService
                 }
             }).ConfigureAwait(false);
 
-            if (result.Result != null)
+            if (result != null)
             {
-                await StoreTokens(result.Result).ConfigureAwait(false);
+                await StoreTokens(result).ConfigureAwait(false);
                 return true;
             }
 
@@ -168,12 +179,12 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
-            var result = await _mediator.Request(new GetStoredTokenRequest()).ConfigureAwait(false);
-            if (result.Result != null)
+            var (context, result) = await _mediator.Request(new GetStoredTokenRequest()).ConfigureAwait(false);
+            if (result != null)
             {
-                _accessToken = result.Result.AccessToken;
-                _refreshToken = result.Result.RefreshToken;
-                _tokenExpiresAt = result.Result.ExpiresAt;
+                _accessToken = result.AccessToken;
+                _refreshToken = result.RefreshToken;
+                _tokenExpiresAt = result.ExpiresAt;
                 
                 _logger.LogInformation("Tokens restored from storage, expires at: {ExpiresAt}", _tokenExpiresAt);
             }

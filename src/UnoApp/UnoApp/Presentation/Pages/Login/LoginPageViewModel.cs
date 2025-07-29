@@ -48,9 +48,12 @@ internal partial class LoginPageViewModel : BasePageViewModel
 
     private async Task LoginAsync()
     {
+        _logger.LogInformation("LoginAsync called with Email: {Email}", Email);
+        
         if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
         {
             ErrorMessage = "Please enter email and password";
+            _logger.LogWarning("Login attempt with empty credentials");
             return;
         }
 
@@ -58,24 +61,27 @@ internal partial class LoginPageViewModel : BasePageViewModel
         {
             IsLoading = true;
             ErrorMessage = null;
-
+            
+            _logger.LogInformation("Calling authentication service for {Email}", Email);
             var success = await _authService.LoginAsync(Email, Password);
+            
+            _logger.LogInformation("Authentication service returned: {Success}", success);
             
             if (success)
             {
-                _logger.LogInformation("Login successful for {Email}", Email);
+                _logger.LogInformation("Login successful for {Email}, navigating to main page", Email);
                 // Navigate to main page after successful login
                 await _navigator.NavigateViewModelAsync<MainViewModel>(this);
             }
             else
             {
                 ErrorMessage = "Invalid email or password";
-                _logger.LogWarning("Login failed for {Email}", Email);
+                _logger.LogWarning("Login failed for {Email} - authentication service returned false", Email);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Login error");
+            _logger.LogError(ex, "Login error in ViewModel");
             ErrorMessage = "An error occurred during login. Please try again.";
         }
         finally
