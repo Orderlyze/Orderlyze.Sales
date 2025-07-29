@@ -45,3 +45,18 @@ This file provides context for Claude Code when working on the Orderlyze.Sales p
 - Always check README or search codebase for test commands
 - Run lint and typecheck commands if found
 - Verify builds before committing
+
+## Standard Feature Implementation Workflow
+
+**WICHTIG**: Bei Anfragen die mit "WORKFLOW:", "Implementiere:" oder "Feature:" beginnen, 
+MUSS ich IMMER diese Schritte ausführen:
+
+1. **GitHub Issue erstellen** (`gh issue create`)
+2. **Feature Branch** (`git checkout -b feature/issue-XXX-name`)
+3. **Implementierung** durchführen
+4. **Build** (`dotnet build`) - bei Fehlern sofort fixen
+5. **Commit & Push** mit Issue-Referenz
+6. **Pull Request** (`gh pr create`) mit "Closes #XXX"
+
+**NIEMALS** Code ohne Issue/PR!
+**IMMER** Build grün vor PR!
