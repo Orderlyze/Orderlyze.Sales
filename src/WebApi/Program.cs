@@ -6,6 +6,7 @@ using Scalar.AspNetCore;
 using WebApi.Data;
 using WebApi.Helpers.Authentication;
 using WebApi.Startup;
+using WixApi;
 
 namespace WebApi
 {
@@ -20,6 +21,9 @@ namespace WebApi
                 options.UseInMemoryDatabase("SalesDb")
             );
             builder.Services.AddControllers();
+            
+            // Add WixApi services
+            builder.Services.AddWixApi(builder.Configuration);
             
             // Add CORS
             builder.Services.AddCors(options =>

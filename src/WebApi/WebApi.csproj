@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharedModels\SharedModels.csproj" />
+    <ProjectReference Include="..\External\WixApi\WixApi.csproj" />
   </ItemGroup>
 
 </Project>

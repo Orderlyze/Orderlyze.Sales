@@ -7,10 +7,11 @@ using WebApi.Mediator.Requests.Settings;
 namespace WebApi.Mediator.Handlers.Settings
 {
     [SingletonHandler]
+    [MediatorHttpGroup("settings", RequiresAuthorization = true)]
     internal class SettingsHandler(IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager) 
         : ICommandHandler<UpdateCallSettingsRequest>
     {
-        [MediatorHttpPost("api/settings/updateCallSettings", "", RequiresAuthorization = true)]
+        [MediatorHttpPost("updateCallSettings", "")]
         public async Task Handle(UpdateCallSettingsRequest request, IMediatorContext context, CancellationToken ct)
         {
             var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;

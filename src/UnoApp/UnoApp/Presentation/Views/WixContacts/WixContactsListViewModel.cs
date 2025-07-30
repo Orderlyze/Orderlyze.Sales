@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnoApp.Presentation.Common.ViewModels;
 using UnoApp.Services.Common;
-using WixApi.Models;
 
 namespace UnoApp.Presentation.Views.WixContacts;
 

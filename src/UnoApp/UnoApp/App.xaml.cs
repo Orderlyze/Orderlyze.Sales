@@ -8,7 +8,6 @@ using UnoApp.Presentation.Pages.WixContacts;
 using UnoApp.Presentation.Views.Contacts;
 using UnoApp.Presentation.Views.WixContacts;
 using UnoApp.Startup;
-using WixApi.Models;
 using SharedModels.Dtos.Contacts;
 using UnoApp.Constants;
 

@@ -358,29 +358,6 @@
         }
       }
     },
-    "/": {
-      "post": {
-        "tags": [
-          "WebApi"
-        ],
-        "operationId": "UpdateCallSettings",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCallSettingsRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/Contact": {
       "post": {
         "tags": [
@@ -485,6 +462,52 @@
               "application/json": {
                 "schema": {
                   "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings": {
+      "post": {
+        "tags": [
+          "WebApi"
+        ],
+        "operationId": "updateCallSettings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCallSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/wix": {
+      "get": {
+        "tags": [
+          "WebApi"
+        ],
+        "operationId": "contacts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WixContactDto"
+                  }
                 }
               }
             }
@@ -916,6 +939,54 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          }
+        }
+      },
+      "WixContactDto": {
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "phone",
+          "address",
+          "company",
+          "labelKeys"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "company": {
+            "type": "string",
+            "nullable": true
+          },
+          "labelKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
