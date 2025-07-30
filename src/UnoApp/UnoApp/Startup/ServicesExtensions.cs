@@ -11,7 +11,6 @@ using Shiny.Mediator.Http;
 using Authentication = UnoApp.Services.Authentication;
 using UnoApp.Services.Common;
 using UnoApp.Services.Http;
-using WixApi;
 using UnoApp;
 
 namespace UnoApp.Startup;
@@ -26,9 +25,6 @@ internal static class ServicesExtensions
         services.TryAddScoped<BaseServices>();
         // Add all services marked with [Service] attribute
         services.AddGeneratedServices();
-        
-        
-        services.AddWixApi(configuration);
         
         // Register HttpClient
         services.AddHttpClient();

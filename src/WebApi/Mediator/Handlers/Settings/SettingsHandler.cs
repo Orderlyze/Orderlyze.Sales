@@ -10,7 +10,7 @@ namespace WebApi.Mediator.Handlers.Settings
     internal class SettingsHandler(IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager) 
         : ICommandHandler<UpdateCallSettingsRequest>
     {
-        [MediatorHttpPost("api/settings/updateCallSettings", "", RequiresAuthorization = true)]
+        [MediatorHttpPost("updateCallSettings", "", RequiresAuthorization = true)]
         public async Task Handle(UpdateCallSettingsRequest request, IMediatorContext context, CancellationToken ct)
         {
             var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
