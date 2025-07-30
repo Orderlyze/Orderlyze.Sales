@@ -28,7 +28,11 @@ public partial class WixContactsListView
     {
         if (e.ClickedItem is WixContactsListModel contact && DataContext is WixContactsListViewModel viewModel)
         {
-            await viewModel.AddContactAsync(contact);
+            // Import the contact using the page's import command
+            if (viewModel.PageViewModel?.ImportContactCommand?.CanExecute(contact.Id) == true)
+            {
+                await viewModel.PageViewModel.ImportContactCommand.ExecuteAsync(contact.Id);
+            }
         }
     }
 }

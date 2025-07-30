@@ -6,6 +6,7 @@ using Shiny.Mediator;
 using WebApi.Constants;
 using WebApi.Data;
 using WebApi.Mediator.Requests.Contacts;
+using WixApi.Repositories;
 using DbModels = WebApi.Data.Models;
 
 namespace WebApi.Mediator.Handlers.Contacts
@@ -14,13 +15,14 @@ namespace WebApi.Mediator.Handlers.Contacts
     /// Handles all contact-related operations including CRUD and call management.
     /// </summary>
     [MediatorHttpGroup(GroupConstants.Contact, RequiresAuthorization = true)]
-    internal sealed class ContactsGroup(AppDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager)
+    internal sealed class ContactsGroup(AppDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager, IWixContactsRepository wixContactsRepository)
         : IRequestHandler<AddContactRequest, ContactDto>,
             IRequestHandler<GetContactRequest, ContactDto?>,
             IRequestHandler<GetAllContactsRequest, IEnumerable<ContactDto>>,
             IRequestHandler<DeleteContactRequest, bool>,
             IRequestHandler<UpdateCallStatusRequest, ContactDto>,
-            IRequestHandler<RescheduleCallRequest, ContactDto>
+            IRequestHandler<RescheduleCallRequest, ContactDto>,
+            IRequestHandler<ImportWixContactRequest, ContactDto>
     {
         /// <summary>
         /// Adds a new contact to the system.
@@ -276,6 +278,69 @@ namespace WebApi.Mediator.Handlers.Contacts
             };
             
             contact.CallHistory.Add(callLog);
+            await db.SaveChangesAsync(ct).ConfigureAwait(false);
+            
+            return MapToDto(contact);
+        }
+
+        /// <summary>
+        /// Imports a Wix contact as a new contact in the system.
+        /// </summary>
+        /// <param name="request">The import request containing the Wix contact ID.</param>
+        /// <param name="context">The mediator context.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>The imported contact DTO.</returns>
+        [MediatorHttpPost("importWix", GroupConstants.NoTemplate)]
+        public async Task<ContactDto> Handle(
+            ImportWixContactRequest request,
+            IMediatorContext context,
+            CancellationToken ct
+        )
+        {
+            var userId = httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+            
+            var user = await userManager.FindByNameAsync(userId)
+                ?? throw new InvalidOperationException($"User '{userId}' not found.");
+            
+            // Check if contact already exists
+            var existingContact = await db.Contacts
+                .FirstOrDefaultAsync(c => c.WixId == request.WixContactId && c.UserId == user.Id, ct)
+                .ConfigureAwait(false);
+                
+            if (existingContact != null)
+            {
+                throw new InvalidOperationException($"Contact with Wix ID '{request.WixContactId}' already exists.");
+            }
+            
+            // Get Wix contact details
+            var wixContacts = await wixContactsRepository.GetContactsAsync();
+            var wixContact = wixContacts.FirstOrDefault(c => c.id == request.WixContactId);
+            
+            if (wixContact == null)
+            {
+                throw new InvalidOperationException($"Wix contact with ID '{request.WixContactId}' not found.");
+            }
+            
+            // Map Wix contact to Contact entity
+            var contact = new DbModels.Contact
+            {
+                Id = Guid.NewGuid(),
+                WixId = wixContact.id,
+                Name = $"{wixContact.info.name?.first} {wixContact.info.name?.last}".Trim(),
+                Email = wixContact.primaryInfo.email ?? string.Empty,
+                Phone = wixContact.primaryInfo.phone ?? wixContact.info.phones?.items?.FirstOrDefault()?.phone ?? string.Empty,
+                Industry = wixContact.info.company ?? "Unknown",
+                CallStatus = CallStatus.New,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                UserId = user.Id
+            };
+            
+            db.Contacts.Add(contact);
             await db.SaveChangesAsync(ct).ConfigureAwait(false);
             
             return MapToDto(contact);
