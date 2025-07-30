@@ -6,6 +6,7 @@ using Scalar.AspNetCore;
 using WebApi.Data;
 using WebApi.Helpers.Authentication;
 using WebApi.Startup;
+using WixApi;
 
 namespace WebApi
 {
@@ -15,6 +16,10 @@ namespace WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddShinyMediator(x => x.AddGeneratedEndpoints());
+            
+            // Add WixApi services
+            builder.Services.AddWixApi(builder.Configuration);
+            
             // Add services to the container.
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseInMemoryDatabase("SalesDb")
