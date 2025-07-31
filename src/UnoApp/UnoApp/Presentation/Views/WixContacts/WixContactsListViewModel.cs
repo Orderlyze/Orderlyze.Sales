@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnoApp.Presentation.Common.ViewModels;
+using UnoApp.Presentation.Pages.WixContacts;
 using UnoApp.Services.Common;
+using Shiny.Mediator;
+using Microsoft.UI.Xaml;
 
 namespace UnoApp.Presentation.Views.WixContacts;
 
@@ -20,6 +23,8 @@ internal partial class WixContactsListViewModel
     { 
         _mediator = mediator;
     }
+
+    public WixContactsPageViewModel? PageViewModel { get; set; }
 
     public override Task InitializeAsync(RoutedEventArgs e)
     {

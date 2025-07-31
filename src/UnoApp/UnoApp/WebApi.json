@@ -363,12 +363,12 @@
         "tags": [
           "WebApi"
         ],
-        "operationId": "rescheduleCall",
+        "operationId": "importWix",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RescheduleCallRequest"
+                "$ref": "#/components/schemas/ImportWixContactRequest"
               }
             }
           },
@@ -725,6 +725,17 @@
                 "type": "string"
               }
             }
+          }
+        }
+      },
+      "ImportWixContactRequest": {
+        "required": [
+          "wixContactId"
+        ],
+        "type": "object",
+        "properties": {
+          "wixContactId": {
+            "type": "string"
           }
         }
       },
