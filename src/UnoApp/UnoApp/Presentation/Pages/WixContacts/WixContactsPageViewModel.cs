@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Shiny.Mediator;
 using UnoApp.ApiClient;
 using UnoApp.Constants;
@@ -8,6 +10,8 @@ using UnoApp.Navigation;
 using UnoApp.Presentation.Common;
 using UnoApp.Presentation.Views.WixContacts;
 using UnoApp.Services.Common;
+using Microsoft.UI.Dispatching;
+using CommunityToolkit.Mvvm.Input;
 
 namespace UnoApp.Presentation.Pages.WixContacts;
 
@@ -15,6 +19,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
 {
     private readonly INavigator _navigator;
     private readonly IMediator _mediator;
+    private readonly BaseServices _baseServices;
 
     public WixContactsPageViewModel(
         BaseServices baseServices,
@@ -25,11 +30,24 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
     {
         _navigator = navigator;
         _mediator = mediator;
+        _baseServices = baseServices;
+        ImportContactCommand = new AsyncRelayCommand<string>(ImportContactAsync);
     }
+
+    public IAsyncRelayCommand<string> ImportContactCommand { get; }
 
     public override IEnumerable<RegionModel> GetRegions(NavigationEventArgs e)
     {
-        return [new("List", RegionViewsNames.WixContactList, data: WixContacts)];
+        var listViewModel = new WixContactsListViewModel(
+            _baseServices,
+            WixContacts,
+            _mediator
+        )
+        {
+            PageViewModel = this
+        };
+        
+        return [new("List", RegionViewsNames.WixContactList, data: listViewModel)];
     }
 
     public IFeed<IEnumerable<WixContactsListModel>> WixContacts =>
@@ -60,4 +78,31 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
             
             return Enumerable.Empty<WixContactsListModel>();
         });
+
+    private async Task ImportContactAsync(string? wixContactId)
+    {
+        if (string.IsNullOrEmpty(wixContactId))
+            return;
+
+        try
+        {
+            // Show loading state if needed
+            await _mediator.Request(new ImportWixHttpRequest
+            {
+                Body = new ImportWixContactRequest { WixContactId = wixContactId }
+            });
+
+            // Show success message
+            // TODO: Add user feedback for successful import
+            
+            // Optionally navigate to contacts page
+            // await _navigator.NavigateAsync(Routes.Contacts);
+        }
+        catch (Exception ex)
+        {
+            // Handle error - show user feedback
+            Console.WriteLine($"Error importing contact: {ex.Message}");
+            // TODO: Add user error feedback
+        }
+    }
 }
