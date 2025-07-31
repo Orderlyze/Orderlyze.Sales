@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <OpenApiDocumentsDirectory>.</OpenApiDocumentsDirectory>
+    <UserSecretsId>7368e234-0ad3-4ed2-aea3-98d6dd61c6f6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

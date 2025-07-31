@@ -13,6 +13,7 @@ using UnoApp.Services.Common;
 using Microsoft.UI.Dispatching;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Uno.Extensions.Reactive;
 
 namespace UnoApp.Presentation.Pages.WixContacts;
 
@@ -21,7 +22,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
     private readonly INavigator _navigator;
     private readonly IMediator _mediator;
     private readonly BaseServices _baseServices;
-    private DateTimeOffset _selectedDate = DateTimeOffset.Now;
+    private readonly IState<DateTimeOffset> _selectedDate;
     private WixContactsListViewModel? _listViewModel;
 
     public WixContactsPageViewModel(
@@ -35,6 +36,9 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
         _mediator = mediator;
         _baseServices = baseServices;
         ImportContactCommand = new AsyncRelayCommand<string>(ImportContactAsync);
+        
+        // Initialize the state with the current date
+        _selectedDate = State.Value(this, () => DateTimeOffset.Now);
     }
 
     public IAsyncRelayCommand<string> ImportContactCommand { get; }
@@ -55,13 +59,12 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
 
     public void OnDateChanged(DateTimeOffset newDate)
     {
-        _selectedDate = newDate;
-        // Trigger refresh of the feed with the new date
-        OnPropertyChanged(nameof(WixContacts));
+        // Update the state value
+        _ = _selectedDate.UpdateAsync(_ => newDate);
     }
 
     public IFeed<IEnumerable<WixContactsListModel>> WixContacts =>
-        Feed.Async(async ct =>
+        _selectedDate.SelectAsync(async (selectedDate, ct) =>
         {
             try
             {
@@ -71,7 +74,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
                 {
                     var allContacts = response.Result
                         .Where(x => x.CreatedDate.HasValue && 
-                                   x.CreatedDate.Value.Date == _selectedDate.Date)
+                                   x.CreatedDate.Value.Date == selectedDate.Date)
                         .Select(x => new WixContactsListModel(
                             x.Id,
                             $"{x.FirstName} {x.LastName}".Trim(),

@@ -7,6 +7,7 @@ using UnoApp.Services.Common;
 using Shiny.Mediator;
 using Microsoft.UI.Xaml;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Uno.Extensions.Reactive;
 
 namespace UnoApp.Presentation.Views.WixContacts;
 
@@ -14,7 +15,7 @@ internal partial class WixContactsListViewModel
     : BaseItemViewModel<IEnumerable<WixContactsListModel>>
 {
     private readonly IMediator _mediator;
-    private DateTimeOffset _selectedDate = DateTimeOffset.Now;
+    public IState<DateTimeOffset> SelectedDate { get; }
 
     public WixContactsListViewModel(
         BaseServices services,
@@ -24,22 +25,19 @@ internal partial class WixContactsListViewModel
         : base(services, wixContacts) 
     { 
         _mediator = mediator;
+        SelectedDate = State.Value(this, () => DateTimeOffset.Now);
+        
+        // Watch for date changes
+        SelectedDate.ForEachAsync(async (date, ct) =>
+        {
+            if (PageViewModel != null)
+            {
+                PageViewModel.OnDateChanged(date);
+            }
+        });
     }
 
     public WixContactsPageViewModel? PageViewModel { get; set; }
-
-    public DateTimeOffset SelectedDate
-    {
-        get => _selectedDate;
-        set
-        {
-            if (SetProperty(ref _selectedDate, value))
-            {
-                // Notify the page view model about the date change
-                PageViewModel?.OnDateChanged(value);
-            }
-        }
-    }
 
     public override Task InitializeAsync(RoutedEventArgs e)
     {
