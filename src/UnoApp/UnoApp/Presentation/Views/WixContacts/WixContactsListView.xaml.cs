@@ -1,19 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace UnoApp.Presentation.Views.WixContacts;
 
@@ -22,6 +9,16 @@ public partial class WixContactsListView
     public WixContactsListView()
     {
         this.InitializeComponent();
+        this.Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is WixContactsListViewModel viewModel)
+        {
+            // Set initial date
+            ContactDatePicker.Date = viewModel.SelectedDate;
+        }
     }
 
     private async void ListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -33,6 +30,15 @@ public partial class WixContactsListView
             {
                 await viewModel.PageViewModel.ImportContactCommand.ExecuteAsync(contact.Id);
             }
+        }
+    }
+
+    private void DatePicker_DateChanged(object sender, DatePickerValueChangedEventArgs args)
+    {
+        if (DataContext is WixContactsListViewModel viewModel && args.NewDate.HasValue)
+        {
+            // Update the selected date in the view model
+            viewModel.SelectedDate = args.NewDate.Value;
         }
     }
 }

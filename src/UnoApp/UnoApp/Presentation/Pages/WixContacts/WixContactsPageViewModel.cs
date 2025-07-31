@@ -22,7 +22,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
     private readonly INavigator _navigator;
     private readonly IMediator _mediator;
     private readonly BaseServices _baseServices;
-    private readonly IState<DateTimeOffset> _selectedDate;
+    private DateTimeOffset _selectedDate = DateTimeOffset.Now;
     private WixContactsListViewModel? _listViewModel;
 
     public WixContactsPageViewModel(
@@ -37,8 +37,8 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
         _baseServices = baseServices;
         ImportContactCommand = new AsyncRelayCommand<string>(ImportContactAsync);
         
-        // Initialize the state with the current date
-        _selectedDate = State.Value(this, () => DateTimeOffset.Now);
+        // Initialize with current date
+        _selectedDate = DateTimeOffset.Now;
     }
 
     public IAsyncRelayCommand<string> ImportContactCommand { get; }
@@ -59,33 +59,48 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
 
     public void OnDateChanged(DateTimeOffset newDate)
     {
-        // Update the state value
-        _ = _selectedDate.UpdateAsync(_ => newDate);
+        // Update the selected date
+        _selectedDate = newDate;
+        Console.WriteLine($"[PageViewModel] Date changed to: {newDate:yyyy-MM-dd}");
     }
 
     public IFeed<IEnumerable<WixContactsListModel>> WixContacts =>
-        _selectedDate.SelectAsync(async (selectedDate, ct) =>
+        Feed.Async(async ct =>
         {
             try
             {
+                Console.WriteLine($"[WixContacts] Fetching contacts for date: {_selectedDate:yyyy-MM-dd}");
                 var response = await _mediator.Request(new ContactsHttpRequest(), ct);
                 
                 if (response.Result != null)
                 {
-                    var allContacts = response.Result
+                    Console.WriteLine($"[WixContacts] Total contacts received: {response.Result.Count()}");
+                    
+                    // Log some sample dates
+                    var sampleContacts = response.Result.Take(5);
+                    foreach (var contact in sampleContacts)
+                    {
+                        Console.WriteLine($"[WixContacts] Contact: {contact.FirstName} {contact.LastName}, Created: {contact.CreatedDate:yyyy-MM-dd HH:mm:ss}");
+                    }
+                    
+                    var filteredContacts = response.Result
                         .Where(x => x.CreatedDate.HasValue && 
-                                   x.CreatedDate.Value.Date == selectedDate.Date)
-                        .Select(x => new WixContactsListModel(
-                            x.Id,
-                            $"{x.FirstName} {x.LastName}".Trim(),
-                            x.Email,
-                            x.Phone,
-                            x.Address, // Branche - using address as branch
-                            x.Company,
-                            x.LabelKeys?.ToArray() ?? Array.Empty<string>()
-                        ));
+                                   x.CreatedDate.Value.Date == _selectedDate.Date)
+                        .ToList();
+                        
+                    Console.WriteLine($"[WixContacts] Filtered contacts for {_selectedDate:yyyy-MM-dd}: {filteredContacts.Count}");
+                    
+                    var result = filteredContacts.Select(x => new WixContactsListModel(
+                        x.Id,
+                        $"{x.FirstName} {x.LastName}".Trim(),
+                        x.Email,
+                        x.Phone,
+                        x.Address, // Branche - using address as branch
+                        x.Company,
+                        x.LabelKeys?.ToArray() ?? Array.Empty<string>()
+                    ));
 
-                    return allContacts;
+                    return result;
                 }
             }
             catch (Exception ex)
