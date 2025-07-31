@@ -12,7 +12,25 @@
     mc:Ignorable="d">
 
     <Grid>
-        <mvux:FeedView Source="{Binding Item}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- Date Picker Row -->
+        <StackPanel Grid.Row="0" 
+                    Orientation="Horizontal" 
+                    Spacing="{StaticResource SpacingMedium}"
+                    Padding="{StaticResource SpacingMedium}">
+            <TextBlock Text="Datum auswählen:" 
+                       VerticalAlignment="Center"
+                       Style="{StaticResource BodyTextStyle}" />
+            <DatePicker x:Name="ContactDatePicker"
+                        Date="{Binding SelectedDate, Mode=TwoWay}"
+                        VerticalAlignment="Center" />
+        </StackPanel>
+        
+        <mvux:FeedView Grid.Row="1" Source="{Binding Item}">
             <mvux:FeedView.ValueTemplate>
                 <DataTemplate>
                     <ListView ItemsSource="{Binding Data}"

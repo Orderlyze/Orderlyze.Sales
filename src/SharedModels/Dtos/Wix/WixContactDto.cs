@@ -8,6 +8,8 @@ namespace SharedModels.Dtos.Wix
         string? Phone,
         string? Address,
         string? Company,
-        string[] LabelKeys
+        string[] LabelKeys,
+        DateTime? CreatedDate = null,
+        DateTime? UpdatedDate = null
     );
 }

@@ -29,7 +29,7 @@ namespace WebApi.Mediator.Handlers.Wix
             CancellationToken ct
         )
         {
-            var wixContacts = await wixContactsRepository.GetContactsAsync();
+            var wixContacts = await wixContactsRepository.GetContactsAsync(100); // Increased limit to get more contacts
             
             return wixContacts.Select(x => new WixContactDto(
                 x.id,
@@ -39,7 +39,9 @@ namespace WebApi.Mediator.Handlers.Wix
                 x.primaryInfo.phone ?? x.info.phones?.items?.FirstOrDefault()?.phone,
                 x.info.addresses?.items?.FirstOrDefault()?.address?.addressLine,
                 x.info.company,
-                x.info.labelKeys?.items?.ToArray() ?? Array.Empty<string>()
+                x.info.labelKeys?.items?.ToArray() ?? Array.Empty<string>(),
+                x.createdDate,
+                x.updatedDate
             ));
         }
     }

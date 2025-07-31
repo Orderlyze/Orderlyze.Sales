@@ -998,6 +998,18 @@
             "items": {
               "type": "string"
             }
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time",
+            "default": null,
+            "nullable": true
+          },
+          "updatedDate": {
+            "type": "string",
+            "format": "date-time",
+            "default": null,
+            "nullable": true
           }
         }
       }

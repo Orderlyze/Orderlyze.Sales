@@ -12,6 +12,7 @@ using UnoApp.Presentation.Views.WixContacts;
 using UnoApp.Services.Common;
 using Microsoft.UI.Dispatching;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace UnoApp.Presentation.Pages.WixContacts;
 
@@ -20,6 +21,8 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
     private readonly INavigator _navigator;
     private readonly IMediator _mediator;
     private readonly BaseServices _baseServices;
+    private DateTimeOffset _selectedDate = DateTimeOffset.Now;
+    private WixContactsListViewModel? _listViewModel;
 
     public WixContactsPageViewModel(
         BaseServices baseServices,
@@ -38,7 +41,7 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
 
     public override IEnumerable<RegionModel> GetRegions(NavigationEventArgs e)
     {
-        var listViewModel = new WixContactsListViewModel(
+        _listViewModel = new WixContactsListViewModel(
             _baseServices,
             WixContacts,
             _mediator
@@ -47,7 +50,14 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
             PageViewModel = this
         };
         
-        return [new("List", RegionViewsNames.WixContactList, data: listViewModel)];
+        return [new("List", RegionViewsNames.WixContactList, data: _listViewModel)];
+    }
+
+    public void OnDateChanged(DateTimeOffset newDate)
+    {
+        _selectedDate = newDate;
+        // Trigger refresh of the feed with the new date
+        OnPropertyChanged(nameof(WixContacts));
     }
 
     public IFeed<IEnumerable<WixContactsListModel>> WixContacts =>
@@ -59,15 +69,20 @@ internal partial class WixContactsPageViewModel : BasePageViewModel
                 
                 if (response.Result != null)
                 {
-                    return response.Result.Select(x => new WixContactsListModel(
-                        x.Id,
-                        $"{x.FirstName} {x.LastName}".Trim(),
-                        x.Email,
-                        x.Phone,
-                        x.Address, // Branche - using address as branch
-                        x.Company,
-                        x.LabelKeys?.ToArray() ?? Array.Empty<string>()
-                    ));
+                    var allContacts = response.Result
+                        .Where(x => x.CreatedDate.HasValue && 
+                                   x.CreatedDate.Value.Date == _selectedDate.Date)
+                        .Select(x => new WixContactsListModel(
+                            x.Id,
+                            $"{x.FirstName} {x.LastName}".Trim(),
+                            x.Email,
+                            x.Phone,
+                            x.Address, // Branche - using address as branch
+                            x.Company,
+                            x.LabelKeys?.ToArray() ?? Array.Empty<string>()
+                        ));
+
+                    return allContacts;
                 }
             }
             catch (Exception ex)
