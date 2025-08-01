@@ -35,10 +35,10 @@ public partial class WixContactsListView
 
     private void DatePicker_DateChanged(object sender, DatePickerValueChangedEventArgs args)
     {
-        if (DataContext is WixContactsListViewModel viewModel && args.NewDate.HasValue)
+        if (DataContext is WixContactsListViewModel viewModel)
         {
             // Update the selected date in the view model
-            viewModel.SelectedDate = args.NewDate.Value;
+            viewModel.SelectedDate = args.NewDate;
         }
     }
 }
