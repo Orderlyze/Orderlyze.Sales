@@ -1,4 +1,0 @@
-#!/bin/bash
-# Shortcut script for feature implementation
-cd "$(dirname "$0")/.."
-python scripts/auto-implement.py "$@"
