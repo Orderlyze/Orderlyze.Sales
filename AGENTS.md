@@ -15,7 +15,6 @@ After completing any user request, automatically:
 ## ID Type Convention
 - **All IDs**: Always use `Guid` for both DTOs and database entities
 - **Consistency**: This ensures type safety and eliminates conversion complexity
-- **No Conversion Needed**: Direct mapping between entities and DTOs
 
 ## Shiny Mediator Usage
 - The API and UnoApp are built around the **Shiny.Mediator** pattern.
