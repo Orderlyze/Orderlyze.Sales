@@ -50,5 +50,4 @@
 - Services: `Business/Services/`
 
 ## Import References
-@docs/reactive-programming.md
-@docs/mvvm-patterns.md
+@.claude/mvvm-patterns.md

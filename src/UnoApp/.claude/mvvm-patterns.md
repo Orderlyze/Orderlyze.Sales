@@ -3,28 +3,24 @@
 ## Overview
 This document outlines the MVVM (Model-View-ViewModel) patterns used in the Orderlyze.Sales application, with special focus on integration with Uno.Reactive.
 
+## Import References
+@docs/reactive/FeedView.md
+@docs/reactive/reactive-programming.md
+
 ## ViewModel Base Classes
 
 ### ViewModelBase
-All ViewModels should inherit from `ViewModelBase` or appropriate specialized base classes.
-
-```csharp
-public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
-{
-    // Base implementation
-}
-```
+All ViewModels should inherit from UnoApp.Presentation.Common.ViewModels or appropriate specialized base classes.
 
 ### Specialized Base Classes
-- `PageViewModelBase`: For page-level ViewModels
-- `DialogViewModelBase`: For dialog ViewModels
-- `ItemViewModelBase`: For list item ViewModels
+- `BasePageViewModel`: For page-level ViewModels
+- `BaseItemViewModel`: For list item ViewModels
 
 ## ViewModel Structure
 
 ### 1. Property Declaration
 ```csharp
-public class CustomerViewModel : ViewModelBase
+public partial class CustomerPageViewModel : BasePageViewModel
 {
     // Services
     private readonly ICustomerService _customerService;
@@ -66,8 +62,7 @@ public CustomerViewModel(
 
 ### 1. Async Commands
 ```csharp
-public ICommand LoadDataCommand => new AsyncRelayCommand(LoadDataAsync);
-
+[RelayCommand]
 private async Task LoadDataAsync(CancellationToken cancellationToken)
 {
     await IsLoading.UpdateAsync(_ => true, cancellationToken);
@@ -85,8 +80,7 @@ private async Task LoadDataAsync(CancellationToken cancellationToken)
 
 ### 2. Parameterized Commands
 ```csharp
-public ICommand DeleteItemCommand => new AsyncRelayCommand<CustomerItem>(DeleteItemAsync);
-
+[RelayCommand]
 private async Task DeleteItemAsync(CustomerItem item, CancellationToken cancellationToken)
 {
     await _service.DeleteAsync(item.Id, cancellationToken);
@@ -97,8 +91,6 @@ private async Task DeleteItemAsync(CustomerItem item, CancellationToken cancella
 
 ### 1. Navigation with Parameters
 ```csharp
-public ICommand NavigateToDetailsCommand => new AsyncRelayCommand<int>(NavigateToDetailsAsync);
-
 private async Task NavigateToDetailsAsync(int customerId, CancellationToken ct)
 {
     var parameters = new Dictionary<string, object>
@@ -128,7 +120,7 @@ private async Task OpenDialogAsync(CancellationToken ct)
 
 ### 1. Initial Load
 ```csharp
-public class CustomerListViewModel : PageViewModelBase
+public class CustomerListViewModel : BasePageViewModel
 {
     public IFeed<IImmutableList<Customer>> Customers { get; }
     
@@ -147,8 +139,7 @@ public class CustomerListViewModel : PageViewModelBase
 public IState<Option<IImmutableList<Customer>>> CustomersState => 
     State<Option<IImmutableList<Customer>>>.Value(this, () => Option<IImmutableList<Customer>>.None());
 
-public ICommand RefreshCommand => new AsyncRelayCommand(RefreshAsync);
-
+[RelayCommand]
 private async Task RefreshAsync(CancellationToken ct)
 {
     await CustomersState.UpdateAsync(async _ => 
@@ -191,7 +182,7 @@ public IFeed<bool> CanSubmit => HasErrors.Select(hasErrors => !hasErrors);
 
 ### 1. Automatic Disposal
 ```csharp
-public class CustomerViewModel : ViewModelBase
+public partial class CustomerViewModel : BaseItemViewModel
 {
     // States are automatically disposed when ViewModel is disposed
     public IState<string> Name => State<string>.Value(this, () => string.Empty);
