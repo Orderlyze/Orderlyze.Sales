@@ -16,7 +16,7 @@
    - Use Uno.Reactive extensions for data binding and state management
    - Leverage `Feed<T>` for data streams
    - Implement `IState<T>` for mutable state
-   - See @docs/reactive-programming.md for detailed guidelines
+   - See @.claude/docs/reactive/reactive-programming.md for detailed guidelines
 
 3. **Data Binding**
    - Use x:Bind for compile-time binding where possible
@@ -27,7 +27,7 @@
    - Use dependency injection for navigation services
    - Keep navigation logic in ViewModels, not code-behind
    - Implement region-based navigation for dynamic content
-   - See @docs/navigation/regions.md for region patterns
+   - See @.claude/navigation/regions.md for region patterns
 
 5. **Dependency Injection**
    - Register services in `App.cs`

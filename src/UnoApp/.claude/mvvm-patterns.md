@@ -4,8 +4,8 @@
 This document outlines the MVVM (Model-View-ViewModel) patterns used in the Orderlyze.Sales application, with special focus on integration with Uno.Reactive.
 
 ## Import References
-@docs/reactive/FeedView.md
-@docs/reactive/reactive-programming.md
+@.claude/docs/reactive/FeedView.md
+@.claude/docs/reactive/reactive-programming.md
 
 ## ViewModel Base Classes
 
