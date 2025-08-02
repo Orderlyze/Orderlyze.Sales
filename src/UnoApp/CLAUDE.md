@@ -26,6 +26,8 @@
 4. **Navigation**
    - Use dependency injection for navigation services
    - Keep navigation logic in ViewModels, not code-behind
+   - Implement region-based navigation for dynamic content
+   - See @docs/navigation/regions.md for region patterns
 
 5. **Dependency Injection**
    - Register services in `App.cs`
@@ -51,3 +53,4 @@
 
 ## Import References
 @.claude/mvvm-patterns.md
+@.claude/navigation/regions.md
