@@ -57,11 +57,21 @@ namespace UnoApp.Presentation.Pages.Contacts
                 var result = await _mediator.Request(new GetAllContactHttpRequest(), ct);
                 if (result.Result != null)
                 {
-                    var contacts = result.Result
-                        .Where(FilterContact)
-                        .Select(c => new ContactViewModel(c, _mediator, _navigator, DefaultCallbackDays))
-                        .OrderBy(c => c.NextCallDate ?? DateTime.MaxValue)
-                        .ThenBy(c => c.Name);
+                    var contactViewModels = new List<ContactViewModel>();
+                    foreach (var contact in result.Result.Where(FilterContact))
+                    {
+                        contactViewModels.Add(new ContactViewModel(
+                            _baseServices,
+                            _mediator,
+                            _serviceProvider.GetRequiredService<ILogger<ContactViewModel>>(),
+                            contact,
+                            DefaultCallbackDays));
+                    }
+                    
+                    // Since we can't directly order by async properties, we'll keep the original order for now
+                    var contacts = contactViewModels
+                        .OrderBy(c => c.Item.Current?.NextCallDate?.DateTime ?? DateTime.MaxValue)
+                        .ThenBy(c => c.Item.Current?.Name ?? string.Empty);
                         
                     return contacts;
                 }

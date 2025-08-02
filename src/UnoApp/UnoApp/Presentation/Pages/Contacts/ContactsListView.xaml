@@ -56,29 +56,29 @@
                                             <!-- Contact Info -->
                                             <StackPanel Grid.Column="0" Spacing="{StaticResource SpacingXSmall}">
                                                 <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
-                                                    <TextBlock Text="{Binding Name}" 
+                                                    <TextBlock Text="{Binding Name.Value}" 
                                                               Style="{StaticResource BodyTextStyle}"
                                                               FontWeight="{StaticResource FontWeightBold}"/>
-                                                    <Border Background="{Binding StatusColor}" 
+                                                    <Border Background="{Binding StatusColor.Value}" 
                                                             Style="{StaticResource StatusBadgeStyle}">
-                                                        <TextBlock Text="{Binding StatusText}" 
+                                                        <TextBlock Text="{Binding StatusText.Value}" 
                                                                   Foreground="White" 
                                                                   Style="{StaticResource CaptionTextStyle}"/>
                                                     </Border>
                                                 </StackPanel>
                                                 
-                                                <TextBlock Text="{Binding Email}" Style="{StaticResource BodySmallTextStyle}"/>
-                                                <TextBlock Text="{Binding Phone}" Style="{StaticResource BodySmallTextStyle}"/>
-                                                <TextBlock Text="{Binding Branche}" Style="{StaticResource BodySmallTextStyle}"/>
+                                                <TextBlock Text="{Binding Email.Value}" Style="{StaticResource BodySmallTextStyle}"/>
+                                                <TextBlock Text="{Binding Phone.Value}" Style="{StaticResource BodySmallTextStyle}"/>
+                                                <TextBlock Text="{Binding Branche.Value}" Style="{StaticResource BodySmallTextStyle}"/>
                                                 
                                                 <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingXSmall}" Margin="0,8,0,0">
                                                     <TextBlock Text="Nächster Anruf:" Style="{StaticResource LabelTextStyle}"/>
-                                                    <TextBlock Text="{Binding NextCallDateDisplay}" 
-                                                              Foreground="{Binding NextCallDateColor}"/>
+                                                    <TextBlock Text="{Binding NextCallDateDisplay.Value}" 
+                                                              Foreground="{Binding NextCallDateColor.Value}"/>
                                                 </StackPanel>
                                                 
-                                                <TextBlock Text="{Binding CallNotes}" 
-                                                          Visibility="{Binding HasNotes}"
+                                                <TextBlock Text="{Binding CallNotes.Value}" 
+                                                          Visibility="{Binding HasNotes.Value}"
                                                           TextWrapping="Wrap"
                                                           Margin="0,4,0,0"
                                                           Style="{StaticResource BodySmallTextStyle}"/>
