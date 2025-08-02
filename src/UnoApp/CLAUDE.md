@@ -51,6 +51,11 @@
 - Models: `Business/Models/`
 - Services: `Business/Services/`
 
+## Slash Commands
+- `/stash-update`: Stash changes, checkout master, and pull latest
+  - See @.claude/commands/stash-update.md
+
 ## Import References
 @.claude/mvvm-patterns.md
 @.claude/navigation/regions.md
+@.claude/commands/stash-update.md
