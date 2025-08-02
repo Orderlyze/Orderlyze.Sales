@@ -16,43 +16,64 @@
         <mvux:FeedView Source="{Binding Item}">
             <mvux:FeedView.ValueTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <ListView ItemsSource="{Binding Data}"
-                                  SelectionMode="None"
-                                  IsItemClickEnabled="False"
-                                  x:Name="ContactsList">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem" BasedOn="{StaticResource StretchedListViewItemStyle}" />
-                            </ListView.ItemContainerStyle>
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="local:ContactsListModel">
-                                    <Border Style="{StaticResource CardBorderStyle}"
-                                                Margin="{StaticResource ListItemMargin}">
-                                        <StackPanel Spacing="{StaticResource SpacingSmall}">
-                                            <TextBlock Text="{Binding Name}"
-                                                           Style="{StaticResource BodyTextStyle}"
-                                                           FontWeight="{StaticResource FontWeightSemiBold}" />
-                                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
-                                                <TextBlock Text="Email:" Style="{StaticResource LabelTextStyle}" />
-                                                <TextBlock Text="{Binding Email}" Style="{StaticResource BodyTextStyle}" />
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
-                                                <TextBlock Text="Phone:" Style="{StaticResource LabelTextStyle}" />
-                                                <TextBlock Text="{Binding Phone}" Style="{StaticResource BodyTextStyle}" />
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
-                                                <TextBlock Text="Branch:" Style="{StaticResource LabelTextStyle}" />
-                                                <TextBlock Text="{Binding Branche}" Style="{StaticResource BodyTextStyle}" />
-                                            </StackPanel>
+                    <ListView ItemsSource="{Binding Data}"
+                              SelectionMode="None"
+                              IsItemClickEnabled="False"
+                              x:Name="ContactsList">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource StretchedListViewItemStyle}" />
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="local:ContactsListModel">
+                                <Border Style="{StaticResource CardBorderStyle}"
+                                        Margin="{StaticResource ListItemMargin}">
+                                    <StackPanel Spacing="{StaticResource SpacingSmall}">
+                                        <TextBlock Text="{Binding Name}"
+                                                   Style="{StaticResource BodyTextStyle}"
+                                                   FontWeight="{StaticResource FontWeightSemiBold}" />
+                                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
+                                            <TextBlock Text="Email:" Style="{StaticResource LabelTextStyle}" />
+                                            <TextBlock Text="{Binding Email}" Style="{StaticResource BodyTextStyle}" />
                                         </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                        
-                    </Grid>
+                                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
+                                            <TextBlock Text="Telefon:" Style="{StaticResource LabelTextStyle}" />
+                                            <TextBlock Text="{Binding Phone}" Style="{StaticResource BodyTextStyle}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSmall}">
+                                            <TextBlock Text="Branche:" Style="{StaticResource LabelTextStyle}" />
+                                            <TextBlock Text="{Binding Branche}" Style="{StaticResource BodyTextStyle}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </DataTemplate>
             </mvux:FeedView.ValueTemplate>
+            
+            <mvux:FeedView.NoneTemplate>
+                <DataTemplate>
+                    <Grid Margin="{StaticResource PageContentMargin}">
+                        <TextBlock Text="Keine Kontakte gefunden"
+                                   Style="{StaticResource BodyTextStyle}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Opacity="0.6"/>
+                    </Grid>
+                </DataTemplate>
+            </mvux:FeedView.NoneTemplate>
+            
+            <mvux:FeedView.ProgressTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <ProgressRing IsActive="True"
+                                      Width="48"
+                                      Height="48"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </mvux:FeedView.ProgressTemplate>
         </mvux:FeedView>
     </Grid>
 </base:BaseView>
