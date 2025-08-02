@@ -39,6 +39,7 @@
 - Follow existing naming conventions in the codebase
 - Keep methods focused and testable
 - Write self-documenting code
+- Each class must be in its own file (one class per file)
 
 ## Testing
 - Write unit tests for ViewModels
