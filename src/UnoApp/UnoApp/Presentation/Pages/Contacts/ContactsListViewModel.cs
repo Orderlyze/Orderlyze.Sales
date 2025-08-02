@@ -57,11 +57,21 @@ namespace UnoApp.Presentation.Pages.Contacts
                 var result = await _mediator.Request(new GetAllContactHttpRequest(), ct);
                 if (result.Result != null)
                 {
-                    var contacts = result.Result
-                        .Where(FilterContact)
-                        .Select(c => new ContactViewModel(c, _mediator, _navigator, DefaultCallbackDays))
-                        .OrderBy(c => c.NextCallDate ?? DateTime.MaxValue)
-                        .ThenBy(c => c.Name);
+                    var contactViewModels = new List<ContactViewModel>();
+                    foreach (var contact in result.Result.Where(FilterContact))
+                    {
+                        contactViewModels.Add(new ContactViewModel(
+                            _baseServices,
+                            _mediator,
+                            _serviceProvider.GetRequiredService<ILogger<ContactViewModel>>(),
+                            contact,
+                            DefaultCallbackDays));
+                    }
+                    
+                    // Since we can't directly order by async properties, we'll keep the original order for now
+                    var contacts = contactViewModels
+                        .OrderBy(c => c.Item.Current?.NextCallDate?.DateTime ?? DateTime.MaxValue)
+                        .ThenBy(c => c.Item.Current?.Name ?? string.Empty);
                         
                     return contacts;
                 }
@@ -141,129 +151,6 @@ namespace UnoApp.Presentation.Pages.Contacts
             {
                 _logger.LogError(ex, "Failed to save settings");
             }
-        }
-    }
-
-    public partial class ContactViewModel : ObservableObject
-    {
-        private readonly UnoApp.ApiClient.ContactDto _contact;
-        private readonly IMediator _mediator;
-        private readonly INavigator _navigator;
-        private readonly int _defaultCallbackDays;
-        private readonly ILogger _logger;
-
-        public ContactViewModel(UnoApp.ApiClient.ContactDto contact, IMediator mediator, INavigator navigator, int defaultCallbackDays)
-        {
-            _contact = contact;
-            _mediator = mediator;
-            _navigator = navigator;
-            _defaultCallbackDays = defaultCallbackDays;
-            _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<ContactViewModel>();
-        }
-
-        public string Name => _contact.Name;
-        public string Email => _contact.Email;
-        public string Phone => _contact.Phone;
-        public string Branche => _contact.Industry;
-        public string? CallNotes => _contact.CallNotes;
-        public DateTime? NextCallDate => _contact.NextCallDate?.DateTime;
-        
-        public string NextCallDateDisplay
-        {
-            get
-            {
-                if (NextCallDate == null)
-                    return "Nicht geplant";
-                    
-                var today = DateTime.Today;
-                var callDate = NextCallDate.Value.Date;
-                
-                if (callDate == today)
-                    return "Heute";
-                else if (callDate == today.AddDays(1))
-                    return "Morgen";
-                else if (callDate < today)
-                    return $"Überfällig ({callDate:dd.MM.})";
-                else
-                    return callDate.ToString("dd.MM.yyyy");
-            }
-        }
-        
-        public string NextCallDateColor
-        {
-            get
-            {
-                if (NextCallDate == null)
-                    return "Gray";
-                    
-                var today = DateTime.Today;
-                if (NextCallDate.Value.Date < today)
-                    return "Red";
-                else if (NextCallDate.Value.Date == today)
-                    return "Orange";
-                else
-                    return "Black";
-            }
-        }
-        
-        public string StatusText => ((DtoModels.CallStatus)(int)_contact.CallStatus) switch
-        {
-            DtoModels.CallStatus.New => "Neu",
-            DtoModels.CallStatus.Scheduled => "Geplant",
-            DtoModels.CallStatus.Reached => "Erreicht",
-            DtoModels.CallStatus.NotReached => "Nicht erreicht",
-            DtoModels.CallStatus.Completed => "Abgeschlossen",
-            DtoModels.CallStatus.Postponed => "Verschoben",
-            _ => "Unbekannt"
-        };
-        
-        public string StatusColor => ((DtoModels.CallStatus)(int)_contact.CallStatus) switch
-        {
-            DtoModels.CallStatus.New => "Blue",
-            DtoModels.CallStatus.Scheduled => "Orange",
-            DtoModels.CallStatus.Reached => "Green",
-            DtoModels.CallStatus.NotReached => "Red",
-            DtoModels.CallStatus.Completed => "Gray",
-            DtoModels.CallStatus.Postponed => "Purple",
-            _ => "Gray"
-        };
-        
-        public Visibility HasNotes => string.IsNullOrWhiteSpace(CallNotes) ? Visibility.Collapsed : Visibility.Visible;
-
-        [RelayCommand]
-        private async Task CallAsync()
-        {
-            // Navigate to call detail page
-            await _navigator.NavigateDataAsync(
-                this,
-                data: new Dictionary<string, object> { ["Contact"] = _contact },
-                cancellation: CancellationToken.None
-            );
-        }
-
-        [RelayCommand]
-        private async Task RescheduleAsync()
-        {
-            // TODO: Show date picker dialog
-            var newDate = DateTime.Today.AddDays(_defaultCallbackDays);
-            
-            // TODO: RescheduleCallHttpRequest needs to be generated from WebApi.json
-            // For now, we'll just update the local state
-            _logger.LogInformation("Would reschedule contact {ContactId} to {Date}", _contact.Id, newDate);
-        }
-
-        [RelayCommand]
-        private async Task MarkReachedAsync()
-        {
-            // TODO: UpdateCallStatusHttpRequest needs to be generated from WebApi.json
-            _logger.LogInformation("Would mark contact {ContactId} as reached", _contact.Id);
-        }
-
-        [RelayCommand]
-        private async Task MarkNotReachedAsync()
-        {
-            // TODO: UpdateCallStatusHttpRequest needs to be generated from WebApi.json
-            _logger.LogInformation("Would mark contact {ContactId} as not reached", _contact.Id);
         }
     }
 }
